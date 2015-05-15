@@ -7,11 +7,12 @@ namespace Cong {
 	Game::Game(const std::string &title, int width, int height) : title(title), width(width), height(height) {
         window = new sf::RenderWindow(sf::VideoMode(width, height), title);
         
-        ball = new Cong::Ball(10);
+        ball = new Cong::Ball(10, 0);
         paddle1 = new Cong::Paddle(sf::Vector2f(20, 80));
         paddle2 = new Cong::Paddle(sf::Vector2f(20, 80));
         
         ball->setPosition(width * 0.5 - 10, height * 0.5 - 10);
+        ball->setDirection(sf::Vector2f(1, 0));
         paddle1->setPosition(20, height * 0.5 - 40);
         paddle2->setPosition(width - 40, height * 0.5 - 40);
         
@@ -40,6 +41,8 @@ namespace Cong {
 	}
 
 	void Game::update() {
+        
+        ball->move(ball->getDirection().x * ball->getSpeed(), ball->getDirection().y * ball->getSpeed());
         
 	}
 
@@ -95,6 +98,10 @@ namespace Cong {
             paddle2Y = paddle2Y + 80 > height ? height - 80 : paddle2Y;
             
             paddle2->setPosition(sf::Vector2f(paddle2Pos.x, paddle2Y));
+        }
+        
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
+            ball->setSpeed(1);
         }
 	}
 

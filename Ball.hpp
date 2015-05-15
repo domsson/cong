@@ -5,11 +5,20 @@
 
 namespace Cong {
 
-    class Ball: public sf::CircleShape {
+class Ball: public sf::CircleShape {
+    
+private:
+    int speed;
+    sf::Vector2f *direction;
 
 public:
-	Ball(int radius);
+	Ball(int radius, int speed);
 	~Ball();
+    
+    void setSpeed(int speed);
+    int getSpeed();
+    void setDirection(const sf::Vector2f &direction);
+    const sf::Vector2f &getDirection();
 
 };
 
