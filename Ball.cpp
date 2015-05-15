@@ -2,7 +2,8 @@
 
 namespace Cong {
     
-    Ball::Ball() {
+    Ball::Ball(int size) : sf::CircleShape(size) {
+
     }
     
     Ball::~Ball() {

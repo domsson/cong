@@ -1,14 +1,14 @@
 #ifndef CONG_BALL_HPP
 #define CONG_BALL_HPP
 
-#include "MovableObject.hpp"
+#include <SFML/Graphics.hpp>
 
 namespace Cong {
 
-class Ball: public MovableObject {
+    class Ball: public sf::CircleShape {
 
 public:
-	Ball();
+	Ball(int radius);
 	~Ball();
 
 };

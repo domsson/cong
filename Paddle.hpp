@@ -2,13 +2,14 @@
 #define CONG_PADDLE_HPP
 
 #include "MovableObject.hpp"
+#include <SFML/Graphics.hpp>
 
 namespace Cong {
 
-class Paddle: public MovableObject {
+    class Paddle: public sf::RectangleShape {
 
 public:
-	Paddle();
+    Paddle(sf::Vector2f size);
 	~Paddle();
 
 };

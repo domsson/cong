@@ -2,7 +2,7 @@
 
 namespace Cong {
     
-    Paddle::Paddle() {
+    Paddle::Paddle(sf::Vector2f size) : sf::RectangleShape(size) {
     }
     
     Paddle::~Paddle() {
