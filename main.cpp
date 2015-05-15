@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Game.hpp"
 
-Cong::Game *game = 0;
+Cong::Game* game = 0;
 
 static const int VIEWPORT_WIDTH = 800;
 static const int VIEWPORT_HEIGHT = 600;

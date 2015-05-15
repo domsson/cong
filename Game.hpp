@@ -25,9 +25,10 @@ private:
 	int height;
 	std::string title;
 
-	void update();
+    void processEvents();
 	void processInputs();
-	void render(sf::RenderWindow window);
+    void update();
+	void render();
 	
 public:
 	Game(const std::string &title, int width, int height);
