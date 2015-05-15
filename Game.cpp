@@ -5,19 +5,20 @@
 namespace Cong {
     
     static const int PADDING = 20;
-    
+    static const int PADDLE_WIDTH = 20;
+    static const int PADDLE_HEIGHT = 80;
+    static const int BALL_RADIUS = 10;
 
 	Game::Game(const std::string &title, int width, int height) : title(title), width(width), height(height) {
         window = new sf::RenderWindow(sf::VideoMode(width, height), title);
         
-        ball = new Cong::Ball(10, 0);
-        paddle1 = new Cong::Paddle(sf::Vector2f(20, 80));
-        paddle2 = new Cong::Paddle(sf::Vector2f(20, 80));
+        ball = new Cong::Ball(BALL_RADIUS, 0);
+        paddle1 = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT));
+        paddle2 = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT));
         
-        ball->setPosition(width * 0.5 - ball->getRadius(), height * 0.5 - ball->getRadius());
-        ball->setDirection(sf::Vector2f(1, 0));
-        paddle1->setPosition(PADDING, height * 0.5 - (paddle1->getSize().y * 0.5));
-        paddle2->setPosition(width - (paddle2->getSize().x + PADDING), height * 0.5 - (paddle2->getSize().y * 0.5));
+        ball->setPosition(width * 0.5 - BALL_RADIUS, height * 0.5 - BALL_RADIUS);
+        paddle1->setPosition(PADDING, height * 0.5 - (PADDLE_HEIGHT* 0.5));
+        paddle2->setPosition(width - (PADDLE_WIDTH + PADDING), height * 0.5 - (PADDLE_HEIGHT * 0.5));
         
 	}
 
@@ -46,14 +47,28 @@ namespace Cong {
 	void Game::update() {
         
         sf::Vector2f ballPositionNext((ball->getPosition().x + ball->getDirection().x * ball->getSpeed()), (ball->getPosition().y + ball->getDirection().x * ball->getSpeed()));
+       
+        // TODO broken
+        if (ballPositionNext.x <= paddle1->getPosition().x + PADDLE_WIDTH) {
+            if (ballPositionNext.y >= paddle1->getPosition().y && ballPositionNext.y <= paddle1->getPosition().y + PADDLE_HEIGHT) {
+                ball->setDirection(sf::Vector2f(-ball->getDirection().x, ball->getDirection().y));
+            }
+        }
+        
+        // TODO broken
+        if (ballPositionNext.x + ball->getRadius() * 2 >= paddle2->getPosition().x) {
+            if (ballPositionNext.y >= paddle2->getPosition().y && ballPositionNext.y <= paddle2->getPosition().y + PADDLE_HEIGHT) {
+                ball->setDirection(sf::Vector2f(-ball->getDirection().x, ball->getDirection().y));
+            }
+        }
         
         if (ballPositionNext.x < 0) {
             ballPositionNext.x = 0;
             ball->setDirection(sf::Vector2f(-ball->getDirection().x, ball->getDirection().y));
         }
         
-        if (ballPositionNext.x > width - ball->getRadius()) {
-            ballPositionNext.x = width - ball->getRadius();
+        if (ballPositionNext.x > width - ball->getRadius() * 2) {
+            ballPositionNext.x = width - ball->getRadius() * 2;
             ball->setDirection(sf::Vector2f(-ball->getDirection().x, ball->getDirection().y));
         }
     
@@ -62,11 +77,10 @@ namespace Cong {
             ball->setDirection(sf::Vector2f(ball->getDirection().x, -ball->getDirection().y));
         }
         
-        if (ballPositionNext.y > height - ball->getRadius()) {
-            ballPositionNext.y = height - ball->getRadius();
+        if (ballPositionNext.y > height - ball->getRadius() * 2) {
+            ballPositionNext.y = height - ball->getRadius() * 2;
             ball->setDirection(sf::Vector2f(ball->getDirection().x, -ball->getDirection().y));
         }
-        
         
         ball->move(ball->getDirection().x * ball->getSpeed(), ball->getDirection().y * ball->getSpeed());
         
@@ -127,6 +141,7 @@ namespace Cong {
         }
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
+            ball->setDirection(sf::Vector2f(1, 0));
             ball->setSpeed(1);
         }
         
