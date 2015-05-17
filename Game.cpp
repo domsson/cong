@@ -1,23 +1,32 @@
+#include <chrono>
+#include <thread>
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <SFML/System.hpp>
 #include "Game.hpp"
 
 namespace Cong {
+
+	static const int TARGET_FPS = 50;
+	static const float SECONDS_PER_FRAME = 1.0 / TARGET_FPS;
     
     static const int PADDING = 20;
     static const int PADDLE_WIDTH = 20;
     static const int PADDLE_HEIGHT = 80;
+	static const int PADDLE_SPEED = 150;
     static const int BALL_RADIUS = 10;
+	static const int BALL_SPEED = 200;
 
 	Game::Game(const std::string &title, int width, int height) : title(title), width(width), height(height) {
         window = new sf::RenderWindow(sf::VideoMode(width, height), title);
         
         ball = new Cong::Ball(BALL_RADIUS, 0);
-        paddle1 = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT));
-        paddle2 = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT));
+        paddle1 = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
+        paddle2 = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
         
-        ball->setPosition(width * 0.5 - BALL_RADIUS, height * 0.5 - BALL_RADIUS);
-        paddle1->setPosition(PADDING, height * 0.5 - (PADDLE_HEIGHT* 0.5));
+        ball->setPosition(width * 0.5, height * 0.5); // The Ball's origin is at its center!
+        paddle1->setPosition(PADDING, height * 0.5 - (PADDLE_HEIGHT * 0.5));
         paddle2->setPosition(width - (PADDLE_WIDTH + PADDING), height * 0.5 - (PADDLE_HEIGHT * 0.5));
         
 	}
@@ -35,7 +44,21 @@ namespace Cong {
 
 	void Game::run() {
 
+		sf::Clock clock;
+		std::cout << "Target SPF: " << SECONDS_PER_FRAME << std::endl;
+
 		while (window->isOpen()) {
+			sf::Time elapsed = clock.restart();
+			float elapsedSeconds = elapsed.asSeconds();
+			// std::cout << "Elapsed: " << elapsedSeconds << "s\n"; 
+
+			// We're gonna be optimistic and assume no computer will lage behind
+			if (elapsedSeconds < SECONDS_PER_FRAME) {
+				long sleepingTime = (SECONDS_PER_FRAME - elapsedSeconds) * 1000;
+				// std::cout << "Sleeping for " << sleepingTime << std::endl;
+				std::this_thread::sleep_for(std::chrono::milliseconds(sleepingTime));
+			}
+
             processEvents();
             processInputs();
             
@@ -46,43 +69,41 @@ namespace Cong {
 
 	void Game::update() {
         
-        sf::Vector2f ballPositionNext((ball->getPosition().x + ball->getDirection().x * ball->getSpeed()), (ball->getPosition().y + ball->getDirection().x * ball->getSpeed()));
-       
-        // TODO broken
-        if (ballPositionNext.x <= paddle1->getPosition().x + PADDLE_WIDTH) {
-            if (ballPositionNext.y >= paddle1->getPosition().y && ballPositionNext.y <= paddle1->getPosition().y + PADDLE_HEIGHT) {
-                ball->setDirection(sf::Vector2f(-ball->getDirection().x, ball->getDirection().y));
-            }
+		float ballSpeed = ball->getSpeed() * SECONDS_PER_FRAME;
+
+        sf::Vector2f ballPositionNext((ball->getPosition().x + ball->getDirection().x * ballSpeed), (ball->getPosition().y + ball->getDirection().x * ballSpeed));
+        
+		if (ballPositionNext.x - BALL_RADIUS <= paddle1->getPosition().x + PADDLE_WIDTH) {
+			std::cout << "karambi!\n";
+			if (ballPositionNext.y >= paddle1->getPosition().y
+				 && ballPositionNext.y <= paddle1->getPosition().y + PADDLE_HEIGHT) {
+				std::cout << "korombishi!!!\n";
+				ball->reverseDirectionHorizontal();
+			}
+		}
+		
+
+        if (ballPositionNext.x <= 0 + BALL_RADIUS) {
+            ballPositionNext.x = 0 + BALL_RADIUS;
+			ball->reverseDirectionHorizontal();
         }
         
-        // TODO broken
-        if (ballPositionNext.x + ball->getRadius() * 2 >= paddle2->getPosition().x) {
-            if (ballPositionNext.y >= paddle2->getPosition().y && ballPositionNext.y <= paddle2->getPosition().y + PADDLE_HEIGHT) {
-                ball->setDirection(sf::Vector2f(-ball->getDirection().x, ball->getDirection().y));
-            }
-        }
-        
-        if (ballPositionNext.x < 0) {
-            ballPositionNext.x = 0;
-            ball->setDirection(sf::Vector2f(-ball->getDirection().x, ball->getDirection().y));
-        }
-        
-        if (ballPositionNext.x > width - ball->getRadius() * 2) {
-            ballPositionNext.x = width - ball->getRadius() * 2;
-            ball->setDirection(sf::Vector2f(-ball->getDirection().x, ball->getDirection().y));
+        if (ballPositionNext.x >= width - BALL_RADIUS) {
+            ballPositionNext.x = width - BALL_RADIUS;
+			ball->reverseDirectionHorizontal();
         }
     
-        if (ballPositionNext.y < 0) {
-            ballPositionNext.y = 0;
-            ball->setDirection(sf::Vector2f(ball->getDirection().x, -ball->getDirection().y));
+        if (ballPositionNext.y <= 0 + BALL_RADIUS) {
+            ballPositionNext.y = 0 + BALL_RADIUS;
+            ball->reverseDirectionVertical();
         }
         
-        if (ballPositionNext.y > height - ball->getRadius() * 2) {
-            ballPositionNext.y = height - ball->getRadius() * 2;
-            ball->setDirection(sf::Vector2f(ball->getDirection().x, -ball->getDirection().y));
+        if (ballPositionNext.y >= height - BALL_RADIUS) {
+            ballPositionNext.y = height - BALL_RADIUS;
+            ball->reverseDirectionVertical();
         }
         
-        ball->move(ball->getDirection().x * ball->getSpeed(), ball->getDirection().y * ball->getSpeed());
+        ball->move(ball->getDirection().x * ballSpeed, ball->getDirection().y * ballSpeed);
         
 	}
 
@@ -110,7 +131,7 @@ namespace Cong {
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
             sf::Vector2f paddle1Pos = paddle1->getPosition();
-            int paddle1Y = paddle1Pos.y - 1;
+            int paddle1Y = paddle1Pos.y - PADDLE_SPEED * SECONDS_PER_FRAME;
             paddle1Y = paddle1Y < 0 ? 0 : paddle1Y;
             
             paddle1->setPosition(sf::Vector2f(paddle1Pos.x, paddle1Y));
@@ -118,7 +139,7 @@ namespace Cong {
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
             sf::Vector2f paddle1Pos = paddle1->getPosition();
-            int paddle1Y = paddle1Pos.y + 1;
+            int paddle1Y = paddle1Pos.y + PADDLE_SPEED * SECONDS_PER_FRAME;
             paddle1Y = paddle1Y + paddle1->getSize().y > height ? height - paddle1->getSize().y : paddle1Y;
             
             paddle1->setPosition(sf::Vector2f(paddle1Pos.x, paddle1Y));
@@ -126,7 +147,7 @@ namespace Cong {
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
             sf::Vector2f paddle2Pos = paddle2->getPosition();
-            int paddle2Y = paddle2Pos.y - 1;
+            int paddle2Y = paddle2Pos.y - PADDLE_SPEED * SECONDS_PER_FRAME;
             paddle2Y = paddle2Y < 0 ? 0 : paddle2Y;
             
             paddle2->setPosition(sf::Vector2f(paddle2Pos.x, paddle2Y));
@@ -134,7 +155,7 @@ namespace Cong {
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
             sf::Vector2f paddle2Pos = paddle2->getPosition();
-            int paddle2Y = paddle2Pos.y + 1;
+            int paddle2Y = paddle2Pos.y + PADDLE_SPEED * SECONDS_PER_FRAME;
             paddle2Y = paddle2Y + paddle2->getSize().y > height ? height - paddle2->getSize().y  : paddle2Y;
             
             paddle2->setPosition(sf::Vector2f(paddle2Pos.x, paddle2Y));
@@ -142,17 +163,17 @@ namespace Cong {
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
             ball->setDirection(sf::Vector2f(1, 0));
-            ball->setSpeed(1);
+            ball->setSpeed(BALL_SPEED);
         }
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::V)) {
             ball->setDirection(sf::Vector2f(0, 1));
-            ball->setSpeed(1);
+            ball->setSpeed(BALL_SPEED);
         }
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
             ball->setDirection(sf::Vector2f(1, 1));
-            ball->setSpeed(1);
+            ball->setSpeed(BALL_SPEED);
         }
 	}
 

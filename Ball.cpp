@@ -1,9 +1,11 @@
 #include "Ball.hpp"
+#include <SFML/Graphics.hpp>
 
 namespace Cong {
     
-    Ball::Ball(int size, int speed) : sf::CircleShape(size), speed(speed) {
+    Ball::Ball(int radius, int speed) : sf::CircleShape(radius), speed(speed) {
         direction = new sf::Vector2f(0, 0);
+		setOrigin(radius, radius);
     }
     
     Ball::~Ball() {
@@ -25,5 +27,17 @@ namespace Cong {
     const sf::Vector2f &Ball::getDirection() {
         return *direction;
     }
+
+	int Ball::getDiameter() {
+		return getRadius() + getRadius();
+	}
+
+	void Ball::reverseDirectionHorizontal() {
+		direction->x = -direction->x;
+	}
+
+	void Ball::reverseDirectionVertical() {
+		direction->y = -direction->y;
+	}
     
 }

@@ -19,6 +19,10 @@ public:
     int getSpeed();
     void setDirection(const sf::Vector2f &direction);
     const sf::Vector2f &getDirection();
+	int getDiameter();
+
+	void reverseDirectionHorizontal();
+	void reverseDirectionVertical();
 
 };
 
