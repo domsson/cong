@@ -81,8 +81,10 @@ namespace Cong {
 			if (ballPositionNext.x - BALL_RADIUS <= paddleLeft->getPosition().x) {
 				if (ballPositionNext.y >= paddleLeft->getPosition().y - PADDLE_HEIGHT * 0.5
 					 && ballPositionNext.y <= paddleLeft->getPosition().y + PADDLE_HEIGHT * 0.5) {
+					float yDiff = (ballPositionNext.y - paddleLeft->getPosition().y) / (PADDLE_HEIGHT * 0.5);
 					ballPositionNext.x = paddleLeft->getPosition().x + BALL_RADIUS;
 					ball->reverseDirectionHorizontal();
+					ball->slope(yDiff);
 				}
 			}
 		}
@@ -92,8 +94,10 @@ namespace Cong {
 			if (ballPositionNext.x + BALL_RADIUS >= paddleRight->getPosition().x) {
 				if (ballPositionNext.y >= paddleRight->getPosition().y - PADDLE_HEIGHT * 0.5
 					 && ballPositionNext.y <= paddleRight->getPosition().y + PADDLE_HEIGHT * 0.5) {
+					float yDiff = (ballPositionNext.y - paddleRight->getPosition().y) / (PADDLE_HEIGHT * 0.5);					
 					ballPositionNext.x = paddleRight->getPosition().x - BALL_RADIUS;
 					ball->reverseDirectionHorizontal();
+					ball->slope(yDiff);
 				}
 			}
 		}

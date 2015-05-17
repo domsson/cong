@@ -63,4 +63,8 @@ namespace Cong {
 		direction->y = -direction->y;
 	}
     
+	void Ball::slope(float amount) {
+		direction->y = amount;
+		normalizeDirection();
+	}
 }

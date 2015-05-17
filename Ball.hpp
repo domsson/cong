@@ -31,6 +31,8 @@ public:
 	void reverseDirectionHorizontal();
 	void reverseDirectionVertical();
 
+	void slope(float amount);
+
 };
 
 }
