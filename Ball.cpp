@@ -22,7 +22,14 @@ namespace Cong {
     
     void Ball::setDirection(const sf::Vector2f &direction) {
         this->direction = new sf::Vector2f(direction.x, direction.y);
+		normalizeDirection();
     }
+
+	void Ball::normalizeDirection() {
+		float length = std::sqrt((direction->x * direction->x) + (direction->y * direction->y));
+		direction->x = direction->x / length;
+		direction->y = direction->y / length;
+	}
     
     const sf::Vector2f &Ball::getDirection() {
         return *direction;
@@ -30,6 +37,22 @@ namespace Cong {
 
 	int Ball::getDiameter() {
 		return getRadius() + getRadius();
+	}
+
+	bool Ball::isMovingLeft() {
+		return direction->x < 0;
+	}
+
+	bool Ball::isMovingRight() {
+		return direction->x > 0;
+	}
+
+	bool Ball::isMovingUp() {
+		return direction->y < 0;
+	}
+
+	bool Ball::isMovingDown() {
+		return direction->y > 0;
 	}
 
 	void Ball::reverseDirectionHorizontal() {

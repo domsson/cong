@@ -1,5 +1,6 @@
 #include <chrono>
 #include <thread>
+#include <cmath>
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -22,12 +23,14 @@ namespace Cong {
         window = new sf::RenderWindow(sf::VideoMode(width, height), title);
         
         ball = new Cong::Ball(BALL_RADIUS, 0);
-        paddle1 = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
-        paddle2 = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
-        
+        paddleLeft = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
+		paddleLeft->setOrigin(PADDLE_WIDTH, PADDLE_HEIGHT * 0.5);
+        paddleRight = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
+		paddleRight->setOrigin(0, PADDLE_HEIGHT * 0.5);      
+
         ball->setPosition(width * 0.5, height * 0.5); // The Ball's origin is at its center!
-        paddle1->setPosition(PADDING, height * 0.5 - (PADDLE_HEIGHT * 0.5));
-        paddle2->setPosition(width - (PADDLE_WIDTH + PADDING), height * 0.5 - (PADDLE_HEIGHT * 0.5));
+        paddleLeft->setPosition(PADDING + PADDLE_WIDTH, height * 0.5); // Origin at right edge, vertically centered
+        paddleRight->setPosition(width - (PADDLE_WIDTH + PADDING), height * 0.5); // Origin at left edge, vertically centered
         
 	}
 
@@ -37,8 +40,8 @@ namespace Cong {
 		delete window;
 		delete ball;
 		delete court;
-		delete paddle1;
-		delete paddle2;
+		delete paddleLeft;
+		delete paddleRight;
 		delete scoreDisplay;
 	}
 
@@ -73,12 +76,25 @@ namespace Cong {
 
         sf::Vector2f ballPositionNext((ball->getPosition().x + ball->getDirection().x * ballSpeed), (ball->getPosition().y + ball->getDirection().x * ballSpeed));
         
-		if (ballPositionNext.x - BALL_RADIUS <= paddle1->getPosition().x + PADDLE_WIDTH) {
-			std::cout << "karambi!\n";
-			if (ballPositionNext.y >= paddle1->getPosition().y
-				 && ballPositionNext.y <= paddle1->getPosition().y + PADDLE_HEIGHT) {
-				std::cout << "korombishi!!!\n";
-				ball->reverseDirectionHorizontal();
+		// CCollision with left paddle?
+		if (ball->isMovingLeft()) {
+			if (ballPositionNext.x - BALL_RADIUS <= paddleLeft->getPosition().x) {
+				if (ballPositionNext.y >= paddleLeft->getPosition().y - PADDLE_HEIGHT * 0.5
+					 && ballPositionNext.y <= paddleLeft->getPosition().y + PADDLE_HEIGHT * 0.5) {
+					ballPositionNext.x = paddleLeft->getPosition().x + BALL_RADIUS;
+					ball->reverseDirectionHorizontal();
+				}
+			}
+		}
+
+		// Collision with right paddle?
+		if (ball->isMovingRight()) {
+			if (ballPositionNext.x + BALL_RADIUS >= paddleRight->getPosition().x) {
+				if (ballPositionNext.y >= paddleRight->getPosition().y - PADDLE_HEIGHT * 0.5
+					 && ballPositionNext.y <= paddleRight->getPosition().y + PADDLE_HEIGHT * 0.5) {
+					ballPositionNext.x = paddleRight->getPosition().x - BALL_RADIUS;
+					ball->reverseDirectionHorizontal();
+				}
 			}
 		}
 		
@@ -110,8 +126,8 @@ namespace Cong {
 	void Game::render() {
         window->clear();
         window->draw(*ball);
-        window->draw(*paddle1);
-        window->draw(*paddle2);
+        window->draw(*paddleLeft);
+        window->draw(*paddleRight);
         window->display();
 	}
     
@@ -130,35 +146,35 @@ namespace Cong {
         }
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-            sf::Vector2f paddle1Pos = paddle1->getPosition();
-            int paddle1Y = paddle1Pos.y - PADDLE_SPEED * SECONDS_PER_FRAME;
-            paddle1Y = paddle1Y < 0 ? 0 : paddle1Y;
+            sf::Vector2f paddleLeftPos = paddleLeft->getPosition();
+            int paddleLeftY = paddleLeftPos.y - PADDLE_SPEED * SECONDS_PER_FRAME;
+            paddleLeftY = paddleLeftY - PADDLE_HEIGHT * 0.5 < 0 ? PADDLE_HEIGHT * 0.5  : paddleLeftY;
             
-            paddle1->setPosition(sf::Vector2f(paddle1Pos.x, paddle1Y));
+            paddleLeft->setPosition(sf::Vector2f(paddleLeftPos.x, paddleLeftY));
         }
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-            sf::Vector2f paddle1Pos = paddle1->getPosition();
-            int paddle1Y = paddle1Pos.y + PADDLE_SPEED * SECONDS_PER_FRAME;
-            paddle1Y = paddle1Y + paddle1->getSize().y > height ? height - paddle1->getSize().y : paddle1Y;
+            sf::Vector2f paddleLeftPos = paddleLeft->getPosition();
+            int paddleLeftY = paddleLeftPos.y + PADDLE_SPEED * SECONDS_PER_FRAME;
+            paddleLeftY = paddleLeftY + PADDLE_HEIGHT * 0.5 > height ? height - PADDLE_HEIGHT * 0.5  : paddleLeftY;
             
-            paddle1->setPosition(sf::Vector2f(paddle1Pos.x, paddle1Y));
+            paddleLeft->setPosition(sf::Vector2f(paddleLeftPos.x, paddleLeftY));
         }
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-            sf::Vector2f paddle2Pos = paddle2->getPosition();
-            int paddle2Y = paddle2Pos.y - PADDLE_SPEED * SECONDS_PER_FRAME;
-            paddle2Y = paddle2Y < 0 ? 0 : paddle2Y;
+            sf::Vector2f paddleRightPos = paddleRight->getPosition();
+            int paddleRightY = paddleRightPos.y - PADDLE_SPEED * SECONDS_PER_FRAME;
+            paddleRightY = paddleRightY - PADDLE_HEIGHT * 0.5 < 0  ? PADDLE_HEIGHT * 0.5  : paddleRightY;
             
-            paddle2->setPosition(sf::Vector2f(paddle2Pos.x, paddle2Y));
+            paddleRight->setPosition(sf::Vector2f(paddleRightPos.x, paddleRightY));
         }
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-            sf::Vector2f paddle2Pos = paddle2->getPosition();
-            int paddle2Y = paddle2Pos.y + PADDLE_SPEED * SECONDS_PER_FRAME;
-            paddle2Y = paddle2Y + paddle2->getSize().y > height ? height - paddle2->getSize().y  : paddle2Y;
+            sf::Vector2f paddleRightPos = paddleRight->getPosition();
+            int paddleRightY = paddleRightPos.y + PADDLE_SPEED * SECONDS_PER_FRAME;
+            paddleRightY = paddleRightY + PADDLE_HEIGHT * 0.5  > height ? height - PADDLE_HEIGHT * 0.5   : paddleRightY;
             
-            paddle2->setPosition(sf::Vector2f(paddle2Pos.x, paddle2Y));
+            paddleRight->setPosition(sf::Vector2f(paddleRightPos.x, paddleRightY));
         }
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {

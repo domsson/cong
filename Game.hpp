@@ -17,8 +17,8 @@ private:
 	sf::RenderWindow *window;
 	Cong::Court *court;
 	Cong::Ball *ball;
-	Cong::Paddle *paddle1;
-	Cong::Paddle *paddle2;
+	Cong::Paddle *paddleLeft;
+	Cong::Paddle *paddleRight;
 	Cong::ScoreDisplay *scoreDisplay;
 
 	int width;
