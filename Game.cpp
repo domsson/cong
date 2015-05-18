@@ -17,21 +17,25 @@ namespace Cong {
     static const int PADDLE_HEIGHT = 80;
 	static const int PADDLE_SPEED = 150;
     static const int BALL_RADIUS = 10;
-	static const int BALL_SPEED = 200;
+	static const int BALL_SPEED = 225;
+    static const int FILL_COLOR[] = {0, 255, 0};
 
 	Game::Game(const std::string &title, int width, int height) : title(title), width(width), height(height) {
         window = new sf::RenderWindow(sf::VideoMode(width, height), title);
         
         ball = new Cong::Ball(BALL_RADIUS, 0);
+        ball->setPosition(width * 0.5, height * 0.5); // The Ball's origin is at its center!
+        ball->setFillColor(sf::Color(FILL_COLOR[0], FILL_COLOR[1], FILL_COLOR[2]));
+        
         paddleLeft = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
 		paddleLeft->setOrigin(PADDLE_WIDTH, PADDLE_HEIGHT * 0.5);
-        paddleRight = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
-		paddleRight->setOrigin(0, PADDLE_HEIGHT * 0.5);      
-
-        ball->setPosition(width * 0.5, height * 0.5); // The Ball's origin is at its center!
         paddleLeft->setPosition(PADDING + PADDLE_WIDTH, height * 0.5); // Origin at right edge, vertically centered
-        paddleRight->setPosition(width - (PADDLE_WIDTH + PADDING), height * 0.5); // Origin at left edge, vertically centered
+        paddleLeft->setFillColor(sf::Color(FILL_COLOR[0], FILL_COLOR[1], FILL_COLOR[2]));
         
+        paddleRight = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
+		paddleRight->setOrigin(0, PADDLE_HEIGHT * 0.5);
+        paddleRight->setPosition(width - (PADDLE_WIDTH + PADDING), height * 0.5); // Origin at left edge, vertically centered
+        paddleRight->setFillColor(sf::Color(FILL_COLOR[0], FILL_COLOR[1], FILL_COLOR[2]));
 	}
 
 	Game::~Game() {
@@ -103,14 +107,16 @@ namespace Cong {
 		}
 		
 
-        if (ballPositionNext.x <= 0 + BALL_RADIUS) {
-            ballPositionNext.x = 0 + BALL_RADIUS;
-			ball->reverseDirectionHorizontal();
+        if (ballPositionNext.x + BALL_RADIUS <= 0) {
+            // ballPositionNext.x = 0 + BALL_RADIUS;
+			// ball->reverseDirectionHorizontal();
+            serve();
         }
         
-        if (ballPositionNext.x >= width - BALL_RADIUS) {
-            ballPositionNext.x = width - BALL_RADIUS;
-			ball->reverseDirectionHorizontal();
+        if (ballPositionNext.x - BALL_RADIUS >= width) {
+            // ballPositionNext.x = width - BALL_RADIUS;
+			// ball->reverseDirectionHorizontal();
+            serve();
         }
     
         if (ballPositionNext.y <= 0 + BALL_RADIUS) {
@@ -196,5 +202,11 @@ namespace Cong {
             ball->setSpeed(BALL_SPEED);
         }
 	}
+    
+    void Game::serve() {
+        ball->setSpeed(0);
+        ball->setDirection(sf::Vector2f(1, 1));
+        ball->setPosition(width * 0.5, height * 0.5);
+    }
 
 }

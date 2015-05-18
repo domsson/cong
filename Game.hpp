@@ -29,6 +29,8 @@ private:
 	void processInputs();
     void update();
 	void render();
+    
+    void serve();
 	
 public:
 	Game(const std::string &title, int width, int height);

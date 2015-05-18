@@ -24,6 +24,12 @@ namespace Cong {
         this->direction = new sf::Vector2f(direction.x, direction.y);
 		normalizeDirection();
     }
+    
+    void Ball::setDirection(float x, float y) {
+        direction->x = x;
+        direction->y = y;
+        normalizeDirection();
+    }
 
 	void Ball::normalizeDirection() {
 		float length = std::sqrt((direction->x * direction->x) + (direction->y * direction->y));

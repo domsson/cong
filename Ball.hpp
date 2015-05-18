@@ -20,6 +20,7 @@ public:
     void setSpeed(int speed);
     int getSpeed();
     void setDirection(const sf::Vector2f &direction);
+    void setDirection(float x, float y);
     const sf::Vector2f &getDirection();
 	int getDiameter();
 
