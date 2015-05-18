@@ -6,7 +6,7 @@
 
 namespace Cong {
 
-class Court {
+    class Court : public sf::Drawable {
     
 private:
     int width;
@@ -17,12 +17,14 @@ private:
     int segmentWidth;
     
     void initSegments();
+        
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 public:
 	Court(int width, int height, int segmentWidth, int numSegments);
 	~Court();
     
-    void draw(sf::RenderWindow &window);
+    //void draw(sf::RenderWindow &window);
 
 };
 

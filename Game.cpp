@@ -23,7 +23,7 @@ namespace Cong {
 	Game::Game(const std::string &title, int width, int height) : title(title), width(width), height(height) {
         window = new sf::RenderWindow(sf::VideoMode(width, height), title);
         
-        court = new Cong::Court(width, height, 4, 17);
+        court = new Cong::Court(width, height, 4, 15);
         
         ball = new Cong::Ball(BALL_RADIUS, 0);
         ball->setPosition(width * 0.5, height * 0.5); // The Ball's origin is at its center!
@@ -137,7 +137,7 @@ namespace Cong {
 
 	void Game::render() {
         window->clear();
-        court->draw(*window);
+        window->draw(*court);
         window->draw(*ball);
         window->draw(*paddleLeft);
         window->draw(*paddleRight);

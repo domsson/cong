@@ -34,10 +34,18 @@ namespace Cong {
         }
     }
     
+    /*
     void Court::draw(sf::RenderWindow &window) {
         
         for (int i=0; i < numSegments; ++i) {
             window.draw(*lineSegments[i]);
+        }
+    }
+    */
+    
+    void Court::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+        for (int i=0; i < numSegments; ++i) {
+            target.draw(*lineSegments[i], states);
         }
     }
     
