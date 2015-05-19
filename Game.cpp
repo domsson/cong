@@ -17,7 +17,7 @@ namespace Cong {
     static const int PADDLE_HEIGHT = 80;
 	static const int PADDLE_SPEED = 150;
     static const int BALL_RADIUS = 10;
-	static const int BALL_SPEED = 225;
+	static const int BALL_SPEED = 100;
     static const int FILL_COLOR[] = {0, 255, 0};
 
 	Game::Game(const std::string &title, int width, int height) : title(title), width(width), height(height) {
@@ -79,20 +79,70 @@ namespace Cong {
 	void Game::update() {
         
 		float ballSpeed = ball->getSpeed() * SECONDS_PER_FRAME;
-
         sf::Vector2f ballPositionNext((ball->getPosition().x + ball->getDirection().x * ballSpeed), (ball->getPosition().y + ball->getDirection().x * ballSpeed));
         
-		// CCollision with left paddle?
+		// Collision with left paddle?
 		if (ball->isMovingLeft()) {
+            
+            // Collision with right edge?
 			if (ballPositionNext.x - BALL_RADIUS <= paddleLeft->getPosition().x) {
-				if (ballPositionNext.y >= paddleLeft->getPosition().y - PADDLE_HEIGHT * 0.5
-					 && ballPositionNext.y <= paddleLeft->getPosition().y + PADDLE_HEIGHT * 0.5) {
-					float yDiff = (ballPositionNext.y - paddleLeft->getPosition().y) / (PADDLE_HEIGHT * 0.5);
-					ballPositionNext.x = paddleLeft->getPosition().x + BALL_RADIUS;
-					ball->reverseDirectionHorizontal();
-					ball->slope(yDiff);
-				}
+                // Let's have some cool circle line intersection math here!
+                sf::Vector2f paddleLeftY(paddleLeft->getPosition().y - PADDLE_HEIGHT * 0.5, paddleLeft->getPosition().y + PADDLE_HEIGHT * 0.5);
+                float radicand = - (paddleLeft->getPosition().x * paddleLeft->getPosition().x) - (ballPositionNext.x * ballPositionNext.x)
+                                    + (2 * ballPositionNext.x * paddleLeft->getPosition().x) + (BALL_RADIUS * BALL_RADIUS);
+                
+                if (radicand >= 0) {
+                    float y1 = ballPositionNext.y + std::sqrt(radicand);
+                    float y2 = ballPositionNext.y - std::sqrt(radicand);
+                    
+                    if (y1 >= paddleLeftY.x && y2 <= paddleLeftY.y) {
+                        float yDiff = (ballPositionNext.y - paddleLeft->getPosition().y) / (PADDLE_HEIGHT * 0.5);
+                        ballPositionNext.x = paddleLeft->getPosition().x + BALL_RADIUS;
+                        ball->reverseDirectionHorizontal();
+                        ball->slope(yDiff);
+                    }
+                }
 			}
+            
+            // Collision with bottom edge?
+            if (ball->isMovingUp()) {
+                float paddleLeftBottomY = paddleLeft->getPosition().y + PADDLE_HEIGHT * 0.5;
+                if (ballPositionNext.y - BALL_RADIUS <= paddleLeftBottomY) {
+                    sf::Vector2f paddleLeftX(paddleLeft->getPosition().x - PADDLE_WIDTH, paddleLeft->getPosition().x);
+                    float radicand = - (paddleLeftBottomY * paddleLeftBottomY) - (ballPositionNext.y * ballPositionNext.y)
+                                        + (2 * paddleLeftBottomY * ballPositionNext.y) + (BALL_RADIUS * BALL_RADIUS);
+                    if (radicand >= 0) {
+                        float x1 = ballPositionNext.x - std::sqrt(radicand);
+                        float x2 = ballPositionNext.x + std::sqrt(radicand);
+                        
+                        if (x1 >= paddleLeft->getPosition().x - PADDLE_WIDTH && x1 <= paddleLeft->getPosition().x) {
+                            ballPositionNext.y = paddleLeftBottomY + BALL_RADIUS;
+                            ball->reverseDirectionVertical();
+                        }
+                    }
+                    
+                }
+            }
+            
+            // Collision with top edge?
+            else if (ball->isMovingDown()) {
+                float paddleLeftTopY = paddleLeft->getPosition().y - PADDLE_HEIGHT * 0.5;
+                if (ballPositionNext.y + BALL_RADIUS >= paddleLeftTopY) {
+                    sf::Vector2f paddleLeftX(paddleLeft->getPosition().x - PADDLE_WIDTH, paddleLeft->getPosition().x);
+                    float radicand = - (paddleLeftTopY * paddleLeftTopY) - (ballPositionNext.y * ballPositionNext.y)
+                                        + (2 * paddleLeftTopY * ballPositionNext.y) + (BALL_RADIUS * BALL_RADIUS);
+                    if (radicand >= 0) {
+                        float x1 = ballPositionNext.x - std::sqrt(radicand);
+                        float x2 = ballPositionNext.x + std::sqrt(radicand);
+                        
+                        if (x1 >= paddleLeft->getPosition().x - PADDLE_WIDTH && x1 <= paddleLeft->getPosition().x) {
+                            ballPositionNext.y = paddleLeftTopY - BALL_RADIUS;
+                            ball->reverseDirectionVertical();
+                        }
+                    }
+                    
+                }
+            }
 		}
 
 		// Collision with right paddle?
