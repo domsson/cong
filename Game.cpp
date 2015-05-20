@@ -84,7 +84,14 @@ namespace Cong {
         
 		// Collision with left paddle?
 		if (ball->isMovingLeft()) {
-            
+            if (ballPositionNext.x - BALL_RADIUS <= paddleLeft->getPosition().x) {
+				if (ball->intersects(paddleLeft->getGlobalBounds())) {
+					ball->reverseDirectionHorizontal();
+				}
+			}
+
+
+			/*
             // Collision with right edge?
 			if (ballPositionNext.x - BALL_RADIUS <= paddleLeft->getPosition().x) {
                 // Let's have some cool circle line intersection math here!
@@ -144,6 +151,7 @@ namespace Cong {
                     
                 }
             }
+		*/
 		}
 
 		// Collision with right paddle?

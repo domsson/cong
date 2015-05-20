@@ -1,4 +1,5 @@
 #include "Ball.hpp"
+#include "Physics.hpp"
 #include <SFML/Graphics.hpp>
 
 namespace Cong {
@@ -66,11 +67,7 @@ namespace Cong {
         return (point.x - getPosition().x) * (point.x - getPosition().x) + (point.y - getPosition().y) * (point.y - getPosition().y) == getRadius() * getRadius();
     }
     
-    bool Ball::intersects (const sf::FloatRect &rectangle) const {
-        // TODO: We don't actually need to check intersection with the rect's edges.
-        // We need a different math that 'simply' checks if any point within the circle intersects with
-        // any point within the rectangle.
-        
+    bool Ball::intersects (const sf::FloatRect &rectangle) const {        
         // http://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
         // http://stackoverflow.com/questions/18704999/how-to-fix-circle-and-rectangle-overlap-in-collision-response/18790389#18790389
         
@@ -80,75 +77,78 @@ namespace Cong {
         }
         
         // The ball's center is not within the rectangle, but it might still intersect with one of the four sides.
-        
-        /*
+		float rectLeft = rectangle.left;
+		float rectRight = rectangle.left + rectangle.width;
+		float rectTop = rectangle.top;
+		float rectBottom = rectangle.top + rectangle.height;
+
+		float ballLeft = getPosition().x - getRadius();
+		float ballRight = getPosition().x + getRadius();
+		float ballTop = getPosition().y - getRadius();
+		float ballBottom = getPosition().y + getRadius();
+
         // Collision with rect's right edge?
         if (isMovingLeft()) {
+			/*
+            float radicand = - (rectRight * rectRight) - (getPosition().x * getPosition().x)
+            				 + (2 * getPosition().x * rectRight) + (getRadius() * getRadius());
             
-			if (getPosition().x - BALL_RADIUS <= paddleLeft->getPosition().x) {
-                // Let's have some cool circle line intersection math here!
-                sf::Vector2f paddleLeftY(paddleLeft->getPosition().y - PADDLE_HEIGHT * 0.5, paddleLeft->getPosition().y + PADDLE_HEIGHT * 0.5);
-                float radicand = - (paddleLeft->getPosition().x * paddleLeft->getPosition().x) - (getPosition().x * getPosition().x)
-                + (2 * getPosition().x * paddleLeft->getPosition().x) + (BALL_RADIUS * BALL_RADIUS);
+            if (radicand >= 0) {
+                float y1 = getPosition().y + std::sqrt(radicand);
+                float y2 = getPosition().y - std::sqrt(radicand);
                 
-                if (radicand >= 0) {
-                    float y1 = getPosition().y + std::sqrt(radicand);
-                    float y2 = getPosition().y - std::sqrt(radicand);
-                    
-                    if (y1 >= paddleLeftY.x && y2 <= paddleLeftY.y) {
-                        float yDiff = (getPosition().y - paddleLeft->getPosition().y) / (PADDLE_HEIGHT * 0.5);
-                        getPosition().x = paddleLeft->getPosition().x + BALL_RADIUS;
-                        ball->reverseDirectionHorizontal();
-                        ball->slope(yDiff);
-                    }
+                if (y1 >= rectTop && y2 <= rectBottom) {
+					return true;
                 }
-			}
+            }
+			*/
+			return Physics::intersectionLineCircle(sf::Vector2f(rectRight, rectTop), sf::Vector2f(rectRight, rectBottom), getPosition(), getRadius());
 		}
         // Collision with rect's left edge?
         else if (isMovingRight()) {
+            float radicand = - (rectLeft * rectLeft) - (getPosition().x * getPosition().x)
+            				 + (2 * getPosition().x * rectLeft) + (getRadius() * getRadius());
             
+            if (radicand >= 0) {
+                float y1 = getPosition().y + std::sqrt(radicand);
+                float y2 = getPosition().y - std::sqrt(radicand);
+                
+                if (y1 >= rectTop && y2 <= rectBottom) {
+					return true;
+                }
+            }
         }
         
         // Collision with rect's bottom edge?
         if (isMovingUp()) {
-            float paddleLeftBottomY = paddleLeft->getPosition().y + PADDLE_HEIGHT * 0.5;
-            if (getPosition().y - BALL_RADIUS <= paddleLeftBottomY) {
-                sf::Vector2f paddleLeftX(paddleLeft->getPosition().x - PADDLE_WIDTH, paddleLeft->getPosition().x);
-                float radicand = - (paddleLeftBottomY * paddleLeftBottomY) - (getPosition().y * getPosition().y)
-                + (2 * paddleLeftBottomY * getPosition().y) + (BALL_RADIUS * BALL_RADIUS);
-                if (radicand >= 0) {
-                    float x1 = getPosition().x - std::sqrt(radicand);
-                    float x2 = getPosition().x + std::sqrt(radicand);
-                    
-                    if (x1 >= paddleLeft->getPosition().x - PADDLE_WIDTH && x1 <= paddleLeft->getPosition().x) {
-                        getPosition().y = paddleLeftBottomY + BALL_RADIUS;
-                        ball->reverseDirectionVertical();
-                    }
-                }
+            float radicand = - (rectBottom * rectBottom) - (getPosition().y * getPosition().y)
+            				 + (2 * rectBottom * getPosition().y) + (getRadius() * getRadius());
+
+            if (radicand >= 0) {
+                float x1 = getPosition().x - std::sqrt(radicand);
+                float x2 = getPosition().x + std::sqrt(radicand);
                 
+                if (x1 >= rectLeft && x1 <= rectRight) {
+					return true;
+                }
             }
         }
         
         // Collision with rect's top edge?
         else if (isMovingDown()) {
-            float paddleLeftTopY = paddleLeft->getPosition().y - PADDLE_HEIGHT * 0.5;
-            if (getPosition().y + BALL_RADIUS >= paddleLeftTopY) {
-                sf::Vector2f paddleLeftX(paddleLeft->getPosition().x - PADDLE_WIDTH, paddleLeft->getPosition().x);
-                float radicand = - (paddleLeftTopY * paddleLeftTopY) - (getPosition().y * getPosition().y)
-                + (2 * paddleLeftTopY * getPosition().y) + (BALL_RADIUS * BALL_RADIUS);
-                if (radicand >= 0) {
-                    float x1 = getPosition().x - std::sqrt(radicand);
-                    float x2 = getPosition().x + std::sqrt(radicand);
-                    
-                    if (x1 >= paddleLeft->getPosition().x - PADDLE_WIDTH && x1 <= paddleLeft->getPosition().x) {
-                        getPosition().y = paddleLeftTopY - BALL_RADIUS;
-                        ball->reverseDirectionVertical();
-                    }
-                }
+            float radicand = - (rectTop * rectTop) - (getPosition().y * getPosition().y)
+            				 + (2 * rectTop * getPosition().y) + (getRadius() * getRadius());
+
+            if (radicand >= 0) {
+                float x1 = getPosition().x - std::sqrt(radicand);
+                float x2 = getPosition().x + std::sqrt(radicand);
                 
+                if (x1 >= rectLeft && x1 <= rectRight) {
+					return true;
+                }
             }
         }
-         */
+        
         return false;
     }
 
