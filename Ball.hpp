@@ -18,16 +18,19 @@ public:
 	~Ball();
     
     void setSpeed(int speed);
-    int getSpeed();
+    int getSpeed() const;
     void setDirection(const sf::Vector2f &direction);
     void setDirection(float x, float y);
     const sf::Vector2f &getDirection();
-	int getDiameter();
+	int getDiameter() const;
 
-	bool isMovingLeft();
-	bool isMovingRight();
-	bool isMovingUp();
-	bool isMovingDown();
+	bool isMovingLeft() const;
+	bool isMovingRight() const;
+	bool isMovingUp() const;
+	bool isMovingDown() const;
+    
+    bool contains (const sf::Vector2f &point) const;
+    bool intersects (const sf::FloatRect &rectangle) const;
 
 	void reverseDirectionHorizontal();
 	void reverseDirectionVertical();

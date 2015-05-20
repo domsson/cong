@@ -17,7 +17,7 @@ namespace Cong {
     static const int PADDLE_HEIGHT = 80;
 	static const int PADDLE_SPEED = 150;
     static const int BALL_RADIUS = 10;
-	static const int BALL_SPEED = 100;
+	static const int BALL_SPEED = 225;
     static const int FILL_COLOR[] = {0, 255, 0};
 
 	Game::Game(const std::string &title, int width, int height) : title(title), width(width), height(height) {
@@ -80,6 +80,7 @@ namespace Cong {
         
 		float ballSpeed = ball->getSpeed() * SECONDS_PER_FRAME;
         sf::Vector2f ballPositionNext((ball->getPosition().x + ball->getDirection().x * ballSpeed), (ball->getPosition().y + ball->getDirection().x * ballSpeed));
+        sf::FloatRect paddleLeftBounds = paddleLeft->getGlobalBounds();
         
 		// Collision with left paddle?
 		if (ball->isMovingLeft()) {
