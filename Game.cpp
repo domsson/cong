@@ -87,21 +87,24 @@ namespace Cong {
         sf::Vector2f ballPositionNext((ball->getPosition().x + ball->getDirection().x * ballSpeed), (ball->getPosition().y + ball->getDirection().x * ballSpeed));
         sf::FloatRect paddleLeftBounds = paddleLeft->getGlobalBounds();
         
+		
+		if (ballPositionNext.x - BALL_RADIUS <= paddleLeft->getPosition().x) {
+            int edge = 0;
+			if (ball->intersects(paddleLeft->getGlobalBounds(), edge)) {
+                if ((edge & EDGE_RIGHT) == EDGE_RIGHT) {
+					float yDiff = (ballPositionNext.y - paddleLeft->getPosition().y) / (PADDLE_HEIGHT * 0.5);                    
+					ball->reverseDirectionHorizontal();
+					ball->slope(yDiff);
+                }
+                if (((edge & EDGE_TOP) == EDGE_TOP) || ((edge & EDGE_BOTTOM) == EDGE_BOTTOM)) {
+                    ball->reverseDirectionVertical();
+                }
+			}
+		}		
+
+
 		// Collision with left paddle?
 		if (ball->isMovingLeft()) {
-            if (ballPositionNext.x - BALL_RADIUS <= paddleLeft->getPosition().x) {
-                int edge = 0;
-				if (ball->intersects(paddleLeft->getGlobalBounds(), edge)) {
-                    if ((edge & EDGE_RIGHT) == EDGE_RIGHT) {
-                        ball->reverseDirectionHorizontal();
-                    }
-                    if (((edge & EDGE_TOP) == EDGE_TOP) || ((edge & EDGE_BOTTOM) == EDGE_BOTTOM)) {
-                        ball->reverseDirectionVertical();
-                    }
-				}
-			}
-
-
 			/*
             // Collision with right edge?
 			if (ballPositionNext.x - BALL_RADIUS <= paddleLeft->getPosition().x) {
@@ -272,6 +275,12 @@ namespace Cong {
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
             ball->setDirection(sf::Vector2f(1, 1));
+            ball->setSpeed(BALL_SPEED);
+        }
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
+			ball->setPosition(PADDING + BALL_RADIUS, height - BALL_RADIUS * 2 - PADDING);
+            ball->setDirection(sf::Vector2f(0, -1));
             ball->setSpeed(BALL_SPEED);
         }
 	}

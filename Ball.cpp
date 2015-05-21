@@ -64,7 +64,6 @@ namespace Cong {
 	}
     
     bool Ball::contains(const sf::Vector2f &point) const {
-        // TODO
         return (point.x - getPosition().x) * (point.x - getPosition().x) + (point.y - getPosition().y) * (point.y - getPosition().y) == getRadius() * getRadius();
     }
     
@@ -90,7 +89,6 @@ namespace Cong {
 
         // Collision with rect's right edge?
         if (isMovingLeft()) {
-			/*
             float radicand = - (rectRight * rectRight) - (getPosition().x * getPosition().x)
             				 + (2 * getPosition().x * rectRight) + (getRadius() * getRadius());
             
@@ -102,12 +100,9 @@ namespace Cong {
 					return true;
                 }
             }
-			*/
-			return Physics::intersectionLineCircle(sf::Vector2f(rectRight, rectTop), sf::Vector2f(rectRight, rectBottom), getPosition(), getRadius());
 		}
         // Collision with rect's left edge?
         else if (isMovingRight()) {
-            /*
             float radicand = - (rectLeft * rectLeft) - (getPosition().x * getPosition().x)
             				 + (2 * getPosition().x * rectLeft) + (getRadius() * getRadius());
             
@@ -119,13 +114,10 @@ namespace Cong {
 					return true;
                 }
             }
-            */
-            return Physics::intersectionLineCircle(sf::Vector2f(rectLeft, rectTop), sf::Vector2f(rectLeft, rectBottom), getPosition(), getRadius());
         }
         
         // Collision with rect's bottom edge?
         if (isMovingUp()) {
-            /*
             float radicand = - (rectBottom * rectBottom) - (getPosition().y * getPosition().y)
             				 + (2 * rectBottom * getPosition().y) + (getRadius() * getRadius());
 
@@ -137,13 +129,10 @@ namespace Cong {
 					return true;
                 }
             }
-            */
-            return Physics::intersectionLineCircle(sf::Vector2f(rectLeft, rectBottom), sf::Vector2f(rectRight, rectBottom), getPosition(), getRadius());
         }
         
         // Collision with rect's top edge?
         else if (isMovingDown()) {
-            /*
             float radicand = - (rectTop * rectTop) - (getPosition().y * getPosition().y)
             				 + (2 * rectTop * getPosition().y) + (getRadius() * getRadius());
 
@@ -155,8 +144,6 @@ namespace Cong {
 					return true;
                 }
             }
-            */
-            return Physics::intersectionLineCircle(sf::Vector2f(rectLeft, rectTop), sf::Vector2f(rectRight, rectTop), getPosition(), getRadius());
         }
         
         return false;
@@ -165,6 +152,11 @@ namespace Cong {
     bool Ball::intersects(const sf::FloatRect &rectangle, int &edges) const {
         bool intersects = false;
         edges = 0;
+
+		sf::Vector2f rectTopLeft(rectangle.left, rectangle.top);
+		sf::Vector2f rectTopRight(rectangle.left + rectangle.width, rectangle.top);
+		sf::Vector2f rectBottomLeft(rectangle.left, rectangle.top + rectangle.height);
+		sf::Vector2f rectBottomRight(rectangle.left + rectangle.width, rectangle.top + rectangle.height);
         
         // The ball's center is within the rectangle, so they definitely intersect.
         if (rectangle.contains(getPosition().x, getPosition().y)) {
@@ -173,46 +165,37 @@ namespace Cong {
         }
         
         // The ball's center is not within the rectangle, but it might still intersect with one of the four sides.
-		float rectLeft = rectangle.left;
-		float rectRight = rectangle.left + rectangle.width;
-		float rectTop = rectangle.top;
-		float rectBottom = rectangle.top + rectangle.height;
-        
         if (isMovingLeft()) {
-			if (Physics::intersectionLineCircle(sf::Vector2f(rectRight, rectTop), sf::Vector2f(rectRight, rectBottom), getPosition(), getRadius())) {
+			if (Physics::intersectionLineCircle(rectTopRight, rectBottomRight, getPosition(), getRadius())) {
                 intersects = true;
-                // edges = edges | Game::EDGE_RIGHT;
                 edges = edges | 2;
-                std::cout << "Edge: " << edges << std::endl;
+                std::cout << "Right Edge: " << edges << std::endl;
             }
 		}
         // Collision with rect's left edge?
         else if (isMovingRight()) {
-            if (Physics::intersectionLineCircle(sf::Vector2f(rectLeft, rectTop), sf::Vector2f(rectLeft, rectBottom), getPosition(), getRadius())) {
+            if (Physics::intersectionLineCircle(rectTopLeft, rectBottomLeft, getPosition(), getRadius())) {
                 intersects = true;
-                // edges = edges | Game::EDGE_LEFT;
                 edges = edges | 8;
-                std::cout << "Edge: " << edges << std::endl;
+                std::cout << "Left Edge: " << edges << std::endl;
             }
         }
         
         // Collision with rect's bottom edge?
         if (isMovingUp()) {
-            if (Physics::intersectionLineCircle(sf::Vector2f(rectLeft, rectBottom), sf::Vector2f(rectRight, rectBottom), getPosition(), getRadius())) {
+            if (Physics::intersectionLineCircle(rectBottomLeft, rectBottomRight, getPosition(), getRadius())) {
                 intersects = true;
-                // edges = edges | Game::EDGE_BOTTOM;
                 edges = edges | 4;
-                std::cout << "Edge: " << edges << std::endl;
+                std::cout << "Bottom Edge: " << edges << std::endl;
             }
         }
         
         // Collision with rect's top edge?
         else if (isMovingDown()) {
-            if (Physics::intersectionLineCircle(sf::Vector2f(rectLeft, rectTop), sf::Vector2f(rectRight, rectTop), getPosition(), getRadius())) {
+            if (Physics::intersectionLineCircle(rectTopLeft, rectTopRight, getPosition(), getRadius())) {
                 intersects = true;
-                // edges = edges | Game::EDGE_TOP;
                 edges = edges | 1;
-                std::cout << "Edge: " << edges << std::endl;
+                std::cout << "Top Edge: " << edges << std::endl;
             }
         }
         
