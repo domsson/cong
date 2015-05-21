@@ -29,8 +29,9 @@ public:
 	bool isMovingUp() const;
 	bool isMovingDown() const;
     
-    bool contains (const sf::Vector2f &point) const;
-    bool intersects (const sf::FloatRect &rectangle) const;
+    bool contains(const sf::Vector2f &point) const;
+    bool intersects(const sf::FloatRect &rectangle) const;
+    bool intersects(const sf::FloatRect &rectangle, int &edges) const;
 
 	void reverseDirectionHorizontal();
 	void reverseDirectionVertical();

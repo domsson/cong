@@ -8,6 +8,11 @@
 #include "Game.hpp"
 
 namespace Cong {
+    
+    const int Game::EDGE_TOP = 1;
+    const int Game::EDGE_RIGHT = 2;
+    const int Game::EDGE_BOTTOM = 4;
+    const int Game::EDGE_LEFT = 8;
 
 	static const int TARGET_FPS = 50;
 	static const float SECONDS_PER_FRAME = 1.0 / TARGET_FPS;
@@ -85,8 +90,14 @@ namespace Cong {
 		// Collision with left paddle?
 		if (ball->isMovingLeft()) {
             if (ballPositionNext.x - BALL_RADIUS <= paddleLeft->getPosition().x) {
-				if (ball->intersects(paddleLeft->getGlobalBounds())) {
-					ball->reverseDirectionHorizontal();
+                int edge = 0;
+				if (ball->intersects(paddleLeft->getGlobalBounds(), edge)) {
+                    if ((edge & EDGE_RIGHT) == EDGE_RIGHT) {
+                        ball->reverseDirectionHorizontal();
+                    }
+                    if (((edge & EDGE_TOP) == EDGE_TOP) || ((edge & EDGE_BOTTOM) == EDGE_BOTTOM)) {
+                        ball->reverseDirectionVertical();
+                    }
 				}
 			}
 

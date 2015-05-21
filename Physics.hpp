@@ -10,7 +10,8 @@ class Physics {
 
 public:
 	static bool intersectionLineCircle(const sf::Vector2f &lineStart, const sf::Vector2f &lineEnd, const sf::Vector2f &circleCenter, int circleRadius);
-
+private:
+    static const int sgn(float x);
 };
 
 }
