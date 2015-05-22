@@ -43,6 +43,13 @@ namespace Cong {
 		paddleRight->setOrigin(0, PADDLE_HEIGHT * 0.5);
         paddleRight->setPosition(width - (PADDLE_WIDTH + PADDING), height * 0.5); // Origin at left edge, vertically centered
         paddleRight->setFillColor(sf::Color(FILL_COLOR[0], FILL_COLOR[1], FILL_COLOR[2]));
+        
+        scoreTexture = new sf::Texture();
+        if (!scoreTexture->loadFromFile("charset.png")) {
+            std::cout << ":-(" << std::endl;
+        };
+        scoreDisplayLeft = new Cong::ScoreDisplay(*scoreTexture, 7, 9, 8);
+        scoreDisplayLeft->setPosition(200, PADDING);
 	}
 
 	Game::~Game() {
@@ -53,7 +60,8 @@ namespace Cong {
 		delete court;
 		delete paddleLeft;
 		delete paddleRight;
-		delete scoreDisplay;
+		delete scoreDisplayLeft;
+		delete scoreDisplayRight;
 	}
 
 	void Game::run() {
@@ -214,6 +222,7 @@ namespace Cong {
         window->draw(*ball);
         window->draw(*paddleLeft);
         window->draw(*paddleRight);
+        window->draw(*scoreDisplayLeft);
         window->display();
 	}
     

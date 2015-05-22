@@ -19,7 +19,9 @@ private:
 	Cong::Ball *ball;
 	Cong::Paddle *paddleLeft;
 	Cong::Paddle *paddleRight;
-	Cong::ScoreDisplay *scoreDisplay;
+	Cong::ScoreDisplay *scoreDisplayLeft;
+    Cong::ScoreDisplay *scoreDisplayRight;
+    sf::Texture *scoreTexture;
 
 	int width;
 	int height;
