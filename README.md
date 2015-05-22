@@ -15,3 +15,8 @@ Planned features
 - Main menu, maybe with an additional Settings menu
 - 1 and 2 player mode (and therefore a simple AI)
 - Possibility to pause the game
+
+Problems and Learnings
+----------------------
+- Referencing files (textures): I have no idea how it works on Mac
+- Passing pointers/references around: You really need to pay attention to the scope!
