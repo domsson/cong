@@ -1,6 +1,6 @@
 cong
 ----
-Another Pong clone, written in C++ and using SFML.
+Another Pong clone, written in C++ and using SFML. For now, I'll code on/for Linux.
 
 Motivation
 ----------
@@ -31,5 +31,5 @@ Planned features
 
 Problems and Learnings
 ----------------------
-- Referencing files (textures): I have no idea how it works on Mac
+- Referencing files (textures): I have no idea how it works on Mac; easy on Linux
 - Passing pointers/references around: You really need to pay attention to the scope!
