@@ -8,6 +8,19 @@ This is my first C++ project. The goal is to get a good grasp of the language's 
 I also want to wrap my head around the basic concepts and patterns of game programming.
 In order to focus on the language instead of OS specific APIs, I decided to use SFML.
 
+Dependencies
+------------
+- [SFML](http://www.sfml-dev.org/)
+
+Building
+--------
+I use these commands, put into a `build.sh` file, to build:
+```
+g++ -c *.cpp -std=c++11
+g++ -o cong *.o -lsfml-graphics -lsfml-window -lsfml-system
+rm ./*.o
+```
+
 Planned features
 ----------------
 - Create a simple, but solid game loop that makes for a fixed game speed across machines
