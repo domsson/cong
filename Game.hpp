@@ -6,6 +6,8 @@
 #include "Ball.hpp"
 #include "Paddle.hpp"
 #include "ScoreDisplay.hpp"
+#include "SpriteText.hpp"
+#include "CharMapProperties.hpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -15,13 +17,16 @@ class Game {
 
 private:
 	sf::RenderWindow *window;
-	Cong::Court *court;
-	Cong::Ball *ball;
-	Cong::Paddle *paddleLeft;
-	Cong::Paddle *paddleRight;
-	Cong::ScoreDisplay *scoreDisplayLeft;
-    Cong::ScoreDisplay *scoreDisplayRight;
+	Court *court;
+	Ball *ball;
+	Paddle *paddleLeft;
+	Paddle *paddleRight;
+	ScoreDisplay *scoreDisplayLeft;
+    ScoreDisplay *scoreDisplayRight;
     sf::Texture *scoreTexture;
+
+	sf::Texture *charMapTexture;
+	CharMapProperties *charMapProps;
 
 	int width;
 	int height;

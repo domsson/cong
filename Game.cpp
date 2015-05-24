@@ -56,6 +56,13 @@ namespace Cong {
 
 		scoreDisplayRight = new Cong::ScoreDisplay(*scoreTexture, 7, 9, 8);
 		scoreDisplayRight->setPosition(600, PADDING);
+
+		charMapTexture = new sf::Texture();
+		charMapTexture->loadFromFile("./tex/charmap-cellphone-white.png");
+		charMapProps = new CharMapProperties("abc", 7, 9, 1, 18);
+		// Seg fault :-(
+		// SpriteText testText(charMapTexture, charMapProps);
+		
 	}
 
 	Game::~Game() {
@@ -68,6 +75,9 @@ namespace Cong {
 		delete paddleRight;
 		delete scoreDisplayLeft;
 		delete scoreDisplayRight;
+
+		delete charMapTexture;
+		delete charMapProps;
 	}
 
 	void Game::run() {

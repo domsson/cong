@@ -11,4 +11,20 @@ namespace Cong {
 	CharMapProperties::~CharMapProperties() {
 	}
 
+	unsigned int CharMapProperties::getCharWidth() const {
+		return charWidth;
+	} 
+
+	unsigned int CharMapProperties::getCharHeight() const {
+		return charHeight;
+	}
+
+	unsigned int CharMapProperties::getCharPadding() const {
+		return charPadding;
+	}
+
+	unsigned int CharMapProperties::getCharsPerLine() const {
+		return charsPerLine;
+	}
+
 }

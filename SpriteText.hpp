@@ -17,18 +17,30 @@ private:
 	std::string text;
 	sf::Sprite *charSprites;
 
+	unsigned int width;
+	unsigned int height;
+	unsigned int scale;
+	unsigned int anchor;
+
 protected:
 
 	void draw(sf::RenderTarget &target, sf::RenderStates states) const;
+	void setCharacter(int i, const char &c);
 
 public:
 
-	SpriteText(const std::string &charMapTexture, CharMapProperties *charMapProperties);
 	SpriteText(sf::Texture *charMapTexture, CharMapProperties *charMapProperties);
 	~SpriteText();
 
 	void setText(const std::string &text);
-	void setCharMap(const std::string &charMapTexture);
+	void setCharMap(sf::Texture *charMapTexture, CharMapProperties *charMapProperties);
+	void setAnchor(int anchor);
+	void setScale(int scale);
+
+	unsigned int getWidth() const;
+	unsigned int getHeight() const;
+	unsigned int getScale() const;
+	unsigned int getAnchor() const;
 
 };
 
