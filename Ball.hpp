@@ -6,7 +6,7 @@
 
 namespace Cong {
 
-class Ball: public sf::CircleShape {
+class Ball: public sf::RectangleShape {
     
 private:
     int speed;
@@ -22,6 +22,7 @@ public:
     void setDirection(const sf::Vector2f &direction);
     void setDirection(float x, float y);
     const sf::Vector2f &getDirection();
+	int getRadius() const;
 	int getDiameter() const;
 
 	bool isMovingLeft() const;

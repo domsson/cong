@@ -5,7 +5,7 @@
 
 namespace Cong {
     
-    Ball::Ball(int radius, int speed) : sf::CircleShape(radius), speed(speed) {
+    Ball::Ball(int radius, int speed) : sf::RectangleShape(sf::Vector2f(radius*2, radius*2)), speed(speed) {
         direction = new sf::Vector2f(0, 0);
 		setOrigin(radius, radius);
     }
@@ -42,6 +42,10 @@ namespace Cong {
     const sf::Vector2f &Ball::getDirection() {
         return *direction;
     }
+
+	int Ball::getRadius() const {
+		return getSize().x * 0.5;
+	}
 
 	int Ball::getDiameter() const {
 		return getRadius() + getRadius();

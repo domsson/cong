@@ -27,12 +27,17 @@ private:
 	int height;
 	std::string title;
 
+	int scoreLeft;
+	int scoreRight;
+
     void processEvents();
 	void processInputs();
     void update();
 	void render();
     
     void serve();
+	void scoreForLeft();
+	void scoreForRight();
 	
 public:
     // http://www.codeproject.com/Articles/13740/The-Beginner-s-Guide-to-Using-Enum-Flags

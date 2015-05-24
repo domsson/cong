@@ -28,6 +28,9 @@ namespace Cong {
 	Game::Game(const std::string &title, int width, int height) : title(title), width(width), height(height) {
         window = new sf::RenderWindow(sf::VideoMode(width, height), title);
         
+		scoreLeft = 0;
+		scoreRight = 0;
+
         court = new Cong::Court(width, height, 4, 15);
         
         ball = new Cong::Ball(BALL_RADIUS, 0);
@@ -128,12 +131,12 @@ namespace Cong {
 		
 
         if (ballPositionNext.x + BALL_RADIUS <= 0) {
-			// scoreLeft();            
+			scoreForLeft();            
 			serve();
         }
         
         if (ballPositionNext.x - BALL_RADIUS >= width) {
-			// scoreRight();
+			scoreForRight();
             serve();
         }
     
@@ -149,6 +152,14 @@ namespace Cong {
         
         ball->move(ball->getDirection().x * ballSpeed, ball->getDirection().y * ballSpeed);
         
+	}
+
+	void Game::scoreForLeft() {
+		scoreDisplayLeft->setScore(++scoreLeft);
+	}
+
+	void Game::scoreForRight() {
+		scoreDisplayRight->setScore(++scoreRight);
 	}
 
 	void Game::render() {
