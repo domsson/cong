@@ -28,7 +28,7 @@
 *.app
 
 # Build scripts
-*.sh
+# *.sh
 
 # XCode Bullshit
 *.plist
