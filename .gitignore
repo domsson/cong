@@ -33,3 +33,6 @@
 # XCode Bullshit
 *.plist
 *.xcodeproj
+
+# The linux executable
+cong
