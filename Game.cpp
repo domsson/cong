@@ -21,7 +21,7 @@ namespace Cong {
     static const int PADDLE_WIDTH = 20;
     static const int PADDLE_HEIGHT = 80;
 	static const int PADDLE_SPEED = 150;
-    static const int BALL_RADIUS = 10;
+    static const int BALL_RADIUS = 14;
 	static const int BALL_SPEED = 225;
     static const int FILL_COLOR[] = {255, 255, 255};
 
@@ -32,7 +32,7 @@ namespace Cong {
 		scoreRight = 0;
 
 		ballTexture = new sf::Texture();
-		ballTexture->loadFromFile("./tex/ball2.png");
+		ballTexture->loadFromFile("./tex/ball3.png");
 		courtTexture = new sf::Texture();
 		courtTexture->loadFromFile("./tex/court.png");		
 		texturedCourt = new sf::RectangleShape(sf::Vector2f(width, height));
