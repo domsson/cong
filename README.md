@@ -2,6 +2,8 @@ cong
 ====
 Another Pong clone, written in C++, using SFML. For now, I'll code on/for Linux.
 
+![Screenshot of Cong](http://i.imgur.com/QSUj3cD.png)
+
 Motivation
 ----------
 This is my first C++ project. The goal is to get a good grasp of the language's basics.
