@@ -45,3 +45,4 @@ Problems and Learnings
 - Better make a cheat sheet on what can/must (not) go in the `.hpp` and .`cpp` file, it get's confusing. Especially with (for example) `static`, which should be in the `.hpp`, but not in the `.cpp` (why?).
 - Passing pointers around creates the ownership question. Who should `delete`? Remember: `delete` will delete the value at the address the pointer is pointing to; the pointer will still point to the same address, there is just nothing anymore.
 - Stack Overflow is full of the advice not to use 'raw' pointers, but 'smart' pointers. But I see so many projects that do fine with 'raw' pointers. So... I don't know.
+- Trying to `delete` a pointer that has not been initialized will cause a segmentation fault. Always initialize them to `0` or `nullptr`!
