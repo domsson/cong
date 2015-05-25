@@ -24,7 +24,7 @@ namespace Cong {
 
 		for (int i=0; i < text.length(); ++i) {
 			charSprites[i].setTexture(*charMap);
-			updateSpritePosition();
+			updateSpritePosition(i);
 			setCharacter(i, text[i]);
 		}
 	}
@@ -53,22 +53,23 @@ namespace Cong {
 	void SpriteText::setPosition(float x, float y) {
 		position.x = x;
 		position.y = y;
-		updateSpritePosition();
+		updateSpritePositions();
 	}
 
 	void SpriteText::setPosition(const sf::Vector2f &position) {
 		this->position.x = position.x;
 		this->position.y = position.y;
-		updateSpritePosition();
+		updateSpritePositions();
 	}
 
 	void SpriteText::setAnchor(SpriteTextAnchor anchor) {
 		this->anchor = anchor;
+		updateSpritePositions();
 	}
 
 	void SpriteText::setScale(unsigned int scale) {
 		this->scale = scale;
-		updateSpritePosition();
+		updateSpritePositions();
 	}
 
 	unsigned int SpriteText::getWidth() const {
@@ -91,10 +92,29 @@ namespace Cong {
 		return position;
 	}
 
-	void SpriteText::updateSpritePosition() {
+	void SpriteText::updateSpritePosition(unsigned int i, float offsetX) {
+		charSprites[i].setPosition(offsetX + position.x + charMapProperties->getCharWidth() * scale * i, position.y);
+		charSprites[i].setScale(sf::Vector2f(scale, scale));
+	}
+
+	void SpriteText::updateSpritePositions() {
+		float offsetX;
+		switch (anchor) {
+			case LEFT:
+				offsetX = 0;
+				break;
+			case CENTER:
+				offsetX = -getWidth() * 0.5;
+				break;
+			case RIGHT:
+				std::cout << "Anchor: right" << std::endl;
+				std::cout << "getWidth(): " << getWidth() << std::endl;
+				offsetX = -getWidth();
+				break;
+		}
+		std::cout << "SpriteText offsetX: " << offsetX << std::endl;
 		for (int i=0; i < text.length(); ++i) {
-			charSprites[i].setPosition(position.x + charMapProperties->getCharWidth() * scale * i, position.y);
-			charSprites[i].setScale(sf::Vector2f(scale, scale));
+			updateSpritePosition(i);
 		}
 	}
 

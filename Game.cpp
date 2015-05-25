@@ -62,11 +62,10 @@ namespace Cong {
 		charMapProps = new CharMapProperties(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", 7, 9, 0, 18);
 		// Seg fault :-(
 		testText = new SpriteText(charMapTexture, charMapProps);
-		testText->setScale(4);		
-		testText->setText("Nice text, huh?");
-		testText->setPosition(PADDING, PADDING);
-		testText->setText("Different text now!");
-		
+		testText->setScale(4);
+		testText->setAnchor(SpriteTextAnchor::RIGHT);
+		//testText->setPosition(width, 0);
+		testText->setText("Right aligned text?");
 	}
 
 	Game::~Game() {

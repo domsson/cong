@@ -27,7 +27,8 @@ protected:
 
 	void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 	void setCharacter(int i, const char &c);
-	void updateSpritePosition();
+	void updateSpritePosition(unsigned int i, float offsetX = 0.0);
+	void updateSpritePositions();
 
 public:
 
