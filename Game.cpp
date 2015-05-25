@@ -32,7 +32,7 @@ namespace Cong {
 		scoreRight = 0;
 
 		ballTexture = new sf::Texture();
-		ballTexture->loadFromFile("./tex/ball.png");
+		ballTexture->loadFromFile("./tex/ball2.png");
 		courtTexture = new sf::Texture();
 		courtTexture->loadFromFile("./tex/court.png");		
 		texturedCourt = new sf::RectangleShape(sf::Vector2f(width, height));
