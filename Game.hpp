@@ -5,7 +5,6 @@
 #include "Court.hpp"
 #include "Ball.hpp"
 #include "Paddle.hpp"
-#include "ScoreDisplay.hpp"
 #include "SpriteText.hpp"
 #include "CharMapProperties.hpp"
 #include <SFML/Window.hpp>
