@@ -6,10 +6,9 @@ namespace Cong {
 	SpriteText::SpriteText(sf::Texture *charMap, CharMapProperties *charMapProperties)
 		: charMap(charMap), charMapProperties(charMapProperties)	
 	{
-		std::cout << ":: ctor start\n";
 		scale = 1;
 		anchor = 0;
-		std::cout << ":: ctor end\n";
+		charSprites = nullptr;
 	}
 	
 	SpriteText::~SpriteText() {
@@ -19,6 +18,7 @@ namespace Cong {
 	
 	void SpriteText::setText(const std::string &text) {
 		this->text = text;
+		delete[] charSprites;
 		charSprites = new sf::Sprite[text.length()];
 
 		for (int i=0; i < text.length(); ++i) {

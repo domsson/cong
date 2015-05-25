@@ -61,7 +61,7 @@ namespace Cong {
 		charMapTexture->loadFromFile("./tex/charmap-cellphone-white.png");
 		charMapProps = new CharMapProperties("abc", 7, 9, 1, 18);
 		// Seg fault :-(
-		// SpriteText testText(charMapTexture, charMapProps);
+		SpriteText testText(charMapTexture, charMapProps);
 		
 	}
 
