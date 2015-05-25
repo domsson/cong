@@ -31,11 +31,19 @@ namespace Cong {
 		scoreLeft = 0;
 		scoreRight = 0;
 
+		ballTexture = new sf::Texture();
+		ballTexture->loadFromFile("./tex/ball.png");
+		courtTexture = new sf::Texture();
+		courtTexture->loadFromFile("./tex/court.png");		
+		texturedCourt = new sf::RectangleShape(sf::Vector2f(width, height));
+		texturedCourt->setTexture(courtTexture);
+
         court = new Cong::Court(width, height, 4, 15);
         
         ball = new Cong::Ball(BALL_RADIUS, 0);
         ball->setPosition(width * 0.5, height * 0.5); // The Ball's origin is at its center!
         ball->setFillColor(sf::Color(FILL_COLOR[0], FILL_COLOR[1], FILL_COLOR[2]));
+		ball->setTexture(ballTexture);
         
         paddleLeft = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
 		paddleLeft->setOrigin(PADDLE_WIDTH, PADDLE_HEIGHT * 0.5);
@@ -77,6 +85,10 @@ namespace Cong {
 
 		delete charMapTexture;
 		delete charMapProps;
+
+		delete texturedCourt;
+		delete courtTexture;
+		delete ballTexture;
 	}
 
 	void Game::run() {
@@ -173,7 +185,8 @@ namespace Cong {
 
 	void Game::render() {
         window->clear();
-        window->draw(*court);
+        // window->draw(*court);
+		window->draw(*texturedCourt);
         window->draw(*scoreDisplayLeft);
         window->draw(*scoreDisplayRight);
         window->draw(*ball);

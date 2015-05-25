@@ -17,6 +17,7 @@ class Game {
 private:
 	sf::RenderWindow *window;
 	Court *court;
+	sf::RectangleShape *texturedCourt;
 	Ball *ball;
 	Paddle *paddleLeft;
 	Paddle *paddleRight;
@@ -26,6 +27,9 @@ private:
 
 	SpriteText *scoreDisplayLeft;
     SpriteText *scoreDisplayRight;
+
+	sf::Texture *courtTexture;
+	sf::Texture *ballTexture;
 
 	int width;
 	int height;
