@@ -27,4 +27,18 @@ namespace Cong {
 		return charsPerLine;
 	}
 
+	int CharMapProperties::getCharPosX(char c) const {
+		std::size_t pos = chars.find(c);
+		if (pos == std::string::npos) { return -1; }
+		unsigned int charColumn = pos % getCharsPerLine();
+		return (charColumn * (getCharWidth() + getCharPadding()));
+	}
+
+	int CharMapProperties::getCharPosY(char c) const {
+		std::size_t pos = chars.find(c);
+		if (pos == std::string::npos) { return -1; }
+		unsigned int charRow = pos / getCharsPerLine();
+		return (charRow * (getCharHeight() + getCharPadding()));		
+	}
+
 }

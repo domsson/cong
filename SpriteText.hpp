@@ -5,6 +5,7 @@
 #include <SFML/System.hpp>
 #include <string>
 #include "CharMapProperties.hpp"
+#include "SpriteTextAnchor.hpp"
 
 namespace Cong {
 
@@ -17,15 +18,16 @@ private:
 	std::string text;
 	sf::Sprite *charSprites;
 
-	unsigned int width;
-	unsigned int height;
+	sf::Vector2f position;
+
 	unsigned int scale;
-	unsigned int anchor;
+	SpriteTextAnchor anchor;
 
 protected:
 
 	void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 	void setCharacter(int i, const char &c);
+	void updateSpritePosition();
 
 public:
 
@@ -34,13 +36,16 @@ public:
 
 	void setText(const std::string &text);
 	void setCharMap(sf::Texture *charMapTexture, CharMapProperties *charMapProperties);
-	void setAnchor(int anchor);
-	void setScale(int scale);
+	void setAnchor(SpriteTextAnchor anchor);
+	void setScale(unsigned int scale);
+	void setPosition(float x, float y);
+	void setPosition(const sf::Vector2f &position);
 
 	unsigned int getWidth() const;
 	unsigned int getHeight() const;
 	unsigned int getScale() const;
-	unsigned int getAnchor() const;
+	SpriteTextAnchor getAnchor() const;
+	const sf::Vector2f& getPosition() const; 
 
 };
 

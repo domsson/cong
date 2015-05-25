@@ -59,9 +59,13 @@ namespace Cong {
 
 		charMapTexture = new sf::Texture();
 		charMapTexture->loadFromFile("./tex/charmap-cellphone-white.png");
-		charMapProps = new CharMapProperties("abc", 7, 9, 1, 18);
+		charMapProps = new CharMapProperties(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", 7, 9, 0, 18);
 		// Seg fault :-(
-		SpriteText testText(charMapTexture, charMapProps);
+		testText = new SpriteText(charMapTexture, charMapProps);
+		testText->setScale(4);		
+		testText->setText("Nice text, huh?");
+		testText->setPosition(PADDING, PADDING);
+		testText->setText("Different text now!");
 		
 	}
 
@@ -177,6 +181,7 @@ namespace Cong {
         window->draw(*court);
         window->draw(*scoreDisplayLeft);
         window->draw(*scoreDisplayRight);
+		window->draw(*testText);
         window->draw(*ball);
         window->draw(*paddleLeft);
         window->draw(*paddleRight);

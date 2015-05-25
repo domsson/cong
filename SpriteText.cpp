@@ -7,12 +7,13 @@ namespace Cong {
 		: charMap(charMap), charMapProperties(charMapProperties)	
 	{
 		scale = 1;
-		anchor = 0;
+		anchor = LEFT;
+		position.x = 0;
+		position.y = 0;
 		charSprites = nullptr;
 	}
 	
 	SpriteText::~SpriteText() {
-		// This should be okay.
 		delete[] charSprites;
 	}
 	
@@ -23,15 +24,19 @@ namespace Cong {
 
 		for (int i=0; i < text.length(); ++i) {
 			charSprites[i].setTexture(*charMap);
-			charSprites[i].setPosition(charMapProperties->getCharWidth() * scale * i, 0);
-			charSprites[i].setScale(sf::Vector2f(scale, scale));
+			updateSpritePosition();
 			setCharacter(i, text[i]);
 		}
 	}
 
 	void SpriteText::setCharacter(int i, const char &c) {
-		// remove * i after testing
-		charSprites[i].setTextureRect(sf::IntRect(0, 0, charMapProperties->getCharWidth() * i, charMapProperties->getCharHeight()));
+		// TODO Handle the case of getCharPos returning -1 (char not in charmap)
+		int charPosX = charMapProperties->getCharPosX(c);
+		int charPosY = charMapProperties->getCharPosY(c);
+		int charWidth = charMapProperties->getCharWidth();
+		int charHeight = charMapProperties->getCharHeight();
+
+		charSprites[i].setTextureRect(sf::IntRect(charPosX, charPosY, charWidth, charHeight));
 	}
 
 	void SpriteText::setCharMap(sf::Texture *charMap, CharMapProperties *charMapProperties) {
@@ -45,32 +50,52 @@ namespace Cong {
 		}
 	}
 
-	void SpriteText::setAnchor(int anchor) {
+	void SpriteText::setPosition(float x, float y) {
+		position.x = x;
+		position.y = y;
+		updateSpritePosition();
+	}
+
+	void SpriteText::setPosition(const sf::Vector2f &position) {
+		this->position.x = position.x;
+		this->position.y = position.y;
+		updateSpritePosition();
+	}
+
+	void SpriteText::setAnchor(SpriteTextAnchor anchor) {
 		this->anchor = anchor;
 	}
 
-	void SpriteText::setScale(int scale) {
+	void SpriteText::setScale(unsigned int scale) {
 		this->scale = scale;
-		for (int i=0; i < text.length(); ++i) {
-			charSprites[i].setPosition(charMapProperties->getCharWidth() * scale * i, 0);
-			charSprites[i].setScale(sf::Vector2f(scale, scale));
-		}
+		updateSpritePosition();
 	}
 
 	unsigned int SpriteText::getWidth() const {
-		return text.length() * charMapProperties->getCharWidth();
+		return text.length() * charMapProperties->getCharWidth() * scale;
 	}
 
 	unsigned int SpriteText::getHeight() const {
-		return charMapProperties->getCharHeight();
+		return charMapProperties->getCharHeight() * scale;
 	}
 
 	unsigned int SpriteText::getScale() const {
 		return scale;
 	}
 
-	unsigned int SpriteText::getAnchor() const {
+	SpriteTextAnchor SpriteText::getAnchor() const {
 		return anchor;
+	}
+
+	const sf::Vector2f& SpriteText::getPosition() const {
+		return position;
+	}
+
+	void SpriteText::updateSpritePosition() {
+		for (int i=0; i < text.length(); ++i) {
+			charSprites[i].setPosition(position.x + charMapProperties->getCharWidth() * scale * i, position.y);
+			charSprites[i].setScale(sf::Vector2f(scale, scale));
+		}
 	}
 
 }

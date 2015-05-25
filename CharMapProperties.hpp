@@ -25,6 +25,9 @@ public:
 	unsigned int getCharPadding() const;
 	unsigned int getCharsPerLine() const;
 
+	int getCharPosX(char c) const;
+	int getCharPosY(char c) const;
+
 };
 
 

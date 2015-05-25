@@ -25,6 +25,7 @@ private:
     ScoreDisplay *scoreDisplayRight;
     sf::Texture *scoreTexture;
 
+	SpriteText *testText;
 	sf::Texture *charMapTexture;
 	CharMapProperties *charMapProps;
 

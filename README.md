@@ -46,3 +46,4 @@ Problems and Learnings
 - Passing pointers around creates the ownership question. Who should `delete`? Remember: `delete` will delete the value at the address the pointer is pointing to; the pointer will still point to the same address, there is just nothing anymore.
 - Stack Overflow is full of the advice not to use 'raw' pointers, but 'smart' pointers. But I see so many projects that do fine with 'raw' pointers. So... I don't know.
 - Trying to `delete` a pointer that has not been initialized will cause a segmentation fault. Always initialize them to `0` or `nullptr`!
+- There are many "weird" types, like size_t, that seem to be used instead of types like int. I should figure out why and what exactly they are.
