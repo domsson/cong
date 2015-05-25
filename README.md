@@ -37,6 +37,13 @@ Stretch goals (if time/motivation permits)
 - Possibility to configure video settings (resolution, windowed/full screen, ...)
 - Color setting (change element/font color from white to some other colors)
 
+Lincence, Copyright, Credits
+----------------------------
+Everything is public domain (do whatever you want with it).
+All code and contents have been created by me, with the exepction of:
+- The sounds, which I got from [OpenGameArt.org](http://opengameart.org/content/3-ping-pong-sounds-8-bit-style)
+
+
 Problems and Learnings
 ----------------------
 - Referencing files (textures): I have no idea how it works on Mac/OS X; easy on Linux. Well, fuck OS X for now!
