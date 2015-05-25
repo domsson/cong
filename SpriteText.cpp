@@ -6,10 +6,7 @@ namespace Cong {
 	SpriteText::SpriteText(sf::Texture *charMap, CharMapProperties *charMapProperties)
 		: charMap(charMap), charMapProperties(charMapProperties)	
 	{
-		scale = 1;
 		anchor = LEFT;
-		position.x = 0;
-		position.y = 0;
 		charSprites = nullptr;
 	}
 	
@@ -27,6 +24,7 @@ namespace Cong {
 			updateSpritePosition(i);
 			setCharacter(i, text[i]);
 		}
+		updateOrigin();
 	}
 
 	void SpriteText::setCharacter(int i, const char &c) {
@@ -45,74 +43,56 @@ namespace Cong {
 	}
 
 	void SpriteText::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+		states.transform *= getTransform();
 		for (int i=0; i<text.length(); ++i) {		
 			target.draw(charSprites[i], states);
 		}
 	}
 
-	void SpriteText::setPosition(float x, float y) {
-		position.x = x;
-		position.y = y;
-		updateSpritePositions();
-	}
-
-	void SpriteText::setPosition(const sf::Vector2f &position) {
-		this->position.x = position.x;
-		this->position.y = position.y;
-		updateSpritePositions();
-	}
-
 	void SpriteText::setAnchor(SpriteTextAnchor anchor) {
 		this->anchor = anchor;
-		updateSpritePositions();
+		updateOrigin();
 	}
 
-	void SpriteText::setScale(unsigned int scale) {
-		this->scale = scale;
-		updateSpritePositions();
+	void SpriteText::updateOrigin() {
+		switch (anchor) {
+			case LEFT:
+				setOrigin(0.0, 0.0);
+				break;
+			case CENTER:
+				setOrigin(getUnscaledWidth() * 0.5, 0.0);
+				break;
+			case RIGHT:
+				setOrigin(getUnscaledWidth(), 0.0);
+				break;
+		}
 	}
 
-	unsigned int SpriteText::getWidth() const {
-		return text.length() * charMapProperties->getCharWidth() * scale;
+	float SpriteText::getWidth() const {
+		return getUnscaledWidth() * getScale().x;
 	}
 
-	unsigned int SpriteText::getHeight() const {
-		return charMapProperties->getCharHeight() * scale;
+	int SpriteText::getUnscaledWidth() const {
+		return text.length() * charMapProperties->getCharWidth();
 	}
 
-	unsigned int SpriteText::getScale() const {
-		return scale;
+	float SpriteText::getHeight() const {
+		return getUnscaledHeight() * getScale().y;
+	}
+
+	int SpriteText::getUnscaledHeight() const {
+		return charMapProperties->getCharHeight();
 	}
 
 	SpriteTextAnchor SpriteText::getAnchor() const {
 		return anchor;
 	}
 
-	const sf::Vector2f& SpriteText::getPosition() const {
-		return position;
-	}
-
-	void SpriteText::updateSpritePosition(unsigned int i, float offsetX) {
-		charSprites[i].setPosition(offsetX + position.x + charMapProperties->getCharWidth() * scale * i, position.y);
-		charSprites[i].setScale(sf::Vector2f(scale, scale));
+	void SpriteText::updateSpritePosition(unsigned int i) {
+		charSprites[i].setPosition(charMapProperties->getCharWidth() * i, 0.0);
 	}
 
 	void SpriteText::updateSpritePositions() {
-		float offsetX;
-		switch (anchor) {
-			case LEFT:
-				offsetX = 0;
-				break;
-			case CENTER:
-				offsetX = -getWidth() * 0.5;
-				break;
-			case RIGHT:
-				std::cout << "Anchor: right" << std::endl;
-				std::cout << "getWidth(): " << getWidth() << std::endl;
-				offsetX = -getWidth();
-				break;
-		}
-		std::cout << "SpriteText offsetX: " << offsetX << std::endl;
 		for (int i=0; i < text.length(); ++i) {
 			updateSpritePosition(i);
 		}
