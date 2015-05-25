@@ -21,13 +21,12 @@ private:
 	Ball *ball;
 	Paddle *paddleLeft;
 	Paddle *paddleRight;
-	ScoreDisplay *scoreDisplayLeft;
-    ScoreDisplay *scoreDisplayRight;
-    sf::Texture *scoreTexture;
 
-	SpriteText *testText;
 	sf::Texture *charMapTexture;
 	CharMapProperties *charMapProps;
+
+	SpriteText *scoreDisplayLeft;
+    SpriteText *scoreDisplayRight;
 
 	int width;
 	int height;

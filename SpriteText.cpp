@@ -6,7 +6,7 @@ namespace Cong {
 	SpriteText::SpriteText(sf::Texture *charMap, CharMapProperties *charMapProperties)
 		: charMap(charMap), charMapProperties(charMapProperties)	
 	{
-		anchor = LEFT;
+		anchor = TOP_LEFT;
 		charSprites = nullptr;
 	}
 	
@@ -56,6 +56,36 @@ namespace Cong {
 
 	void SpriteText::updateOrigin() {
 		switch (anchor) {
+			case TOP_LEFT:
+				setOrigin(0.0, 0.0);
+				break;
+			case TOP_CENTER:
+				setOrigin(getUnscaledWidth() * 0.5, 0.0);
+				break;
+			case TOP_RIGHT:
+				setOrigin(getUnscaledWidth(), 0.0);
+				break;
+			case CENTER_LEFT:
+				setOrigin(0.0, getUnscaledHeight() * 0.5);
+				break;
+			case CENTER_CENTER:
+				setOrigin(getUnscaledWidth() * 0.5, getUnscaledHeight() * 0.5);
+				break;
+			case CENTER_RIGHT:
+				setOrigin(getUnscaledWidth(), getUnscaledHeight() * 0.5);
+				break;
+			case BOTTOM_LEFT:
+				setOrigin(0.0, getUnscaledHeight());
+				break;
+			case BOTTOM_CENTER:
+				setOrigin(getUnscaledWidth() * 0.5, getUnscaledHeight());
+				break;
+			case BOTTOM_RIGHT:
+				setOrigin(getUnscaledWidth(), getUnscaledHeight());
+				break;			
+		}
+/*
+		switch (anchor) {
 			case LEFT:
 				setOrigin(0.0, 0.0);
 				break;
@@ -66,6 +96,7 @@ namespace Cong {
 				setOrigin(getUnscaledWidth(), 0.0);
 				break;
 		}
+*/
 	}
 
 	float SpriteText::getWidth() const {

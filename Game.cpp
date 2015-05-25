@@ -47,25 +47,21 @@ namespace Cong {
         paddleRight->setPosition(width - (PADDLE_WIDTH + PADDING), height * 0.5); // Origin at left edge, vertically centered
         paddleRight->setFillColor(sf::Color(FILL_COLOR[0], FILL_COLOR[1], FILL_COLOR[2]));
         
-        scoreTexture = new sf::Texture();
-        if (!scoreTexture->loadFromFile("tex/charmap.png")) {
-            std::cout << ":-(" << std::endl;
-        };
-        scoreDisplayLeft = new Cong::ScoreDisplay(*scoreTexture, 7, 9, 8);
-        scoreDisplayLeft->setPosition(200, PADDING);
-
-		scoreDisplayRight = new Cong::ScoreDisplay(*scoreTexture, 7, 9, 8);
-		scoreDisplayRight->setPosition(600, PADDING);
-
 		charMapTexture = new sf::Texture();
 		charMapTexture->loadFromFile("./tex/charmap-cellphone-white.png");
 		charMapProps = new CharMapProperties(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", 7, 9, 0, 18);
-		// Seg fault :-(
-		testText = new SpriteText(charMapTexture, charMapProps);
-		testText->setScale(sf::Vector2f(4, 4));
-		testText->setAnchor(SpriteTextAnchor::CENTER);
-		testText->setPosition(400, 0);
-		testText->setText("Centered text!");
+
+		scoreDisplayLeft = new SpriteText(charMapTexture, charMapProps);
+		scoreDisplayLeft->setScale(sf::Vector2f(8, 8));
+		scoreDisplayLeft->setAnchor(SpriteTextAnchor::TOP_CENTER);
+		scoreDisplayLeft->setPosition(width * 0.35, PADDING);
+		scoreDisplayLeft->setText("0");
+
+		scoreDisplayRight = new SpriteText(charMapTexture, charMapProps);
+		scoreDisplayRight->setScale(sf::Vector2f(8, 8));
+		scoreDisplayRight->setAnchor(SpriteTextAnchor::TOP_CENTER);
+		scoreDisplayRight->setPosition(width * 0.65, PADDING);
+		scoreDisplayRight->setText("0");
 	}
 
 	Game::~Game() {
@@ -168,11 +164,11 @@ namespace Cong {
 	}
 
 	void Game::scoreForLeft() {
-		scoreDisplayLeft->setScore(++scoreLeft);
+		scoreDisplayLeft->setText(std::to_string(++scoreLeft));
 	}
 
 	void Game::scoreForRight() {
-		scoreDisplayRight->setScore(++scoreRight);
+		scoreDisplayRight->setText(std::to_string(++scoreRight));
 	}
 
 	void Game::render() {
@@ -180,7 +176,6 @@ namespace Cong {
         window->draw(*court);
         window->draw(*scoreDisplayLeft);
         window->draw(*scoreDisplayRight);
-		window->draw(*testText);
         window->draw(*ball);
         window->draw(*paddleLeft);
         window->draw(*paddleRight);
