@@ -23,9 +23,23 @@ namespace Cong {
 	static const int PADDLE_SPEED = 150;
     static const int BALL_RADIUS = 14;
 	static const int BALL_SPEED = 225;
-    static const int FILL_COLOR[] = {255, 255, 255};
 
-	Game::Game(const std::string &title, int width, int height) : title(title), width(width), height(height) {
+	static const int COURT_COLOR[] = {255, 255, 255};
+    static const int BALL_COLOR[] = {255, 255, 255};
+	static const int PADDLE_COLOR[] = {255, 255, 255};
+
+	static const std::string TEXTURE_DIR = "./tex/";
+	static const std::string BALL_TEXTURE = "ball4.png";
+	static const std::string COURT_TEXTURE = "court.png";
+	static const std::string PADDLE_TEXTURE = "";
+	static const std::string FONT_TEXTURE = "charmap-cellphone-white.png";
+
+	Game::Game(const std::string &title, int width, int height) :
+			window(0), court(0), ball(0), paddleLeft(0), paddleRight(0),
+			scoreDisplayLeft(0), scoreDisplayRight(0), charMapTexture(0),
+			charMapProps(0), courtTexture(0), ballTexture(0),
+			title(title), width(width), height(height)
+	{
         window = new sf::RenderWindow(sf::VideoMode(width, height), title);
         
 		resetScores();
@@ -33,7 +47,6 @@ namespace Cong {
 		initPaddles();
 		initBall();
 		initScoreDisplays();
-
 	}
 
 	void Game::resetScores() {
@@ -42,10 +55,13 @@ namespace Cong {
 	}
 
 	void Game::initCourt() {
-		courtTexture = new sf::Texture();
-		courtTexture->loadFromFile("./tex/court.png");
+		if (!COURT_TEXTURE.empty()) {
+			courtTexture = new sf::Texture();
+			courtTexture->loadFromFile(TEXTURE_DIR + COURT_TEXTURE);
+		}
 
 		court = new sf::RectangleShape(sf::Vector2f(width, height));
+		court->setFillColor(sf::Color(COURT_COLOR[0], COURT_COLOR[1], COURT_COLOR[2]));
 		court->setTexture(courtTexture);
 	}
 
@@ -53,27 +69,27 @@ namespace Cong {
         paddleLeft = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
 		paddleLeft->setOrigin(PADDLE_WIDTH, PADDLE_HEIGHT * 0.5);
         paddleLeft->setPosition(PADDING + PADDLE_WIDTH, height * 0.5); // Origin at right edge, vertically centered
-        paddleLeft->setFillColor(sf::Color(FILL_COLOR[0], FILL_COLOR[1], FILL_COLOR[2]));
+        paddleLeft->setFillColor(sf::Color(PADDLE_COLOR[0], PADDLE_COLOR[1], PADDLE_COLOR[2]));
         
         paddleRight = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
 		paddleRight->setOrigin(0, PADDLE_HEIGHT * 0.5);
         paddleRight->setPosition(width - (PADDLE_WIDTH + PADDING), height * 0.5); // Origin at left edge, vertically centered
-        paddleRight->setFillColor(sf::Color(FILL_COLOR[0], FILL_COLOR[1], FILL_COLOR[2]));
+        paddleRight->setFillColor(sf::Color(PADDLE_COLOR[0], PADDLE_COLOR[1], PADDLE_COLOR[2]));
 	}
 
 	void Game::initBall() {
 		ballTexture = new sf::Texture();
-		ballTexture->loadFromFile("./tex/ball4.png");
+		ballTexture->loadFromFile(TEXTURE_DIR + BALL_TEXTURE);
 
         ball = new Cong::Ball(BALL_RADIUS, 0);
         ball->setPosition(width * 0.5, height * 0.5); // The Ball's origin is at its center!
-        ball->setFillColor(sf::Color(FILL_COLOR[0], FILL_COLOR[1], FILL_COLOR[2]));
+        ball->setFillColor(sf::Color(BALL_COLOR[0], BALL_COLOR[1], BALL_COLOR[2]));
 		ball->setTexture(ballTexture);
 	}
 
 	void Game::initScoreDisplays() {
 		charMapTexture = new sf::Texture();
-		charMapTexture->loadFromFile("./tex/charmap-cellphone-white.png");
+		charMapTexture->loadFromFile(TEXTURE_DIR + FONT_TEXTURE);
 
 		charMapProps = new CharMapProperties(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", 7, 9, 0, 18);
 
