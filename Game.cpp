@@ -78,8 +78,10 @@ namespace Cong {
 	}
 
 	void Game::initBall() {
-		ballTexture = new sf::Texture();
-		ballTexture->loadFromFile(TEXTURE_DIR + BALL_TEXTURE);
+		if (!BALL_TEXTURE.empty()) {
+			ballTexture = new sf::Texture();
+			ballTexture->loadFromFile(TEXTURE_DIR + BALL_TEXTURE);
+		}
 
         ball = new Cong::Ball(BALL_RADIUS, 0);
         ball->setPosition(width * 0.5, height * 0.5); // The Ball's origin is at its center!
