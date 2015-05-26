@@ -28,23 +28,28 @@ namespace Cong {
 	Game::Game(const std::string &title, int width, int height) : title(title), width(width), height(height) {
         window = new sf::RenderWindow(sf::VideoMode(width, height), title);
         
+		resetScores();
+		initCourt();
+		initPaddles();
+		initBall();
+		initScoreDisplays();
+
+	}
+
+	void Game::resetScores() {
 		scoreLeft = 0;
 		scoreRight = 0;
+	}
 
-		ballTexture = new sf::Texture();
-		ballTexture->loadFromFile("./tex/ball4.png");
+	void Game::initCourt() {
 		courtTexture = new sf::Texture();
-		courtTexture->loadFromFile("./tex/court.png");		
-		texturedCourt = new sf::RectangleShape(sf::Vector2f(width, height));
-		texturedCourt->setTexture(courtTexture);
+		courtTexture->loadFromFile("./tex/court.png");
 
-        court = new Cong::Court(width, height, 4, 15);
-        
-        ball = new Cong::Ball(BALL_RADIUS, 0);
-        ball->setPosition(width * 0.5, height * 0.5); // The Ball's origin is at its center!
-        ball->setFillColor(sf::Color(FILL_COLOR[0], FILL_COLOR[1], FILL_COLOR[2]));
-		ball->setTexture(ballTexture);
-        
+		court = new sf::RectangleShape(sf::Vector2f(width, height));
+		court->setTexture(courtTexture);
+	}
+
+	void Game::initPaddles() {
         paddleLeft = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
 		paddleLeft->setOrigin(PADDLE_WIDTH, PADDLE_HEIGHT * 0.5);
         paddleLeft->setPosition(PADDING + PADDLE_WIDTH, height * 0.5); // Origin at right edge, vertically centered
@@ -54,22 +59,35 @@ namespace Cong {
 		paddleRight->setOrigin(0, PADDLE_HEIGHT * 0.5);
         paddleRight->setPosition(width - (PADDLE_WIDTH + PADDING), height * 0.5); // Origin at left edge, vertically centered
         paddleRight->setFillColor(sf::Color(FILL_COLOR[0], FILL_COLOR[1], FILL_COLOR[2]));
-        
+	}
+
+	void Game::initBall() {
+		ballTexture = new sf::Texture();
+		ballTexture->loadFromFile("./tex/ball4.png");
+
+        ball = new Cong::Ball(BALL_RADIUS, 0);
+        ball->setPosition(width * 0.5, height * 0.5); // The Ball's origin is at its center!
+        ball->setFillColor(sf::Color(FILL_COLOR[0], FILL_COLOR[1], FILL_COLOR[2]));
+		ball->setTexture(ballTexture);
+	}
+
+	void Game::initScoreDisplays() {
 		charMapTexture = new sf::Texture();
 		charMapTexture->loadFromFile("./tex/charmap-cellphone-white.png");
+
 		charMapProps = new CharMapProperties(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", 7, 9, 0, 18);
 
 		scoreDisplayLeft = new SpriteText(charMapTexture, charMapProps);
 		scoreDisplayLeft->setScale(sf::Vector2f(8, 8));
 		scoreDisplayLeft->setAnchor(SpriteTextAnchor::TOP_CENTER);
 		scoreDisplayLeft->setPosition(width * 0.35, PADDING);
-		scoreDisplayLeft->setText("0");
+		scoreDisplayLeft->setText(std::to_string(scoreLeft));
 
 		scoreDisplayRight = new SpriteText(charMapTexture, charMapProps);
 		scoreDisplayRight->setScale(sf::Vector2f(8, 8));
 		scoreDisplayRight->setAnchor(SpriteTextAnchor::TOP_CENTER);
 		scoreDisplayRight->setPosition(width * 0.65, PADDING);
-		scoreDisplayRight->setText("0");
+		scoreDisplayRight->setText(std::to_string(scoreRight));
 	}
 
 	Game::~Game() {
@@ -85,8 +103,6 @@ namespace Cong {
 
 		delete charMapTexture;
 		delete charMapProps;
-
-		delete texturedCourt;
 		delete courtTexture;
 		delete ballTexture;
 	}
@@ -185,8 +201,7 @@ namespace Cong {
 
 	void Game::render() {
         window->clear();
-        // window->draw(*court);
-		window->draw(*texturedCourt);
+        window->draw(*court);
         window->draw(*scoreDisplayLeft);
         window->draw(*scoreDisplayRight);
         window->draw(*ball);

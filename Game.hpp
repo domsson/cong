@@ -16,18 +16,16 @@ class Game {
 
 private:
 	sf::RenderWindow *window;
-	Court *court;
-	sf::RectangleShape *texturedCourt;
+
+	sf::RectangleShape *court;
 	Ball *ball;
 	Paddle *paddleLeft;
 	Paddle *paddleRight;
-
-	sf::Texture *charMapTexture;
-	CharMapProperties *charMapProps;
-
 	SpriteText *scoreDisplayLeft;
     SpriteText *scoreDisplayRight;
 
+	sf::Texture *charMapTexture;
+	CharMapProperties *charMapProps;
 	sf::Texture *courtTexture;
 	sf::Texture *ballTexture;
 
@@ -46,6 +44,13 @@ private:
     void serve();
 	void scoreForLeft();
 	void scoreForRight();
+
+	void initCourt();
+	void initPaddles();
+	void initBall();
+	void initScoreDisplays();
+
+	void resetScores();
 	
 public:
     // http://www.codeproject.com/Articles/13740/The-Beginner-s-Guide-to-Using-Enum-Flags
