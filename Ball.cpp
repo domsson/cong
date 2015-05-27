@@ -7,7 +7,7 @@ namespace Cong {
     
     Ball::Ball(int radius, int speed) : sf::RectangleShape(sf::Vector2f(radius*2, radius*2)), speed(speed) {
         direction = new sf::Vector2f(0, 0);
-		setOrigin(radius, radius);
+		setOrigin(radius - 0.5, radius - 0.5);
     }
     
     Ball::~Ball() {

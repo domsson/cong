@@ -28,6 +28,7 @@ private:
 	CharMapProperties *charMapProps;
 	sf::Texture *courtTexture;
 	sf::Texture *ballTexture;
+	sf::Texture *paddleTexture;
 
 	int width;
 	int height;

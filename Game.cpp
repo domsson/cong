@@ -22,7 +22,7 @@ namespace Cong {
     static const int PADDLE_HEIGHT = 80;
 	static const int PADDLE_SPEED = 150;
     static const int BALL_RADIUS = 14;
-	static const int BALL_SPEED = 225;
+	static const int BALL_SPEED = 250;
 
 	static const int COURT_COLOR[] = {255, 255, 255};
     static const int BALL_COLOR[] = {255, 255, 255};
@@ -37,7 +37,7 @@ namespace Cong {
 	Game::Game(const std::string &title, int width, int height) :
 			window(0), court(0), ball(0), paddleLeft(0), paddleRight(0),
 			scoreDisplayLeft(0), scoreDisplayRight(0), charMapTexture(0),
-			charMapProps(0), courtTexture(0), ballTexture(0),
+			charMapProps(0), courtTexture(0), ballTexture(0), paddleTexture(0),
 			title(title), width(width), height(height)
 	{
         window = new sf::RenderWindow(sf::VideoMode(width, height), title);
@@ -66,15 +66,22 @@ namespace Cong {
 	}
 
 	void Game::initPaddles() {
+		if (!PADDLE_TEXTURE.empty()) {
+			paddleTexture = new sf::Texture();
+			paddleTexture->loadFromFile(TEXTURE_DIR + PADDLE_TEXTURE);
+		}
+
         paddleLeft = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
 		paddleLeft->setOrigin(PADDLE_WIDTH, PADDLE_HEIGHT * 0.5);
         paddleLeft->setPosition(PADDING + PADDLE_WIDTH, height * 0.5); // Origin at right edge, vertically centered
         paddleLeft->setFillColor(sf::Color(PADDLE_COLOR[0], PADDLE_COLOR[1], PADDLE_COLOR[2]));
+		paddleLeft->setTexture(paddleTexture);
         
         paddleRight = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
 		paddleRight->setOrigin(0, PADDLE_HEIGHT * 0.5);
         paddleRight->setPosition(width - (PADDLE_WIDTH + PADDING), height * 0.5); // Origin at left edge, vertically centered
         paddleRight->setFillColor(sf::Color(PADDLE_COLOR[0], PADDLE_COLOR[1], PADDLE_COLOR[2]));
+		paddleRight->setTexture(paddleTexture);
 	}
 
 	void Game::initBall() {
@@ -84,7 +91,7 @@ namespace Cong {
 		}
 
         ball = new Cong::Ball(BALL_RADIUS, 0);
-        ball->setPosition(width * 0.5, height * 0.5); // The Ball's origin is at its center!
+        ball->setPosition((width-1) * 0.5, (height-1) * 0.5); // The Ball's origin is at its center!
         ball->setFillColor(sf::Color(BALL_COLOR[0], BALL_COLOR[1], BALL_COLOR[2]));
 		ball->setTexture(ballTexture);
 	}
@@ -123,6 +130,7 @@ namespace Cong {
 		delete charMapProps;
 		delete courtTexture;
 		delete ballTexture;
+		delete paddleTexture;
 	}
 
 	void Game::run() {
@@ -299,7 +307,7 @@ namespace Cong {
     void Game::serve() {
         ball->setSpeed(0);
         ball->setDirection(sf::Vector2f(1, 1));
-        ball->setPosition(width * 0.5, height * 0.5);
+        ball->setPosition((width-1) * 0.5, (height-1) * 0.5);
     }
 
 }
