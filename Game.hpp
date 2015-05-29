@@ -2,7 +2,6 @@
 #define CONG_GAME_HPP
 
 #include <string>
-#include "Court.hpp"
 #include "Ball.hpp"
 #include "Paddle.hpp"
 #include "SpriteText.hpp"
