@@ -22,7 +22,8 @@ namespace Cong {
     static const int PADDLE_HEIGHT = 80;
 	static const int PADDLE_SPEED = 150;
     static const int BALL_RADIUS = 14;
-	static const int BALL_SPEED = 250;
+	static const int BALL_SPEED = 150;
+	static const float BALL_SPEED_INCREASE = 0.10;
 
 	static const int COURT_COLOR[] = {255, 255, 255};
     static const int BALL_COLOR[] = {255, 255, 255};
@@ -72,14 +73,14 @@ namespace Cong {
 		}
 
         paddleLeft = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
-		paddleLeft->setOrigin(PADDLE_WIDTH, PADDLE_HEIGHT * 0.5);
-        paddleLeft->setPosition(PADDING + PADDLE_WIDTH, height * 0.5); // Origin at right edge, vertically centered
+		paddleLeft->setOrigin(PADDLE_WIDTH, (PADDLE_HEIGHT * 0.5) - 0.5);
+        paddleLeft->setPosition(PADDING + PADDLE_WIDTH, (height-1) * 0.5); // Origin at right edge, vertically centered
         paddleLeft->setFillColor(sf::Color(PADDLE_COLOR[0], PADDLE_COLOR[1], PADDLE_COLOR[2]));
 		paddleLeft->setTexture(paddleTexture);
         
         paddleRight = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
-		paddleRight->setOrigin(0, PADDLE_HEIGHT * 0.5);
-        paddleRight->setPosition(width - (PADDLE_WIDTH + PADDING), height * 0.5); // Origin at left edge, vertically centered
+		paddleRight->setOrigin(0, (PADDLE_HEIGHT * 0.5) - 0.5);
+        paddleRight->setPosition(width - (PADDLE_WIDTH + PADDING), (height-1) * 0.5); // Origin at left edge, vertically centered
         paddleRight->setFillColor(sf::Color(PADDLE_COLOR[0], PADDLE_COLOR[1], PADDLE_COLOR[2]));
 		paddleRight->setTexture(paddleTexture);
 	}
@@ -158,21 +159,100 @@ namespace Cong {
 		}
 	}
 
+	bool Game::rangesIntersect(const sf::Vector2f &range1, const sf::Vector2f &range2) const {
+		return !((range1.x < range2.x && range1.x < range2.y && range1.y < range2.x && range1.y < range2.y) 
+		||  (range1.x > range2.x && range1.x > range2.y && range1.y > range2.x && range1.y > range2.y));
+	}
+
+	bool Game::intersectVertically(const sf::Vector2f &ballStart, const sf::Vector2f &ballEnd, float lineY, float &delta, sf::Vector2f &intersection) const {
+		delta = (lineY - ballStart.y) / (ballEnd.y - ballStart.y);	
+		if (delta == 0) { return false; }
+		intersection.x = ballStart.x + delta * (ballEnd.x - ballStart.x);
+		intersection.y = ballStart.y + delta * (ballEnd.y - ballStart.y);
+		if (delta < 0) { delta *= -1; }
+		if (delta > 1) { return false; }
+		return true;
+	}
+
+	bool Game::intersectHorizontally(const sf::Vector2f &ballStart, const sf::Vector2f &ballEnd, float lineX, float &delta, sf::Vector2f &intersection) const {
+		delta = (lineX - ballStart.x) / (ballEnd.x - ballStart.x);
+		if (delta == 0) { return false; }
+		intersection.x = ballStart.x + delta * (ballEnd.x - ballStart.x);
+		intersection.y = ballStart.y + delta * (ballEnd.y - ballStart.y);
+		if (delta < 0) { delta *= -1; }
+		if (delta > 1) { return false; }
+
+		return true;
+	}
+
 	void Game::update() {
         
 		float ballSpeed = ball->getSpeed() * SECONDS_PER_FRAME;
-        sf::Vector2f ballPositionNext((ball->getPosition().x + ball->getDirection().x * ballSpeed), (ball->getPosition().y + ball->getDirection().x * ballSpeed));
+        sf::Vector2f ballPositionNext((ball->getPosition().x + ball->getDirection().x * ballSpeed), (ball->getPosition().y + ball->getDirection().y * ballSpeed));
         sf::FloatRect paddleLeftBounds = paddleLeft->getGlobalBounds();
         
-		
 		if (ballPositionNext.x - BALL_RADIUS <= paddleLeft->getPosition().x) {
-            int edge = 0;
+			float deltaX = 0.0;
+			float deltaY = 0.0;
+			sf::Vector2f intersectionX(0,0);
+			sf::Vector2f intersectionY(0,0);
+			bool collisionX = false;
+			bool collisionY = false;
+
+			if (ball->isMovingLeft()) {
+				sf::Vector2f ballStart(ball->getPosition().x - ball->getRadius(), ball->getPosition().y);
+				sf::Vector2f ballEnd(ballPositionNext.x - ball->getRadius(), ballPositionNext.y);
+				
+				collisionX = intersectHorizontally(ballStart, ballEnd, paddleLeft->getPosition().x, deltaX, intersectionX);			
+				sf::Vector2f ballRange(intersectionX.y - ball->getRadius(), intersectionX.y + ball->getRadius());
+				sf::Vector2f paddleRange(paddleLeftBounds.top, paddleLeftBounds.top + paddleLeftBounds.height);
+
+				if (collisionX && rangesIntersect(ballRange, paddleRange)) {
+					std::cout << "Horizontal collision @ x:" << intersectionX.x << ", y:" << intersectionX.y << std::endl;
+					std::cout << "Ball:  x:" << ballStart.x << ", y:" << ballStart.y << " --> x:" << ballEnd.x << ", y:" << ballEnd.y << std::endl;
+					std::cout << "Range: y1:" << ballRange.x << ", y2:" << ballRange.y << " <-> y1:" << paddleRange.x << ", y2:" << paddleRange.y << std::endl;
+					
+					float yDiff = (ballPositionNext.y - paddleLeft->getPosition().y) / (PADDLE_HEIGHT * 0.5);
+					ball->reverseDirectionHorizontal();
+					ball->setSpeed(ball->getSpeed() * (1.0 + BALL_SPEED_INCREASE));
+					ball->slope(yDiff);
+				}
+			}
+
+			if (ball->isMovingDown()) {
+				sf::Vector2f ballStart(ball->getPosition().x, ball->getPosition().y + ball->getRadius());
+				sf::Vector2f ballEnd(ballPositionNext.x, ballPositionNext.y + ball->getRadius());
+
+				collisionY = intersectVertically(ballStart, ballEnd, paddleLeftBounds.top, deltaY, intersectionY);
+				sf::Vector2f ballRange(intersectionX.x - ball->getRadius(), intersectionX.x + ball->getRadius());
+				sf::Vector2f paddleRange(paddleLeftBounds.left, paddleLeftBounds.left + paddleLeftBounds.width);
+
+				if (collisionY && rangesIntersect(ballRange, paddleRange)) {
+					ball->reverseDirectionVertical();
+				}
+			}
+
+			else if (ball->isMovingUp()) {
+				sf::Vector2f ballStart(ball->getPosition().x, ball->getPosition().y - ball->getRadius());
+				sf::Vector2f ballEnd(ballPositionNext.x, ballPositionNext.y - ball->getRadius());				
+
+				collisionY = intersectVertically(ballStart, ballEnd, paddleLeftBounds.top + paddleLeftBounds.height, deltaY, intersectionY);
+				sf::Vector2f ballRange(intersectionX.x - ball->getRadius(), intersectionX.x + ball->getRadius());
+				sf::Vector2f paddleRange(paddleLeftBounds.left, paddleLeftBounds.left + paddleLeftBounds.width);
+				
+				if (collisionY && rangesIntersect(ballRange, paddleRange)) {
+					ball->reverseDirectionVertical();
+				}
+			}
+
+			/*
 			if (((ballPositionNext.y - BALL_RADIUS >= paddleLeft->getPosition().y - PADDLE_HEIGHT)
 				&& (ballPositionNext.y + BALL_RADIUS <= paddleLeft->getPosition().y + PADDLE_HEIGHT))) {
 				float yDiff = (ballPositionNext.y - paddleLeft->getPosition().y) / (PADDLE_HEIGHT * 0.5);                    
 				ball->reverseDirectionHorizontal();
 				ball->slope(yDiff);          
 			}
+			*/
 		}
 
 		// Collision with right paddle?
@@ -192,11 +272,13 @@ namespace Cong {
         if (ballPositionNext.x + BALL_RADIUS <= 0) {
 			scoreForLeft();            
 			serve();
+			return;
         }
         
         if (ballPositionNext.x - BALL_RADIUS >= width) {
 			scoreForRight();
             serve();
+			return;
         }
     
         if (ballPositionNext.y <= 0 + BALL_RADIUS) {
@@ -209,7 +291,8 @@ namespace Cong {
             ball->reverseDirectionVertical();
         }
         
-        ball->move(ball->getDirection().x * ballSpeed, ball->getDirection().y * ballSpeed);
+        // ball->move(ball->getDirection().x * ballSpeed, ball->getDirection().y * ballSpeed);
+		ball->setPosition(ballPositionNext);
         
 	}
 
