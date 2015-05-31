@@ -7,6 +7,7 @@
 #include "SpriteText.hpp"
 #include "CharMapProperties.hpp"
 #include "Physics.hpp"
+#include "Math.hpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -52,8 +53,6 @@ private:
 	void initScoreDisplays();
 
 	void resetScores();
-
-	bool rangesIntersect(const sf::Vector2f &range1, const sf::Vector2f &range2) const;
 
 public:
     // http://www.codeproject.com/Articles/13740/The-Beginner-s-Guide-to-Using-Enum-Flags

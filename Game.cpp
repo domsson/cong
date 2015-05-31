@@ -159,11 +159,6 @@ namespace Cong {
 		}
 	}
 
-	bool Game::rangesIntersect(const sf::Vector2f &range1, const sf::Vector2f &range2) const {
-		return !((range1.x < range2.x && range1.x < range2.y && range1.y < range2.x && range1.y < range2.y) 
-		||  (range1.x > range2.x && range1.x > range2.y && range1.y > range2.x && range1.y > range2.y));
-	}
-
 	void Game::update() {
         
 		float ballSpeed = ball->getSpeed() * SECONDS_PER_FRAME;
@@ -188,7 +183,7 @@ namespace Cong {
 				sf::Vector2f ballRange(intersectionX.y - ball->getRadius(), intersectionX.y + ball->getRadius());
 				sf::Vector2f paddleRange(paddleLeftBounds.top, paddleLeftBounds.top + paddleLeftBounds.height);
 
-				if (collisionX && rangesIntersect(ballRange, paddleRange)) {
+				if (collisionX && Math::rangesIntersect(ballRange, paddleRange)) {
 					float yDiff = (ballPositionNext.y - paddleLeft->getPosition().y) / (PADDLE_HEIGHT * 0.5);
 					ball->reverseDirectionHorizontal();
 					ball->setSpeed(ball->getSpeed() * (1.0 + BALL_SPEED_INCREASE));
@@ -204,7 +199,7 @@ namespace Cong {
 				sf::Vector2f ballRange(intersectionY.x - ball->getRadius(), intersectionY.x + ball->getRadius());
 				sf::Vector2f paddleRange(paddleLeftBounds.left, paddleLeftBounds.left + paddleLeftBounds.width);
 
-				if (collisionY && rangesIntersect(ballRange, paddleRange)) {
+				if (collisionY && Math::rangesIntersect(ballRange, paddleRange)) {
 					ball->reverseDirectionVertical();
 				}
 			}
@@ -217,7 +212,7 @@ namespace Cong {
 				sf::Vector2f ballRange(intersectionY.x - ball->getRadius(), intersectionY.x + ball->getRadius());
 				sf::Vector2f paddleRange(paddleLeftBounds.left, paddleLeftBounds.left + paddleLeftBounds.width);				
 
-				if (collisionY && rangesIntersect(ballRange, paddleRange)) {
+				if (collisionY && Math::rangesIntersect(ballRange, paddleRange)) {
 					ball->reverseDirectionVertical();
 				}
 			}
@@ -242,7 +237,7 @@ namespace Cong {
 				sf::Vector2f ballRange(intersectionX.y - ball->getRadius(), intersectionX.y + ball->getRadius());
 				sf::Vector2f paddleRange(paddleRightBounds.top, paddleRightBounds.top + paddleRightBounds.height);
 
-				if (collisionX && rangesIntersect(ballRange, paddleRange)) {
+				if (collisionX && Math::rangesIntersect(ballRange, paddleRange)) {
 					float yDiff = (ballPositionNext.y - paddleRight->getPosition().y) / (PADDLE_HEIGHT * 0.5);
 					ball->reverseDirectionHorizontal();
 					ball->setSpeed(ball->getSpeed() * (1.0 + BALL_SPEED_INCREASE));
@@ -258,7 +253,7 @@ namespace Cong {
 				sf::Vector2f ballRange(intersectionY.x - ball->getRadius(), intersectionY.x + ball->getRadius());
 				sf::Vector2f paddleRange(paddleRightBounds.left, paddleRightBounds.left + paddleRightBounds.width);
 
-				if (collisionY && rangesIntersect(ballRange, paddleRange)) {
+				if (collisionY && Math::rangesIntersect(ballRange, paddleRange)) {
 					ball->reverseDirectionVertical();
 				}
 			}
@@ -271,7 +266,7 @@ namespace Cong {
 				sf::Vector2f ballRange(intersectionY.x - ball->getRadius(), intersectionY.x + ball->getRadius());
 				sf::Vector2f paddleRange(paddleRightBounds.left, paddleRightBounds.left + paddleRightBounds.width);
 				
-				if (collisionY && rangesIntersect(ballRange, paddleRange)) {
+				if (collisionY && Math::rangesIntersect(ballRange, paddleRange)) {
 					ball->reverseDirectionVertical();
 				}
 			}

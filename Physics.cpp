@@ -36,9 +36,5 @@ namespace Cong {
 		if (std::abs(delta) > 1) { return false; }
 		return true;
 	}
-    
-    const int Physics::sgn(float x) {
-        return (x < 0) ? -1 : 1;
-    }
 
 }
