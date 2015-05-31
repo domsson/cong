@@ -35,6 +35,12 @@ namespace Cong {
 	static const std::string PADDLE_TEXTURE = "";
 	static const std::string FONT_TEXTURE = "charmap-cellphone-white.png";
 
+	static const std::string SOUND_DIR = "./sfx/";
+	static const std::string BEEP_SOUND = "beep.wav";
+	static const std::string HIT_PADDLE_SOUND = "ping_pong_8bit_beeep.ogg";
+	static const std::string HIT_WALL_SOUND = "ping_pong_8bit_plop.ogg";
+	static const std::string BALL_OUT_SOUND = "ping_pong_8bit_peeeeeep.ogg";
+
 	Game::Game(const std::string &title, int width, int height) :
 			window(0), court(0), ball(0), paddleLeft(0), paddleRight(0),
 			scoreDisplayLeft(0), scoreDisplayRight(0), charMapTexture(0),
@@ -48,6 +54,7 @@ namespace Cong {
 		initPaddles();
 		initBall();
 		initScoreDisplays();
+		initSounds();
 	}
 
 	void Game::resetScores() {
@@ -116,6 +123,22 @@ namespace Cong {
 		scoreDisplayRight->setText(std::to_string(scoreRight));
 	}
 
+	void Game::initSounds() {
+		loadSound(SOUND_DIR + HIT_PADDLE_SOUND, paddleSoundFile, paddleSound);
+		loadSound(SOUND_DIR + HIT_WALL_SOUND, wallSoundFile, wallSound);
+		loadSound(SOUND_DIR + BALL_OUT_SOUND, outSoundFile, outSound);
+	}
+
+	bool Game::loadSound(const std::string &soundFile, sf::SoundBuffer &buffer, sf::Sound &sound) {
+		if (!buffer.loadFromFile(soundFile)) {
+			std::cerr << "Error: Could not load sound file " << soundFile << std::endl;
+			return false;
+		}
+		sound.setBuffer(buffer);
+		std::cout << "Loaded " << soundFile << " (Duration: " << buffer.getDuration().asMilliseconds() << " ms)" << std::endl;
+		return true;
+	}
+
 	Game::~Game() {
 		window->close();
 
@@ -132,6 +155,16 @@ namespace Cong {
 		delete courtTexture;
 		delete ballTexture;
 		delete paddleTexture;
+
+/*
+		delete paddleSound;
+		delete wallSound;
+		delete outSound;
+
+		delete paddleSoundFile;
+		delete wallSoundFile;
+		delete outSoundFile;
+*/
 	}
 
 	void Game::run() {
@@ -188,6 +221,7 @@ namespace Cong {
 					ball->reverseDirectionHorizontal();
 					ball->setSpeed(ball->getSpeed() * (1.0 + BALL_SPEED_INCREASE));
 					ball->slope(yDiff);
+					paddleSound.play();
 				}
 			}
 
@@ -201,6 +235,7 @@ namespace Cong {
 
 				if (collisionY && Math::rangesIntersect(ballRange, paddleRange)) {
 					ball->reverseDirectionVertical();
+					paddleSound.play();
 				}
 			}
 
@@ -214,6 +249,7 @@ namespace Cong {
 
 				if (collisionY && Math::rangesIntersect(ballRange, paddleRange)) {
 					ball->reverseDirectionVertical();
+					paddleSound.play();
 				}
 			}
 		}
@@ -242,6 +278,7 @@ namespace Cong {
 					ball->reverseDirectionHorizontal();
 					ball->setSpeed(ball->getSpeed() * (1.0 + BALL_SPEED_INCREASE));
 					ball->slope(yDiff);
+					paddleSound.play();
 				}
 			}
 
@@ -255,6 +292,7 @@ namespace Cong {
 
 				if (collisionY && Math::rangesIntersect(ballRange, paddleRange)) {
 					ball->reverseDirectionVertical();
+					paddleSound.play();
 				}
 			}
 
@@ -268,30 +306,35 @@ namespace Cong {
 				
 				if (collisionY && Math::rangesIntersect(ballRange, paddleRange)) {
 					ball->reverseDirectionVertical();
+					paddleSound.play();
 				}
 			}
 		}
 		
 
         if (ballPositionNext.x + BALL_RADIUS <= 0) {
-			scoreForLeft();            
+			scoreForLeft();          
+			outSound.play();
 			serve();
 			return;
         }
         
         if (ballPositionNext.x - BALL_RADIUS >= width) {
 			scoreForRight();
+			outSound.play();
             serve();
 			return;
         }
     
         if (ballPositionNext.y <= 0 + BALL_RADIUS) {
             ballPositionNext.y = 0 + BALL_RADIUS;
+			wallSound.play();
             ball->reverseDirectionVertical();
         }
         
         if (ballPositionNext.y >= height - BALL_RADIUS) {
             ballPositionNext.y = height - BALL_RADIUS;
+			wallSound.play();
             ball->reverseDirectionVertical();
         }
         

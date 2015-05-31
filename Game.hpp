@@ -10,6 +10,7 @@
 #include "Math.hpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 namespace Cong {
 
@@ -31,6 +32,14 @@ private:
 	sf::Texture *ballTexture;
 	sf::Texture *paddleTexture;
 
+	sf::Sound paddleSound;
+	sf::Sound wallSound;
+	sf::Sound outSound;
+
+	sf::SoundBuffer paddleSoundFile;
+	sf::SoundBuffer wallSoundFile;
+	sf::SoundBuffer outSoundFile;
+
 	int width;
 	int height;
 	std::string title;
@@ -51,8 +60,11 @@ private:
 	void initPaddles();
 	void initBall();
 	void initScoreDisplays();
+	void initSounds();
 
 	void resetScores();
+
+	bool loadSound(const std::string &soundFile, sf::SoundBuffer &buffer, sf::Sound &sound);
 
 public:
     // http://www.codeproject.com/Articles/13740/The-Beginner-s-Guide-to-Using-Enum-Flags
