@@ -12,7 +12,7 @@ In order to focus on the language instead of OS specific APIs, I decided to use 
 
 Dependencies
 ------------
-- [SFML](http://www.sfml-dev.org/)
+- [SFML](http://www.sfml-dev.org/) (Version 2.0+)
 
 Building
 --------
