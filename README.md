@@ -43,7 +43,7 @@ Lincence, Copyright, Credits
 ----------------------------
 Everything is public domain (do whatever you want with it).
 All code and contents have been created by me, with the exepction of:
-- The sounds, which I got from [OpenGameArt.org](http://opengameart.org/content/3-ping-pong-sounds-8-bit-style)
+- The sounds, which I got from [OpenGameArt.org](http://opengameart.org/content/3-ping-pong-sounds-8-bit-style) (Public Domain)
 
 
 Problems and Learnings
