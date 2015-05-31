@@ -155,16 +155,6 @@ namespace Cong {
 		delete courtTexture;
 		delete ballTexture;
 		delete paddleTexture;
-
-/*
-		delete paddleSound;
-		delete wallSound;
-		delete outSound;
-
-		delete paddleSoundFile;
-		delete wallSoundFile;
-		delete outSoundFile;
-*/
 	}
 
 	void Game::run() {

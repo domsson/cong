@@ -12,7 +12,7 @@ static const std::string TITLE = "Cong!";
 
 int main() {
     char* path = getcwd(NULL, 0);
-    std::cout << "Cong working directory: " << path << std::endl;
+    std::cout << "CWD: " << path << std::endl;
     
 	game = new Cong::Game(TITLE, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 	game->run();
