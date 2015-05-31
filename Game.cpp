@@ -20,10 +20,10 @@ namespace Cong {
     static const int PADDING = 20;
     static const int PADDLE_WIDTH = 20;
     static const int PADDLE_HEIGHT = 80;
-	static const int PADDLE_SPEED = 150;
+	static const int PADDLE_SPEED = 400;
     static const int BALL_RADIUS = 14;
-	static const int BALL_SPEED = 150;
-	static const float BALL_SPEED_INCREASE = 0.10;
+	static const int BALL_SPEED = 300;
+	static const float BALL_SPEED_INCREASE = 0.05;
 
 	static const int COURT_COLOR[] = {255, 255, 255};
     static const int BALL_COLOR[] = {255, 255, 255};
@@ -164,27 +164,6 @@ namespace Cong {
 		||  (range1.x > range2.x && range1.x > range2.y && range1.y > range2.x && range1.y > range2.y));
 	}
 
-	bool Game::intersectVertically(const sf::Vector2f &ballStart, const sf::Vector2f &ballEnd, float lineY, float &delta, sf::Vector2f &intersection) const {
-		delta = (lineY - ballStart.y) / (ballEnd.y - ballStart.y);	
-		if (delta == 0) { return false; }
-		intersection.x = ballStart.x + delta * (ballEnd.x - ballStart.x);
-		intersection.y = ballStart.y + delta * (ballEnd.y - ballStart.y);
-		if (delta < 0) { delta *= -1; }
-		if (delta > 1) { return false; }
-		return true;
-	}
-
-	bool Game::intersectHorizontally(const sf::Vector2f &ballStart, const sf::Vector2f &ballEnd, float lineX, float &delta, sf::Vector2f &intersection) const {
-		delta = (lineX - ballStart.x) / (ballEnd.x - ballStart.x);
-		if (delta == 0) { return false; }
-		intersection.x = ballStart.x + delta * (ballEnd.x - ballStart.x);
-		intersection.y = ballStart.y + delta * (ballEnd.y - ballStart.y);
-		if (delta < 0) { delta *= -1; }
-		if (delta > 1) { return false; }
-
-		return true;
-	}
-
 	void Game::update() {
         
 		float ballSpeed = ball->getSpeed() * SECONDS_PER_FRAME;
@@ -205,7 +184,7 @@ namespace Cong {
 				sf::Vector2f ballStart(ball->getPosition().x - ball->getRadius(), ball->getPosition().y);
 				sf::Vector2f ballEnd(ballPositionNext.x - ball->getRadius(), ballPositionNext.y);
 				
-				collisionX = intersectHorizontally(ballStart, ballEnd, paddleLeft->getPosition().x, deltaX, intersectionX);			
+				collisionX = Physics::intersectionWithX(ballStart, ballEnd, paddleLeft->getPosition().x, deltaX, intersectionX);			
 				sf::Vector2f ballRange(intersectionX.y - ball->getRadius(), intersectionX.y + ball->getRadius());
 				sf::Vector2f paddleRange(paddleLeftBounds.top, paddleLeftBounds.top + paddleLeftBounds.height);
 
@@ -221,7 +200,7 @@ namespace Cong {
 				sf::Vector2f ballStart(ball->getPosition().x, ball->getPosition().y + ball->getRadius());
 				sf::Vector2f ballEnd(ballPositionNext.x, ballPositionNext.y + ball->getRadius());
 
-				collisionY = intersectVertically(ballStart, ballEnd, paddleLeftBounds.top, deltaY, intersectionY);
+				collisionY = Physics::intersectionWithY(ballStart, ballEnd, paddleLeftBounds.top, deltaY, intersectionY);
 				sf::Vector2f ballRange(intersectionY.x - ball->getRadius(), intersectionY.x + ball->getRadius());
 				sf::Vector2f paddleRange(paddleLeftBounds.left, paddleLeftBounds.left + paddleLeftBounds.width);
 
@@ -234,7 +213,7 @@ namespace Cong {
 				sf::Vector2f ballStart(ball->getPosition().x, ball->getPosition().y - ball->getRadius());
 				sf::Vector2f ballEnd(ballPositionNext.x, ballPositionNext.y - ball->getRadius());				
 
-				collisionY = intersectVertically(ballStart, ballEnd, paddleLeftBounds.top + paddleLeftBounds.height, deltaY, intersectionY);
+				collisionY = Physics::intersectionWithY(ballStart, ballEnd, paddleLeftBounds.top + paddleLeftBounds.height, deltaY, intersectionY);
 				sf::Vector2f ballRange(intersectionY.x - ball->getRadius(), intersectionY.x + ball->getRadius());
 				sf::Vector2f paddleRange(paddleLeftBounds.left, paddleLeftBounds.left + paddleLeftBounds.width);				
 
@@ -259,7 +238,7 @@ namespace Cong {
 				sf::Vector2f ballStart(ball->getPosition().x + ball->getRadius(), ball->getPosition().y);
 				sf::Vector2f ballEnd(ballPositionNext.x + ball->getRadius(), ballPositionNext.y);
 				
-				collisionX = intersectHorizontally(ballStart, ballEnd, paddleRight->getPosition().x, deltaX, intersectionX);			
+				collisionX = Physics::intersectionWithX(ballStart, ballEnd, paddleRight->getPosition().x, deltaX, intersectionX);			
 				sf::Vector2f ballRange(intersectionX.y - ball->getRadius(), intersectionX.y + ball->getRadius());
 				sf::Vector2f paddleRange(paddleRightBounds.top, paddleRightBounds.top + paddleRightBounds.height);
 
@@ -275,7 +254,7 @@ namespace Cong {
 				sf::Vector2f ballStart(ball->getPosition().x, ball->getPosition().y + ball->getRadius());
 				sf::Vector2f ballEnd(ballPositionNext.x, ballPositionNext.y + ball->getRadius());
 
-				collisionY = intersectVertically(ballStart, ballEnd, paddleRightBounds.top, deltaY, intersectionY);
+				collisionY = Physics::intersectionWithY(ballStart, ballEnd, paddleRightBounds.top, deltaY, intersectionY);
 				sf::Vector2f ballRange(intersectionY.x - ball->getRadius(), intersectionY.x + ball->getRadius());
 				sf::Vector2f paddleRange(paddleRightBounds.left, paddleRightBounds.left + paddleRightBounds.width);
 
@@ -288,7 +267,7 @@ namespace Cong {
 				sf::Vector2f ballStart(ball->getPosition().x, ball->getPosition().y - ball->getRadius());
 				sf::Vector2f ballEnd(ballPositionNext.x, ballPositionNext.y - ball->getRadius());				
 
-				collisionY = intersectVertically(ballStart, ballEnd, paddleRightBounds.top + paddleRightBounds.height, deltaY, intersectionY);
+				collisionY = Physics::intersectionWithY(ballStart, ballEnd, paddleRightBounds.top + paddleRightBounds.height, deltaY, intersectionY);
 				sf::Vector2f ballRange(intersectionY.x - ball->getRadius(), intersectionY.x + ball->getRadius());
 				sf::Vector2f paddleRange(paddleRightBounds.left, paddleRightBounds.left + paddleRightBounds.width);
 				

@@ -3,57 +3,38 @@
 
 namespace Cong {
 
-	bool Physics::intersectionLineCircle(const sf::Vector2f &lineStart, const sf::Vector2f &lineEnd, const sf::Vector2f &circleCenter, int circleRadius) {
-		// http://mathworld.wolfram.com/Circle-LineIntersection.html
-        // Circle has to be at origin for this to work!!!
-        float x1 = lineStart.x - circleCenter.x;
-        float y1 = lineStart.y - circleCenter.y;
-        float x2 = lineEnd.x - circleCenter.x;
-        float y2 = lineEnd.y - circleCenter.y;
-        
-		float dx = x2 - x1;
-		float dy = y2 - y1;
-		float dr = std::sqrt(dx * dx + dy * dy);
-		float D = x1 * y2 - x2 * y1;
-		float radicand = (circleRadius * circleRadius) * (dr * dr) - (D * D);
-		      
-        if (radicand < 0) {
-            return false;
-        }
-        
-        float sqrtTerm = std::sqrt(radicand);
-        float sigTerm = Physics::sgn(dy) * dx;
-        float absTerm = std::abs(dy);
-        float xTerm = D * dy;
-        float yTerm = - D * dx;
-        
-        if (radicand == 0) {
-            sf::Vector2f intersection(0, 0);
-            intersection.x = (xTerm / (dr * dr));
-            intersection.y = (yTerm / (dr * dr));
-            // std::cout << "Tangent Intersection @ " << intersection.x << ", " << intersection.y << std::endl;
-            
-            return ((intersection.x >= x1 && intersection.x <= x2)
-                    && (intersection.y >= y1 && intersection.y <= y2));
-        }
-        
-        else if (radicand > 0) {
-            sf::Vector2f intersection1(0, 0);
-            sf::Vector2f intersection2(0, 0);
-            intersection1.x = (xTerm + sigTerm * sqrtTerm) / (dr * dr);
-            intersection2.x = (xTerm - sigTerm * sqrtTerm) / (dr * dr);
-            intersection1.y = (yTerm + absTerm * sqrtTerm) / (dr * dr);
-            intersection1.y = (yTerm - absTerm * sqrtTerm) / (dr * dr);
-            // std::cout << "Real Intersection @ " << intersection1.x << ", " << intersection1.y << "; " << intersection2.x << ", " << intersection2.y << std::endl;
-            
-            return ((intersection1.x >= x1 && intersection1.x <= x2)
-                    && (intersection1.y >= y1 && intersection1.y <= y2)
-                    && (intersection2.x >= x1 && intersection2.x <= x2)
-                    && (intersection2.y >= y1 && intersection2.y <= y2));
-        }
-        
-        // ?
-        return false;
+	/*
+	 * Checks if the given line segment intersects with the (infinite) vertical line at position x
+	 * and sets delta (distance factor; how far down the line segment?) and the intersection point.
+	 * Will only return true if the absolute value of delta is between 0 and 1; otherwise false.
+	 * Intersection and delta will still be set if the intersection is not within the segment bounds
+	 * and can therefore always be evaluated for further processing outside this function.
+	 * A delta value of 0 means that there is no intersection (lines are parallel or identical).
+	 */
+	bool Physics::intersectionWithX(const sf::Vector2f &lineStart, const sf::Vector2f &lineEnd, float x, float &delta, sf::Vector2f &intersection) {
+		delta = (x - lineStart.x) / (lineEnd.x - lineStart.x);
+		if (delta == 0) { return false; }
+		intersection.x = lineStart.x + delta * (lineEnd.x - lineStart.x);
+		intersection.y = lineStart.y + delta * (lineEnd.y - lineStart.y);
+		if (std::abs(delta) > 1) { return false; }
+		return true;
+	}
+
+	/*
+	 * Checks if the given line segment intersects with the (infinite) horizontal line at position y
+	 * and sets delta (distance factor; how far down the line segment?) and the intersection point.
+	 * Will only return true if the absolute value of delta is between 0 and 1; otherwise false.
+	 * Intersection and delta will still be set if the intersection is not within the segment bounds
+	 * and can therefore always be evaluated for further processing outside this function.
+	 * A delta value of 0 means that there is no intersection (lines are parallel or identical).
+	 */
+	bool Physics::intersectionWithY(const sf::Vector2f &lineStart, const sf::Vector2f &lineEnd, float y, float &delta, sf::Vector2f &intersection) {
+		delta = (y - lineStart.y) / (lineEnd.y - lineStart.y);	
+		if (delta == 0) { return false; }
+		intersection.x = lineStart.x + delta * (lineEnd.x - lineStart.x);
+		intersection.y = lineStart.y + delta * (lineEnd.y - lineStart.y);
+		if (std::abs(delta) > 1) { return false; }
+		return true;
 	}
     
     const int Physics::sgn(float x) {

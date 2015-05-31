@@ -6,6 +6,7 @@
 #include "Paddle.hpp"
 #include "SpriteText.hpp"
 #include "CharMapProperties.hpp"
+#include "Physics.hpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -53,8 +54,6 @@ private:
 	void resetScores();
 
 	bool rangesIntersect(const sf::Vector2f &range1, const sf::Vector2f &range2) const;
-	bool intersectVertically(const sf::Vector2f &ballStart, const sf::Vector2f &ballEnd, float lineY, float &delta, sf::Vector2f &intersection) const;
-	bool intersectHorizontally(const sf::Vector2f &ballStart, const sf::Vector2f &ballEnd, float lineX, float &delta, sf::Vector2f &intersection) const;
 
 public:
     // http://www.codeproject.com/Articles/13740/The-Beginner-s-Guide-to-Using-Enum-Flags
