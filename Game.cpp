@@ -39,7 +39,7 @@ namespace Cong {
 	Game::Game(const std::string &title, int width, int height) :
 			window(0), court(0), ball(0), paddleLeft(0), paddleRight(0),
 			scoreDisplayLeft(0), scoreDisplayRight(0), charMapProps(0),
-			title(title), width(width), height(height)
+			title(title), width(width), height(height), state(0)
 	{
         window = new sf::RenderWindow(sf::VideoMode(width, height), title);
         
@@ -142,6 +142,7 @@ namespace Cong {
 		window->close();
 
 		delete window;
+		delete state;
 
 		delete ball;
 		delete court;

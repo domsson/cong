@@ -8,6 +8,8 @@
 #include "CharMapProperties.hpp"
 #include "Physics.hpp"
 #include "Math.hpp"
+#include "GameState.hpp"
+#include "GameState.fwd.hpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
@@ -18,6 +20,8 @@ class Game {
 
 private:
 	sf::RenderWindow *window;
+
+	GameState *state;
 
 	sf::RectangleShape *court;
 	Ball *ball;
