@@ -34,7 +34,7 @@ Planned features
 Stretch goals (if time/motivation permits)
 ------------------------------------------
 - Round ball and the required custom physics as an additional challenge
-- Support for other Input devices (Joystick, Joypad)
+- Support for other Input devices (Joystick, Joypad) and analog input
 - Possibility to customize inputs (user can choose which buttons/keys move the paddles)
 - Possibility to configure video settings (resolution, windowed/full screen, ...)
 - Color setting (change element/font color from white to some other colors)
