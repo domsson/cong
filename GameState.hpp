@@ -1,10 +1,11 @@
 #ifndef CONG_GAMESTATE_HPP
 #define CONG_GAMESTATE_HPP
 
-// #include "Game.hpp"
-#include "Game.fwd.hpp"
+#include "Game.hpp"
 
 namespace Cong {
+
+class Game;
 
 class GameState {
 

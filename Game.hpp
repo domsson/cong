@@ -9,12 +9,13 @@
 #include "Physics.hpp"
 #include "Math.hpp"
 #include "GameState.hpp"
-#include "GameState.fwd.hpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
 namespace Cong {
+
+class GameState;
 
 class Game {
 
