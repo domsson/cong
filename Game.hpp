@@ -26,11 +26,11 @@ private:
 	SpriteText *scoreDisplayLeft;
     SpriteText *scoreDisplayRight;
 
-	sf::Texture *charMapTexture;
 	CharMapProperties *charMapProps;
-	sf::Texture *courtTexture;
-	sf::Texture *ballTexture;
-	sf::Texture *paddleTexture;
+	sf::Texture charMapTexture;
+	sf::Texture courtTexture;
+	sf::Texture ballTexture;
+	sf::Texture paddleTexture;
 
 	sf::Sound paddleSound;
 	sf::Sound wallSound;
@@ -65,6 +65,7 @@ private:
 	void resetScores();
 
 	bool loadSound(const std::string &soundFile, sf::SoundBuffer &buffer, sf::Sound &sound);
+	bool loadTexture(const std::string &textureFile, sf::Texture &texture);
 
 public:
     // http://www.codeproject.com/Articles/13740/The-Beginner-s-Guide-to-Using-Enum-Flags

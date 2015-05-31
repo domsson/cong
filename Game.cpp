@@ -43,8 +43,7 @@ namespace Cong {
 
 	Game::Game(const std::string &title, int width, int height) :
 			window(0), court(0), ball(0), paddleLeft(0), paddleRight(0),
-			scoreDisplayLeft(0), scoreDisplayRight(0), charMapTexture(0),
-			charMapProps(0), courtTexture(0), ballTexture(0), paddleTexture(0),
+			scoreDisplayLeft(0), scoreDisplayRight(0), charMapProps(0),
 			title(title), width(width), height(height)
 	{
         window = new sf::RenderWindow(sf::VideoMode(width, height), title);
@@ -64,59 +63,55 @@ namespace Cong {
 
 	void Game::initCourt() {
 		if (!COURT_TEXTURE.empty()) {
-			courtTexture = new sf::Texture();
-			courtTexture->loadFromFile(TEXTURE_DIR + COURT_TEXTURE);
+			loadTexture(TEXTURE_DIR + COURT_TEXTURE, courtTexture);
 		}
 
 		court = new sf::RectangleShape(sf::Vector2f(width, height));
 		court->setFillColor(sf::Color(COURT_COLOR[0], COURT_COLOR[1], COURT_COLOR[2]));
-		court->setTexture(courtTexture);
+		court->setTexture(&courtTexture);
 	}
 
 	void Game::initPaddles() {
 		if (!PADDLE_TEXTURE.empty()) {
-			paddleTexture = new sf::Texture();
-			paddleTexture->loadFromFile(TEXTURE_DIR + PADDLE_TEXTURE);
+			loadTexture(TEXTURE_DIR + PADDLE_TEXTURE, paddleTexture);
 		}
 
         paddleLeft = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
 		paddleLeft->setOrigin(PADDLE_WIDTH, (PADDLE_HEIGHT * 0.5) - 0.5);
         paddleLeft->setPosition(PADDING + PADDLE_WIDTH, (height-1) * 0.5); // Origin at right edge, vertically centered
         paddleLeft->setFillColor(sf::Color(PADDLE_COLOR[0], PADDLE_COLOR[1], PADDLE_COLOR[2]));
-		paddleLeft->setTexture(paddleTexture);
+		paddleLeft->setTexture(&paddleTexture);
         
         paddleRight = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
 		paddleRight->setOrigin(0, (PADDLE_HEIGHT * 0.5) - 0.5);
         paddleRight->setPosition(width - (PADDLE_WIDTH + PADDING), (height-1) * 0.5); // Origin at left edge, vertically centered
         paddleRight->setFillColor(sf::Color(PADDLE_COLOR[0], PADDLE_COLOR[1], PADDLE_COLOR[2]));
-		paddleRight->setTexture(paddleTexture);
+		paddleRight->setTexture(&paddleTexture);
 	}
 
 	void Game::initBall() {
 		if (!BALL_TEXTURE.empty()) {
-			ballTexture = new sf::Texture();
-			ballTexture->loadFromFile(TEXTURE_DIR + BALL_TEXTURE);
+			loadTexture(TEXTURE_DIR + BALL_TEXTURE, ballTexture);
 		}
 
         ball = new Cong::Ball(BALL_RADIUS, 0);
         ball->setPosition((width-1) * 0.5, (height-1) * 0.5); // The Ball's origin is at its center!
         ball->setFillColor(sf::Color(BALL_COLOR[0], BALL_COLOR[1], BALL_COLOR[2]));
-		ball->setTexture(ballTexture);
+		ball->setTexture(&ballTexture);
 	}
 
 	void Game::initScoreDisplays() {
-		charMapTexture = new sf::Texture();
-		charMapTexture->loadFromFile(TEXTURE_DIR + FONT_TEXTURE);
+		loadTexture(TEXTURE_DIR + FONT_TEXTURE, charMapTexture);
 
 		charMapProps = new CharMapProperties(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", 7, 9, 0, 18);
 
-		scoreDisplayLeft = new SpriteText(charMapTexture, charMapProps);
+		scoreDisplayLeft = new SpriteText(&charMapTexture, charMapProps);
 		scoreDisplayLeft->setScale(sf::Vector2f(8, 8));
 		scoreDisplayLeft->setAnchor(SpriteTextAnchor::TOP_CENTER);
 		scoreDisplayLeft->setPosition(width * 0.35, PADDING);
 		scoreDisplayLeft->setText(std::to_string(scoreLeft));
 
-		scoreDisplayRight = new SpriteText(charMapTexture, charMapProps);
+		scoreDisplayRight = new SpriteText(&charMapTexture, charMapProps);
 		scoreDisplayRight->setScale(sf::Vector2f(8, 8));
 		scoreDisplayRight->setAnchor(SpriteTextAnchor::TOP_CENTER);
 		scoreDisplayRight->setPosition(width * 0.65, PADDING);
@@ -139,10 +134,20 @@ namespace Cong {
 		return true;
 	}
 
+	bool Game::loadTexture(const std::string &textureFile, sf::Texture &texture) {
+		if (!texture.loadFromFile(textureFile)) {
+			std::cerr << "Error: Could not load image file " << textureFile << std::endl;
+			return false;
+		}
+		std::cout << "Loaded " << textureFile << " (Size: " << texture.getSize().x << " x " << texture.getSize().y << " px)" << std::endl;
+		return true;	
+	}
+
 	Game::~Game() {
 		window->close();
 
 		delete window;
+
 		delete ball;
 		delete court;
 		delete paddleLeft;
@@ -150,11 +155,7 @@ namespace Cong {
 		delete scoreDisplayLeft;
 		delete scoreDisplayRight;
 
-		delete charMapTexture;
 		delete charMapProps;
-		delete courtTexture;
-		delete ballTexture;
-		delete paddleTexture;
 	}
 
 	void Game::run() {
