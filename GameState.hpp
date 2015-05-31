@@ -13,8 +13,8 @@ public:
 
 	void setGame(Game *game);
 
-	virtual void onEnter() = 0;
-	virtual void onExit() = 0;
+	virtual void enter() = 0;
+	virtual void exit() = 0;
 
 	virtual void processEvents() = 0;
 	virtual void processInputs() = 0;

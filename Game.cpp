@@ -51,6 +51,18 @@ namespace Cong {
 		initSounds();
 	}
 
+	void Game::setState(GameState *state) {
+		if (this->state != nullptr) {
+			this->state->exit();
+		}
+		this->state = state;
+		state->enter();
+	}
+	
+	sf::RenderWindow* Game::getWindow() const {
+		return window;
+	}
+
 	void Game::resetScores() {
 		scoreLeft = 0;
 		scoreRight = 0;
@@ -58,7 +70,7 @@ namespace Cong {
 
 	void Game::initCourt() {
 		if (!COURT_TEXTURE.empty()) {
-			loadTexture(TEXTURE_DIR + COURT_TEXTURE, courtTexture);
+			Game::loadTexture(TEXTURE_DIR + COURT_TEXTURE, courtTexture);
 		}
 
 		court = new sf::RectangleShape(sf::Vector2f(width, height));
@@ -68,7 +80,7 @@ namespace Cong {
 
 	void Game::initPaddles() {
 		if (!PADDLE_TEXTURE.empty()) {
-			loadTexture(TEXTURE_DIR + PADDLE_TEXTURE, paddleTexture);
+			Game::loadTexture(TEXTURE_DIR + PADDLE_TEXTURE, paddleTexture);
 		}
 
         paddleLeft = new Cong::Paddle(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT), PADDLE_SPEED);
@@ -86,7 +98,7 @@ namespace Cong {
 
 	void Game::initBall() {
 		if (!BALL_TEXTURE.empty()) {
-			loadTexture(TEXTURE_DIR + BALL_TEXTURE, ballTexture);
+			Game::loadTexture(TEXTURE_DIR + BALL_TEXTURE, ballTexture);
 		}
 
         ball = new Cong::Ball(BALL_RADIUS, 0);
@@ -96,7 +108,7 @@ namespace Cong {
 	}
 
 	void Game::initScoreDisplays() {
-		loadTexture(TEXTURE_DIR + FONT_TEXTURE, charMapTexture);
+		Game::loadTexture(TEXTURE_DIR + FONT_TEXTURE, charMapTexture);
 
 		charMapProps = new CharMapProperties(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", 7, 9, 0, 18);
 
@@ -114,9 +126,9 @@ namespace Cong {
 	}
 
 	void Game::initSounds() {
-		loadSound(SOUND_DIR + HIT_PADDLE_SOUND, paddleSoundFile, paddleSound);
-		loadSound(SOUND_DIR + HIT_WALL_SOUND, wallSoundFile, wallSound);
-		loadSound(SOUND_DIR + BALL_OUT_SOUND, outSoundFile, outSound);
+		Game::loadSound(SOUND_DIR + HIT_PADDLE_SOUND, paddleSoundFile, paddleSound);
+		Game::loadSound(SOUND_DIR + HIT_WALL_SOUND, wallSoundFile, wallSound);
+		Game::loadSound(SOUND_DIR + BALL_OUT_SOUND, outSoundFile, outSound);
 	}
 
 	bool Game::loadSound(const std::string &soundFile, sf::SoundBuffer &buffer, sf::Sound &sound) {
@@ -300,14 +312,14 @@ namespace Cong {
 		
 
         if (ballPositionNext.x + BALL_RADIUS <= 0) {
-			scoreForLeft();          
+			scoreForRight();          
 			outSound.play();
 			serve();
 			return;
         }
         
         if (ballPositionNext.x - BALL_RADIUS >= width) {
-			scoreForRight();
+			scoreForLeft();
 			outSound.play();
             serve();
 			return;
@@ -330,12 +342,24 @@ namespace Cong {
         
 	}
 
+    void Game::serve() {
+        ball->setSpeed(0);
+        ball->setDirection(sf::Vector2f(1, 1));
+        ball->setPosition((width-1) * 0.5, (height-1) * 0.5);
+    }
+
 	void Game::scoreForLeft() {
 		scoreDisplayLeft->setText(std::to_string(++scoreLeft));
+		if (scoreLeft >= 11) {
+			// Left Wins!
+		}
 	}
 
 	void Game::scoreForRight() {
 		scoreDisplayRight->setText(std::to_string(++scoreRight));
+		if (scoreRight >= 11) {
+			// Right Wins!
+		}
 	}
 
 	void Game::render() {
@@ -416,11 +440,5 @@ namespace Cong {
             ball->setSpeed(BALL_SPEED);
         }
 	}
-    
-    void Game::serve() {
-        ball->setSpeed(0);
-        ball->setDirection(sf::Vector2f(1, 1));
-        ball->setPosition((width-1) * 0.5, (height-1) * 0.5);
-    }
 
 }

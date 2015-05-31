@@ -22,6 +22,10 @@ class Game {
 private:
 	sf::RenderWindow *window;
 
+	int width;
+	int height;
+	std::string title;
+
 	GameState *state;
 
 	sf::RectangleShape *court;
@@ -45,10 +49,6 @@ private:
 	sf::SoundBuffer wallSoundFile;
 	sf::SoundBuffer outSoundFile;
 
-	int width;
-	int height;
-	std::string title;
-
 	int scoreLeft;
 	int scoreRight;
 
@@ -69,15 +69,17 @@ private:
 
 	void resetScores();
 
-	bool loadSound(const std::string &soundFile, sf::SoundBuffer &buffer, sf::Sound &sound);
-	bool loadTexture(const std::string &textureFile, sf::Texture &texture);
-
 public:
     
 	Game(const std::string &title, int width, int height);
 	~Game();
 
 	void run();
+	void setState(GameState *state);
+	sf::RenderWindow* getWindow() const;
+
+	static bool loadSound(const std::string &soundFile, sf::SoundBuffer &buffer, sf::Sound &sound);
+	static bool loadTexture(const std::string &textureFile, sf::Texture &texture);
 
 };
 
