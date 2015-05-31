@@ -68,12 +68,6 @@ private:
 	bool loadTexture(const std::string &textureFile, sf::Texture &texture);
 
 public:
-    // http://www.codeproject.com/Articles/13740/The-Beginner-s-Guide-to-Using-Enum-Flags
-    // TODO Maybe better use Enum for it (Edge::TOP, Edge::LEFT and so on)
-    static const int EDGE_TOP;
-    static const int EDGE_RIGHT;
-    static const int EDGE_BOTTOM;
-    static const int EDGE_LEFT;
     
 	Game(const std::string &title, int width, int height);
 	~Game();
