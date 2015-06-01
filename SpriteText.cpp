@@ -8,6 +8,11 @@ namespace Cong {
 	{
 		anchor = TOP_LEFT;
 		charSprites = nullptr;
+
+		color.r = 255;
+		color.g = 255;
+		color.b = 255;
+		color.a = 255;
 	}
 	
 	SpriteText::~SpriteText() {
@@ -21,6 +26,7 @@ namespace Cong {
 
 		for (int i=0; i < text.length(); ++i) {
 			charSprites[i].setTexture(*charMap);
+			charSprites[i].setColor(color);
 			updateSpritePosition(i);
 			setCharacter(i, text[i]);
 		}
@@ -52,6 +58,17 @@ namespace Cong {
 	void SpriteText::setAnchor(SpriteTextAnchor anchor) {
 		this->anchor = anchor;
 		updateOrigin();
+	}
+
+	void SpriteText::setColor(const sf::Color &color) {
+		this->color.r = color.r;
+		this->color.g = color.g;
+		this->color.b = color.b;
+		this->color.a = color.a;
+
+		for (int i=0; i<text.length(); ++i) {		
+			charSprites[i].setColor(this->color);
+		}
 	}
 
 	void SpriteText::updateOrigin() {

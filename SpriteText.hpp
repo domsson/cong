@@ -19,6 +19,7 @@ private:
 	sf::Sprite *charSprites;
 
 	SpriteTextAnchor anchor;
+	sf::Color color;
 
 	int getUnscaledWidth() const;
 	int getUnscaledHeight() const;
@@ -39,6 +40,7 @@ public:
 	void setText(const std::string &text);
 	void setCharMap(sf::Texture *charMapTexture, CharMapProperties *charMapProperties);
 	void setAnchor(SpriteTextAnchor anchor);
+	void setColor(const sf::Color &color);
 
 	float getWidth() const;
 	float getHeight() const;
