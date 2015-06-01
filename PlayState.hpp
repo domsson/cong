@@ -1,7 +1,18 @@
 #ifndef CONG_PLAYSTATE_HPP
 #define CONG_PLAYSTATE_HPP
 
+#include <string>
+#include <iostream>
+#include "Ball.hpp"
+#include "Paddle.hpp"
+#include "SpriteText.hpp"
+#include "CharMapProperties.hpp"
+#include "Physics.hpp"
+#include "Math.hpp"
 #include "GameState.hpp"
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 namespace Cong {
 
@@ -55,10 +66,10 @@ public:
 	void enter();
 	void exit();
 
-	void processEvents();
-	void processInputs();
-    void update();
-	void render();
+	void processEvents(Game *game);
+	void processInputs(Game *game);
+    void update(Game *game);
+	void render(Game *game);
 
 };
 

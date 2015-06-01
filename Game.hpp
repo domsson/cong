@@ -28,46 +28,10 @@ private:
 
 	GameState *state;
 
-	sf::RectangleShape *court;
-	Ball *ball;
-	Paddle *paddleLeft;
-	Paddle *paddleRight;
-	SpriteText *scoreDisplayLeft;
-    SpriteText *scoreDisplayRight;
-
-	CharMapProperties *charMapProps;
-	sf::Texture charMapTexture;
-	sf::Texture courtTexture;
-	sf::Texture ballTexture;
-	sf::Texture paddleTexture;
-
-	sf::Sound paddleSound;
-	sf::Sound wallSound;
-	sf::Sound outSound;
-
-	sf::SoundBuffer paddleSoundFile;
-	sf::SoundBuffer wallSoundFile;
-	sf::SoundBuffer outSoundFile;
-
-	int scoreLeft;
-	int scoreRight;
-
     void processEvents();
 	void processInputs();
     void update();
 	void render();
-    
-    void serve();
-	void scoreForLeft();
-	void scoreForRight();
-
-	void initCourt();
-	void initPaddles();
-	void initBall();
-	void initScoreDisplays();
-	void initSounds();
-
-	void resetScores();
 
 public:
     
@@ -77,6 +41,7 @@ public:
 	void run();
 	void setState(GameState *state);
 	sf::RenderWindow* getWindow() const;
+	float getDeltaTime() const;
 
 	static bool loadSound(const std::string &soundFile, sf::SoundBuffer &buffer, sf::Sound &sound);
 	static bool loadTexture(const std::string &textureFile, sf::Texture &texture);

@@ -30,12 +30,6 @@ namespace Cong {
 			court(0), ball(0), paddleLeft(0), paddleRight(0),
 			scoreDisplayLeft(0), scoreDisplayRight(0), charMapProps(0)
 	{
-		resetScores();
-		initCourt();
-		initPaddles();
-		initBall();
-		initScoreDisplays();
-		initSounds();
 	}
 
 	PlayState::~PlayState() {
@@ -50,6 +44,12 @@ namespace Cong {
 	}
 
 	void PlayState::enter() {
+		resetScores();
+		initCourt();
+		initPaddles();
+		initBall();
+		initScoreDisplays();
+		initSounds();
 	}
 
 	void PlayState::exit() {
@@ -123,8 +123,8 @@ namespace Cong {
 		Game::loadSound(SOUND_DIR + BALL_OUT_SOUND, outSoundFile, outSound);
 	}	
 
-	void PlayState::update() {
-		float ballSpeed = ball->getSpeed() * 0.02;
+	void PlayState::update(Game *game) {
+		float ballSpeed = ball->getSpeed() * game->getDeltaTime();
         sf::Vector2f ballPositionNext((ball->getPosition().x + ball->getDirection().x * ballSpeed), (ball->getPosition().y + ball->getDirection().y * ballSpeed));
         
 		// We check for collisions with the left paddle only if the ball is close to it.
@@ -243,14 +243,14 @@ namespace Cong {
 		
 
         if (ballPositionNext.x + BALL_RADIUS <= 0) {
-			scoreForLeft();          
+			scoreForRight();          
 			outSound.play();
 			serve();
 			return;
         }
         
         if (ballPositionNext.x - BALL_RADIUS >= width) {
-			scoreForRight();
+			scoreForLeft();
 			outSound.play();
             serve();
 			return;
@@ -286,26 +286,27 @@ namespace Cong {
 		scoreDisplayRight->setText(std::to_string(++scoreRight));
 	}
 
-	void PlayState::processEvents() {
+	void PlayState::processEvents(Game *game) {
 /*
+		std::cout << "PlayState::processEvents()" << std::endl;
         sf::Event event;
         while (game->getWindow()->pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+			std::cout << "PlayState::processEvents() while loop" << std::endl;
+            if (event.type == sf::Event::Closed) {
                 game->getWindow()->close();
-        }
-        */
-    }
-
-	void PlayState::processInputs() {
-/*
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-            window->close();
+			}
         }
 */
+    }
+
+	void PlayState::processInputs(Game *game) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+            game->getWindow()->close();
+        }
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
             sf::Vector2f paddleLeftPos = paddleLeft->getPosition();
-            int paddleLeftY = paddleLeftPos.y - PADDLE_SPEED * 0.02;
+            int paddleLeftY = paddleLeftPos.y - PADDLE_SPEED * game->getDeltaTime();
             paddleLeftY = paddleLeftY - PADDLE_HEIGHT * 0.5 < 0 ? PADDLE_HEIGHT * 0.5  : paddleLeftY;
             
             paddleLeft->setPosition(sf::Vector2f(paddleLeftPos.x, paddleLeftY));
@@ -313,7 +314,7 @@ namespace Cong {
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
             sf::Vector2f paddleLeftPos = paddleLeft->getPosition();
-            int paddleLeftY = paddleLeftPos.y + PADDLE_SPEED * 0.02;
+            int paddleLeftY = paddleLeftPos.y + PADDLE_SPEED * game->getDeltaTime();
             paddleLeftY = paddleLeftY + PADDLE_HEIGHT * 0.5 > height ? height - PADDLE_HEIGHT * 0.5  : paddleLeftY;
             
             paddleLeft->setPosition(sf::Vector2f(paddleLeftPos.x, paddleLeftY));
@@ -321,7 +322,7 @@ namespace Cong {
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
             sf::Vector2f paddleRightPos = paddleRight->getPosition();
-            int paddleRightY = paddleRightPos.y - PADDLE_SPEED * 0.02;
+            int paddleRightY = paddleRightPos.y - PADDLE_SPEED * game->getDeltaTime();
             paddleRightY = paddleRightY - PADDLE_HEIGHT * 0.5 < 0  ? PADDLE_HEIGHT * 0.5  : paddleRightY;
             
             paddleRight->setPosition(sf::Vector2f(paddleRightPos.x, paddleRightY));
@@ -329,7 +330,7 @@ namespace Cong {
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
             sf::Vector2f paddleRightPos = paddleRight->getPosition();
-            int paddleRightY = paddleRightPos.y + PADDLE_SPEED * 0.02;
+            int paddleRightY = paddleRightPos.y + PADDLE_SPEED * game->getDeltaTime();
             paddleRightY = paddleRightY + PADDLE_HEIGHT * 0.5  > height ? height - PADDLE_HEIGHT * 0.5   : paddleRightY;
             
             paddleRight->setPosition(sf::Vector2f(paddleRightPos.x, paddleRightY));
@@ -357,7 +358,7 @@ namespace Cong {
         }
 	}
 
-	void PlayState::render() {
+	void PlayState::render(Game *game) {
 		game->getWindow()->clear();
         game->getWindow()->draw(*court);
         game->getWindow()->draw(*scoreDisplayLeft);

@@ -2,8 +2,14 @@
 
 namespace Cong {
 
-	void GameState::setGame(Game *game) {
-		this->game = game;
+	GameState::GameState() {
+	}
+
+	GameState::~GameState() {
+	}
+
+	void GameState::changeState(Game *game, GameState *state) {
+		game->setState(state);
 	}
 
 }

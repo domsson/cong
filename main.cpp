@@ -3,6 +3,8 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Game.hpp"
+#include "MainMenuState.hpp"
+#include "PlayState.hpp"
 
 Cong::Game* game = 0;
 
@@ -15,7 +17,9 @@ int main() {
     std::cout << "CWD: " << path << std::endl;
     
 	game = new Cong::Game(TITLE, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+	game->setState(new Cong::MainMenuState(VIEWPORT_WIDTH, VIEWPORT_HEIGHT));
 	game->run();
 
+	delete game;
     return 0;
 }

@@ -11,19 +11,20 @@ class GameState {
 
 public:
 
-	void setGame(Game *game);
+	GameState();
+	virtual ~GameState();
 
 	virtual void enter() = 0;
 	virtual void exit() = 0;
 
-	virtual void processEvents() = 0;
-	virtual void processInputs() = 0;
-    virtual void update() = 0;
-	virtual void render() = 0;
+	virtual void processEvents(Game *game) = 0;
+	virtual void processInputs(Game *game) = 0;
+    virtual void update(Game *game) = 0;
+	virtual void render(Game *game) = 0;
 
 protected:
 
-	Game *game = 0;
+	void changeState(Game *game, GameState *state);
 
 };
 
