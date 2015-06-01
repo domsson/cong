@@ -58,3 +58,4 @@ Problems and Learnings
 - There are many "weird" types, like size_t, that seem to be used instead of types like int. I should figure out why and what exactly they are.
 - Default values for function parameters should appear in the declaration (header file), *not* the definition (cpp file)! (The other way round is possible with a different effect on visibility, but can never have both)
 - Circular dependencies are tricky. Forward declarations can help. See http://stackoverflow.com/questions/625799/resolve-circular-dependencies-in-c
+- [Virtual / Pure Virtual](http://stackoverflow.com/questions/1306778/c-virtual-pure-virtual-explained) - Important for inheritance and interfaces / abstract classes
