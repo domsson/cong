@@ -11,17 +11,17 @@ namespace Cong {
 
 	static const int TARGET_FPS = 50;
 	static const float SECONDS_PER_FRAME = 1.0 / TARGET_FPS;
-    
-    static const int PADDING = 20;
-    static const int PADDLE_WIDTH = 20;
-    static const int PADDLE_HEIGHT = 80;
+
+	static const int PADDING = 20;
+	static const int PADDLE_WIDTH = 20;
+	static const int PADDLE_HEIGHT = 80;
 	static const int PADDLE_SPEED = 400;
-    static const int BALL_RADIUS = 14;
+	static const int BALL_RADIUS = 14;
 	static const int BALL_SPEED = 300;
 	static const float BALL_SPEED_INCREASE = 0.05;
 
 	static const int COURT_COLOR[] = {255, 255, 255};
-    static const int BALL_COLOR[] = {255, 255, 255};
+	static const int BALL_COLOR[] = {255, 255, 255};
 	static const int PADDLE_COLOR[] = {255, 255, 255};
 
 	static const std::string TEXTURE_DIR = "./tex/";

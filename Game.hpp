@@ -28,9 +28,9 @@ private:
 
 	GameState *state;
 
-    void processEvents();
+	void processEvents();
 	void processInputs();
-    void update();
+	void update();
 	void render();
 
 public:
