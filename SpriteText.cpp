@@ -3,8 +3,8 @@
 
 namespace Cong {
 
-	SpriteText::SpriteText(sf::Texture *charMap, CharMapProperties *charMapProperties)
-		: charMap(charMap), charMapProperties(charMapProperties)	
+	SpriteText::SpriteText(const CharMap &charMap)
+		: charMap(&charMap)	
 	{
 		anchor = TOP_LEFT;
 		charSprites = nullptr;
@@ -25,7 +25,7 @@ namespace Cong {
 		charSprites = new sf::Sprite[text.length()];
 
 		for (int i=0; i < text.length(); ++i) {
-			charSprites[i].setTexture(*charMap);
+			charSprites[i].setTexture(*charMap->getTexture());
 			charSprites[i].setColor(color);
 			updateSpritePosition(i);
 			setCharacter(i, text[i]);
@@ -35,17 +35,16 @@ namespace Cong {
 
 	void SpriteText::setCharacter(int i, const char &c) {
 		// TODO Handle the case of getCharPos returning -1 (char not in charmap)
-		int charPosX = charMapProperties->getCharPosX(c);
-		int charPosY = charMapProperties->getCharPosY(c);
-		int charWidth = charMapProperties->getCharWidth();
-		int charHeight = charMapProperties->getCharHeight();
+		int charPosX = charMap->getCharPosX(c);
+		int charPosY = charMap->getCharPosY(c);
 
-		charSprites[i].setTextureRect(sf::IntRect(charPosX, charPosY, charWidth, charHeight));
+		charSprites[i].setTextureRect(sf::IntRect(charPosX, charPosY, charMap->charWidth, charMap->charHeight));
 	}
 
-	void SpriteText::setCharMap(sf::Texture *charMap, CharMapProperties *charMapProperties) {
-		this->charMap = charMap;
-		this->charMapProperties = charMapProperties;
+	void SpriteText::setCharMap(const CharMap &charMap) {
+		this->charMap = &charMap;
+		updateSpritePositions();
+		updateOrigin();
 	}
 
 	void SpriteText::draw(sf::RenderTarget &target, sf::RenderStates states) const {
@@ -101,19 +100,6 @@ namespace Cong {
 				setOrigin(getUnscaledWidth(), getUnscaledHeight());
 				break;			
 		}
-/*
-		switch (anchor) {
-			case LEFT:
-				setOrigin(0.0, 0.0);
-				break;
-			case CENTER:
-				setOrigin(getUnscaledWidth() * 0.5, 0.0);
-				break;
-			case RIGHT:
-				setOrigin(getUnscaledWidth(), 0.0);
-				break;
-		}
-*/
 	}
 
 	float SpriteText::getWidth() const {
@@ -121,7 +107,7 @@ namespace Cong {
 	}
 
 	int SpriteText::getUnscaledWidth() const {
-		return text.length() * charMapProperties->getCharWidth();
+		return text.length() * charMap->charWidth;
 	}
 
 	float SpriteText::getHeight() const {
@@ -129,7 +115,7 @@ namespace Cong {
 	}
 
 	int SpriteText::getUnscaledHeight() const {
-		return charMapProperties->getCharHeight();
+		return charMap->charHeight;
 	}
 
 	SpriteTextAnchor SpriteText::getAnchor() const {
@@ -137,7 +123,7 @@ namespace Cong {
 	}
 
 	void SpriteText::updateSpritePosition(unsigned int i) {
-		charSprites[i].setPosition(charMapProperties->getCharWidth() * i, 0.0);
+		charSprites[i].setPosition(charMap->charWidth * i, 0.0);
 	}
 
 	void SpriteText::updateSpritePositions() {

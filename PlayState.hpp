@@ -3,16 +3,16 @@
 
 #include <string>
 #include <iostream>
-#include "Ball.hpp"
-#include "Paddle.hpp"
-#include "SpriteText.hpp"
-#include "CharMapProperties.hpp"
-#include "Physics.hpp"
-#include "Math.hpp"
-#include "GameState.hpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include "Physics.hpp"
+#include "Math.hpp"
+#include "Ball.hpp"
+#include "Paddle.hpp"
+#include "CharMap.hpp"
+#include "SpriteText.hpp"
+#include "GameState.hpp"
 
 namespace Cong {
 
@@ -27,14 +27,16 @@ private:
 	Ball *ball;
 	Paddle *paddleLeft;
 	Paddle *paddleRight;
-	SpriteText *scoreDisplayLeft;
-    SpriteText *scoreDisplayRight;
 
-	CharMapProperties *charMapProps;
-	sf::Texture charMapTexture;
 	sf::Texture courtTexture;
 	sf::Texture ballTexture;
 	sf::Texture paddleTexture;
+
+	sf::Texture charMapTexture;
+	CharMap *charMap;
+
+	SpriteText *scoreDisplayLeft;
+    SpriteText *scoreDisplayRight;
 
 	sf::Sound paddleSound;
 	sf::Sound wallSound;

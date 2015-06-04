@@ -26,13 +26,14 @@ namespace Cong {
 	static const std::string HIT_WALL_SOUND = "ping_pong_8bit_plop.ogg";
 	static const std::string BALL_OUT_SOUND = "ping_pong_8bit_peeeeeep.ogg";
 
-	PlayState::PlayState(int width, int height) : width(width), height(height),
-			court(0), ball(0), paddleLeft(0), paddleRight(0),
-			scoreDisplayLeft(0), scoreDisplayRight(0), charMapProps(0)
+	PlayState::PlayState(int width, int height)
+		: width(width), height(height), court(0), ball(0), paddleLeft(0), paddleRight(0),
+		scoreDisplayLeft(0), scoreDisplayRight(0), charMap(0), charMapTexture()
 	{
 	}
 
-	PlayState::~PlayState() {
+	PlayState::~PlayState()
+	{
 		delete ball;
 		delete court;
 		delete paddleLeft;
@@ -40,7 +41,7 @@ namespace Cong {
 		delete scoreDisplayLeft;
 		delete scoreDisplayRight;
 
-		delete charMapProps;
+		delete charMap;
 	}
 
 	void PlayState::enter() {
@@ -102,15 +103,15 @@ namespace Cong {
 	void PlayState::initScoreDisplays() {
 		Game::loadTexture(TEXTURE_DIR + FONT_TEXTURE, charMapTexture);
 
-		charMapProps = new CharMapProperties(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", 7, 9, 0, 18);
+		charMap = new CharMap(charMapTexture, " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~", 7, 9, 0, 18);
 
-		scoreDisplayLeft = new SpriteText(&charMapTexture, charMapProps);
+		scoreDisplayLeft = new SpriteText(*charMap);
 		scoreDisplayLeft->setScale(sf::Vector2f(8, 8));
 		scoreDisplayLeft->setAnchor(SpriteTextAnchor::TOP_CENTER);
 		scoreDisplayLeft->setPosition(width * 0.35, PADDING);
 		scoreDisplayLeft->setText(std::to_string(scoreLeft));
 
-		scoreDisplayRight = new SpriteText(&charMapTexture, charMapProps);
+		scoreDisplayRight = new SpriteText(*charMap);
 		scoreDisplayRight->setScale(sf::Vector2f(8, 8));
 		scoreDisplayRight->setAnchor(SpriteTextAnchor::TOP_CENTER);
 		scoreDisplayRight->setPosition(width * 0.65, PADDING);

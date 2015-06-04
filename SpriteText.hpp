@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <string>
-#include "CharMapProperties.hpp"
+#include "CharMap.hpp"
 #include "SpriteTextAnchor.hpp"
 
 namespace Cong {
@@ -12,8 +12,7 @@ namespace Cong {
 class SpriteText : public sf::Transformable, public sf::Drawable {
 
 private:
-	sf::Texture *charMap;
-	CharMapProperties *charMapProperties;
+	const CharMap *charMap;
 
 	std::string text;
 	sf::Sprite *charSprites;
@@ -21,24 +20,25 @@ private:
 	SpriteTextAnchor anchor;
 	sf::Color color;
 
+protected:
+
 	int getUnscaledWidth() const;
 	int getUnscaledHeight() const;
 
-protected:
-
-	void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 	void setCharacter(int i, const char &c);
 	void updateSpritePosition(unsigned int i);
 	void updateSpritePositions();
 	void updateOrigin();
 
+	void draw(sf::RenderTarget &target, sf::RenderStates states) const;
+
 public:
 
-	SpriteText(sf::Texture *charMapTexture, CharMapProperties *charMapProperties);
+	SpriteText(const CharMap &charMap);
 	~SpriteText();
 
 	void setText(const std::string &text);
-	void setCharMap(sf::Texture *charMapTexture, CharMapProperties *charMapProperties);
+	void setCharMap(const CharMap &charMapTexture);
 	void setAnchor(SpriteTextAnchor anchor);
 	void setColor(const sf::Color &color);
 

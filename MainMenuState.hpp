@@ -3,12 +3,12 @@
 
 #include <string>
 #include <iostream>
-#include "Game.hpp"
-#include "SpriteText.hpp"
-#include "CharMapProperties.hpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include "Game.hpp"
+#include "CharMap.hpp"
+#include "SpriteText.hpp"
 
 namespace Cong {
 
@@ -19,12 +19,11 @@ private:
 	int width;
 	int height;
 
-	SpriteText *headline;
-	SpriteText *intro;
+	SpriteText *headline; // TODO can we make this object instead of pointer?
+	SpriteText *intro;    // TODO can we make this object instead of pointer?
 
-	CharMapProperties *charMapProps;
 	sf::Texture charMapTexture;
-
+	CharMap *charMap;
 
 public:
 

@@ -5,7 +5,6 @@
 #include "Ball.hpp"
 #include "Paddle.hpp"
 #include "SpriteText.hpp"
-#include "CharMapProperties.hpp"
 #include "Physics.hpp"
 #include "Math.hpp"
 #include "GameState.hpp"
