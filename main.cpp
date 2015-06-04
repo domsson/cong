@@ -13,13 +13,13 @@ static const int VIEWPORT_HEIGHT = 600;
 static const std::string TITLE = "Cong!";
 
 int main() {
-    char* path = getcwd(NULL, 0);
-    std::cout << "CWD: " << path << std::endl;
-    
+	char* path = getcwd(NULL, 0);
+	std::cout << "CWD: " << path << std::endl;
+
 	game = new Cong::Game(TITLE, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 	game->setState(new Cong::MainMenuState(VIEWPORT_WIDTH, VIEWPORT_HEIGHT));
 	game->run();
 
 	delete game;
-    return 0;
+	return 0;
 }
