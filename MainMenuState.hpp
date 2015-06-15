@@ -3,10 +3,14 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
+
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+
 #include "Game.hpp"
+#include "GameState.hpp"
 #include "CharMap.hpp"
 #include "SpriteText.hpp"
 
@@ -16,27 +20,33 @@ class MainMenuState: public GameState {
 
 private:
 
-	int width;
-	int height;
+	const CharMap *charMap;
 
-	SpriteText *headline; // TODO can we make this object instead of pointer?
-	SpriteText *intro;    // TODO can we make this object instead of pointer?
+	SpriteText headline;
+	SpriteText intro;
 
-	sf::Texture charMapTexture;
-	CharMap *charMap;
+	std::vector<SpriteText> menuItems;
+	unsigned int currentMenuItem;
+
+	void initCharMap();
+	void initText();
+
+	void addMenuItem(const std::string &label);
+	void selectNextMenuItem();
+	void selectPrevMenuItem();
 
 public:
 
-	MainMenuState(int width, int height);
+	MainMenuState(Game &game);
 	~MainMenuState();
 
 	void enter();
 	void exit();
 
-	void processEvents(Game *game);
-	void processInputs(Game *game);
-    void update(Game *game);
-	void render(Game *game);
+	void processEvents();
+	void processInputs();
+    void update();
+	void render();
 
 };
 

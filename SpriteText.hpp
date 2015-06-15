@@ -30,10 +30,14 @@ protected:
 	void updateSpritePositions();
 	void updateOrigin();
 
+	void allocateCharSprites();
+	void adjustCharSpritesToText();
+
 	void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
 public:
 
+	SpriteText();
 	SpriteText(const CharMap &charMap);
 	~SpriteText();
 
@@ -44,6 +48,7 @@ public:
 
 	float getWidth() const;
 	float getHeight() const;
+	std::string getText() const;
 	SpriteTextAnchor getAnchor() const;
 
 };

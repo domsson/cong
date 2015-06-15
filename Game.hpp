@@ -2,35 +2,49 @@
 #define CONG_GAME_HPP
 
 #include <string>
-#include "Ball.hpp"
-#include "Paddle.hpp"
-#include "SpriteText.hpp"
-#include "Physics.hpp"
-#include "Math.hpp"
-#include "GameState.hpp"
+#include <chrono>
+#include <thread>
+#include <iostream>
+
+#include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+
+#include "SpriteText.hpp"
+#include "StateManager.hpp"
+#include "GameState.hpp"
+#include "GameStates.hpp"
+#include "MainMenuState.hpp"
+#include "PlayState.hpp"
 
 namespace Cong {
 
 class GameState;
 
-class Game {
+class Game: public StateManager {
 
 private:
+
 	sf::RenderWindow *window;
 
 	int width;
 	int height;
 	std::string title;
 
-	GameState *state;
+	GameState *activeState;
+	//mutable bool stateChangeRequested;
+
+	sf::Texture charMapTexture;
+	const CharMap *charMap;
 
 	void processEvents();
 	void processInputs();
 	void update();
 	void render();
+
+	void changeState(GameStates newState);
+	void tryStateChange();
 
 public:
     
@@ -38,9 +52,14 @@ public:
 	~Game();
 
 	void run();
-	void setState(GameState *state);
+	void setState(GameState *newState);
+	//void requestStateChange() const;
 	sf::RenderWindow* getWindow() const;
 	float getDeltaTime() const;
+	unsigned int getViewportWidth() const;
+	unsigned int getViewportHeight() const;
+	std::string getTitle() const;
+	const CharMap* getDefaultCharMap() const;
 
 	static bool loadSound(const std::string &soundFile, sf::SoundBuffer &buffer, sf::Sound &sound);
 	static bool loadTexture(const std::string &textureFile, sf::Texture &texture);

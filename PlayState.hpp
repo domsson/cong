@@ -1,11 +1,13 @@
 #ifndef CONG_PLAYSTATE_HPP
 #define CONG_PLAYSTATE_HPP
 
+#include <cmath>
 #include <string>
 #include <iostream>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include "Game.hpp"
 #include "Physics.hpp"
 #include "Math.hpp"
 #include "Ball.hpp"
@@ -32,8 +34,7 @@ private:
 	sf::Texture ballTexture;
 	sf::Texture paddleTexture;
 
-	sf::Texture charMapTexture;
-	CharMap *charMap;
+	const CharMap *charMap;
 
 	SpriteText *scoreDisplayLeft;
     SpriteText *scoreDisplayRight;
@@ -62,16 +63,16 @@ private:
 
 public:
 
-	PlayState(int width, int height);
+	PlayState(Game &game);
 	~PlayState();
 
 	void enter();
 	void exit();
 
-	void processEvents(Game *game);
-	void processInputs(Game *game);
-    void update(Game *game);
-	void render(Game *game);
+	void processEvents();
+	void processInputs();
+    void update();
+	void render();
 
 };
 

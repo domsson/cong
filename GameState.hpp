@@ -1,7 +1,8 @@
 #ifndef CONG_GAMESTATE_HPP
 #define CONG_GAMESTATE_HPP
 
-#include "Game.hpp"
+#include <iostream>
+#include "GameStates.hpp"
 
 namespace Cong {
 
@@ -12,19 +13,26 @@ class GameState {
 public:
 
 	GameState();
-	virtual ~GameState();
+	GameState(Game &game);
+	virtual ~GameState(); // TODO Do we need the dtor? Should it be virtual?
 
 	virtual void enter() = 0;
 	virtual void exit() = 0;
 
-	virtual void processEvents(Game *game) = 0;
-	virtual void processInputs(Game *game) = 0;
-    virtual void update(Game *game) = 0;
-	virtual void render(Game *game) = 0;
+	virtual void processEvents() = 0;
+	virtual void processInputs() = 0;
+    virtual void update() = 0;
+	virtual void render() = 0;
+
+	void setGame(Game &game);
+	GameStates getNextState() const;
 
 protected:
 
-	void changeState(Game *game, GameState *state);
+	const Game *game;
+	GameStates nextState;
+
+	void changeState(GameStates nextState);
 
 };
 
