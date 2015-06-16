@@ -3,8 +3,8 @@
 namespace Cong {
 
 	static const std::string FOO = "Hit <RETURN> to play";
+	
 	static const int MENU_PADDING = 64;
-
 	static const int MENU_ITEM_SCALE = 4;
 	static const int MENU_ITEM_PADDING = 32;
 	static const int MENU_START_Y = 128;
@@ -20,7 +20,7 @@ namespace Cong {
 		initCharMap();
 		initText();
 
-		addMenuItem(MENU_LABEL_PLAY);
+		addMenuItem("kacke");
 		addMenuItem(MENU_LABEL_OPTIONS);
 	}
 
@@ -57,6 +57,14 @@ namespace Cong {
 				else if (event.key.code == sf::Keyboard::Return)
 				{
 					changeState(GameStates::GAMEPLAY);
+				}
+				else if (event.key.code == sf::Keyboard::Up)
+				{
+					selectPrevMenuItem();
+				}
+				else if (event.key.code == sf::Keyboard::Down)
+				{
+					selectNextMenuItem();
 				}
 			}
         }
@@ -110,34 +118,43 @@ namespace Cong {
 
 	void MainMenuState::addMenuItem(const std::string &label)
 	{
+
 		SpriteText newItem;
 		newItem.setCharMap(*charMap);
-/*
 		newItem.setScale(sf::Vector2f(MENU_ITEM_SCALE, MENU_ITEM_SCALE));
 		newItem.setAnchor(SpriteTextAnchor::TOP_CENTER);
 		int offsetY = menuItems.size() * (newItem.getHeight() + MENU_ITEM_PADDING);
 		newItem.setPosition(game->getViewportWidth() * 0.5, MENU_START_Y + offsetY);
 		newItem.setText("  " + label);
-*/
-
 		menuItems.push_back(newItem);
-		
+
+
 /*
+		SpriteText newItem;
+		newItem.setCharMap(*charMap);
+
 		unsigned int itemNum = menuItems.size();
 		//menuItems.push_back(*(new SpriteText(*charMap)));
-		menuItems.push_back(SpriteText(*charMap));
+		//menuItems.push_back(SpriteText(*charMap));
+		menuItems.push_back(newItem);
 		menuItems.back().setScale(sf::Vector2f(MENU_ITEM_SCALE, MENU_ITEM_SCALE));
 		menuItems.back().setAnchor(SpriteTextAnchor::TOP_CENTER);
 		unsigned int offsetY = itemNum * (menuItems.back().getHeight() + MENU_ITEM_PADDING);
 		menuItems.back().setPosition(game->getViewportWidth() * 0.5, MENU_START_Y + offsetY);
 		menuItems.back().setText("  " + label);
 */
+		
 	}
 
 	void MainMenuState::selectNextMenuItem()
 	{
 		std::string prevItemText = menuItems.at(currentMenuItem).getText();
-		menuItems.at(currentMenuItem++).setText(" " + prevItemText.substr(1, std::string::npos));
+		menuItems.at(currentMenuItem).setText(" " + prevItemText.substr(1, std::string::npos));
+
+		if (++currentMenuItem >= menuItems.size())
+		{
+			currentMenuItem = 0;
+		}
 		
 		std::string nextItemText = menuItems.at(currentMenuItem).getText();
 		menuItems.at(currentMenuItem).setText(MENU_ITEM_INDICATOR + nextItemText.substr(1, std::string::npos));
@@ -146,7 +163,12 @@ namespace Cong {
 	void MainMenuState::selectPrevMenuItem()
 	{
 		std::string prevItemText = menuItems.at(currentMenuItem).getText();
-		menuItems.at(currentMenuItem--).setText(" " + prevItemText.substr(1, std::string::npos));
+		menuItems.at(currentMenuItem).setText(" " + prevItemText.substr(1, std::string::npos));
+
+		if (--currentMenuItem < 0)
+		{
+			currentMenuItem = menuItems.size() - 1;
+		}
 		
 		std::string nextItemText = menuItems.at(currentMenuItem).getText();
 		menuItems.at(currentMenuItem).setText(MENU_ITEM_INDICATOR + nextItemText.substr(1, std::string::npos));

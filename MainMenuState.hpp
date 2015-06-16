@@ -26,7 +26,7 @@ private:
 	SpriteText intro;
 
 	std::vector<SpriteText> menuItems;
-	unsigned int currentMenuItem;
+	int currentMenuItem;
 
 	void initCharMap();
 	void initText();

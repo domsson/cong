@@ -39,6 +39,8 @@ public:
 
 	SpriteText();
 	SpriteText(const CharMap &charMap);
+	SpriteText(const SpriteText &spriteText); // Copy constructor
+	SpriteText& operator=(const SpriteText &spriteText); // Custom assignment operator
 	~SpriteText();
 
 	void setText(const std::string &text);

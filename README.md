@@ -59,3 +59,8 @@ Problems and Learnings
 - Default values for function parameters should appear in the declaration (header file), *not* the definition (cpp file)! (The other way round is possible with a different effect on visibility, but can never have both)
 - Circular dependencies are tricky. Forward declarations can help. See http://stackoverflow.com/questions/625799/resolve-circular-dependencies-in-c
 - [Virtual / Pure Virtual](http://stackoverflow.com/questions/1306778/c-virtual-pure-virtual-explained) - Important for inheritance and interfaces / abstract classes
+- If a class has members that are pointers, you will most likely need a copy constructor and custom assignment operator (for deep instead of shallow copies), otherwise you'll run into ugly problems (Segfault says hello!). See http://stackoverflow.com/questions/29052286/initialize-object-with-pointer-members-in-a-vector-c
+- The above leads or is related to move semantics (no idea yet!), the [&&-operator](http://stackoverflow.com/questions/4549151/c-double-address-operator) (related to move semantics) and the Rule of Three / Five (basically the previous point)
+- Copy constructors can have member initializer lists as well!
+- Copy constructors in derived classes need to explicitly call their base/parent's copy constructors (in the initializer list), otherwise the base object's will properties not be copied accordingly
+- Custom assignment operators can NOT have member initializer lists. Simple reason: As we define what happens when we _assign_ (and not _initialize_) to our object, the members have already been initialized at this point.

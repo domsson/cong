@@ -14,6 +14,23 @@ namespace Cong {
 	{
 		// Do nothing
 	}
+
+	// Copy constructor
+	SpriteText::SpriteText(const SpriteText &spriteText)
+	: Transformable(spriteText), Drawable(spriteText), charMap(spriteText.charMap),
+	  charSprites(nullptr), anchor(spriteText.anchor), color(spriteText.color)
+	{
+		setText(spriteText.text);
+	}
+
+	 // Custom assignment operator
+	SpriteText& SpriteText::operator=(const SpriteText &spriteText)
+	{
+		charMap = spriteText.charMap; // Don't use setCharMap() here, otherwise we'll create overhead
+		anchor = spriteText.anchor;
+		color = spriteText.color;
+		setText(spriteText.text);
+	}
 	
 	SpriteText::~SpriteText()
 	{
@@ -23,10 +40,13 @@ namespace Cong {
 	void SpriteText::setCharMap(const CharMap &charMap)
 	{
 		this->charMap = &charMap; // Update the reference
+		adjustCharSpritesToText(); // Different charMap means the sprites need re-adjustment!
+		/*
 		if (text.length() > 0)
 		{
 			setText(text); // Setting the text will do all the required sprite adjustments
 		}
+		*/
 	}
 	
 	void SpriteText::setText(const std::string &text)
@@ -42,6 +62,7 @@ namespace Cong {
 		if (text.length() > 0)
 		{
 			charSprites = new sf::Sprite[text.length()];
+			std::cout << "SpriteText <" << text << "> text adress: " << charSprites << std::endl;
 		}
 	}
 
