@@ -2,8 +2,6 @@
 
 namespace Cong {
 
-	static const std::string FOO = "Hit <RETURN> to play";
-	
 	static const int MENU_PADDING = 64;
 	static const int MENU_ITEM_SCALE = 4;
 	static const int MENU_ITEM_PADDING = 32;
@@ -15,6 +13,10 @@ namespace Cong {
 	static const std::string MENU_LABEL_OPTIONS = "Options";
 	static const std::string MENU_LABEL_QUIT = "Quit";
 
+	static const sf::Color COLOR_TITLE = sf::Color::Red;
+	static const sf::Color COLOR_DEFAULT = sf::Color::White;
+	static const sf::Color COLOR_SELECTED = sf::Color::Green;
+
 	MainMenuState::MainMenuState(Game &game)
 	: GameState(game), charMap(nullptr), currentMenuItem(0)
 	{
@@ -24,6 +26,8 @@ namespace Cong {
 		addMenuItem(MENU_LABEL_PLAY);
 		addMenuItem(MENU_LABEL_OPTIONS);
 		addMenuItem(MENU_LABEL_QUIT);
+
+		selectMenuItem(currentMenuItem);
 	}
 
 	MainMenuState::~MainMenuState()
@@ -84,7 +88,6 @@ namespace Cong {
 	{
 		game->getWindow()->clear();
 		game->getWindow()->draw(headline);
-		// game->getWindow()->draw(intro);
 		
 		for (int i=0; i<menuItems.size(); ++i)
 		{
@@ -109,13 +112,7 @@ namespace Cong {
 		headline.setAnchor(SpriteTextAnchor::TOP_CENTER);
 		headline.setPosition(game->getViewportWidth() * 0.5, MENU_PADDING);
 		headline.setText(game->getTitle());
-		headline.setColor(sf::Color::Red);
-
-		intro.setCharMap(*charMap);
-		intro.setScale(sf::Vector2f(4, 4));
-		intro.setAnchor(SpriteTextAnchor::BOTTOM_CENTER);
-		intro.setPosition(game->getViewportWidth() * 0.5, game->getViewportHeight() - MENU_PADDING);
-		intro.setText(FOO);		
+		headline.setColor(COLOR_TITLE);	
 	}
 
 	void MainMenuState::addMenuItem(const std::string &label)
@@ -131,54 +128,38 @@ namespace Cong {
 		menuItems.push_back(newItem);		
 	}
 
+	void MainMenuState::selectMenuItem(int i)
+	{
+		menuItems.at(i).setColor(COLOR_SELECTED);
+	}
+
+	void MainMenuState::deselectMenuItem(int i)
+	{
+		menuItems.at(i).setColor(COLOR_DEFAULT);
+	}
+
 	void MainMenuState::selectNextMenuItem()
 	{
-		/*
-		std::string prevItemText = menuItems.at(currentMenuItem).getText();
-		menuItems.at(currentMenuItem).setText(prevItemText.substr(MENU_ITEM_PREFIX.length(), std::string::npos - MENU_ITEM_SUFFIX.length()));
-
-		if (++currentMenuItem >= menuItems.size())
-		{
-			currentMenuItem = 0;
-		}
-		
-		std::string nextItemText = menuItems.at(currentMenuItem).getText();
-		menuItems.at(currentMenuItem).setText(MENU_ITEM_PREFIX + nextItemText + MENU_ITEM_SUFFIX);
-		*/
-
-		menuItems.at(currentMenuItem).setColor(sf::Color::White);
+		deselectMenuItem(currentMenuItem);
 
 		if (++currentMenuItem >= menuItems.size())
 		{
 			currentMenuItem = 0;
 		}
 
-		menuItems.at(currentMenuItem).setColor(sf::Color::Green);
+		selectMenuItem(currentMenuItem);
 	}
 
 	void MainMenuState::selectPrevMenuItem()
 	{
-		/*
-		std::string prevItemText = menuItems.at(currentMenuItem).getText();
-		menuItems.at(currentMenuItem).setText(prevItemText.substr(MENU_ITEM_PREFIX.length(), std::string::npos - MENU_ITEM_SUFFIX.length()));
-
-		if (--currentMenuItem < 0)
-		{
-			currentMenuItem = menuItems.size() - 1;
-		}
-		
-		std::string nextItemText = menuItems.at(currentMenuItem).getText();
-		menuItems.at(currentMenuItem).setText(MENU_ITEM_PREFIX + nextItemText + MENU_ITEM_SUFFIX);
-		*/
-
-		menuItems.at(currentMenuItem).setColor(sf::Color::White);
-		
+		deselectMenuItem(currentMenuItem);
+				
 		if (--currentMenuItem < 0)
 		{
 			currentMenuItem = menuItems.size() - 1;
 		}
 
-		menuItems.at(currentMenuItem).setColor(sf::Color::Green);
+		selectMenuItem(currentMenuItem);
 	}
 
 }

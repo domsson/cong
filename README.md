@@ -64,3 +64,5 @@ Problems and Learnings
 - Copy constructors can have member initializer lists as well!
 - Copy constructors in derived classes need to explicitly call their base/parent's copy constructors (in the initializer list), otherwise the base object's will properties not be copied accordingly
 - Custom assignment operators can NOT have member initializer lists. Simple reason: As we define what happens when we _assign_ (and not _initialize_) to our object, the members have already been initialized at this point.
+- Virtual: makes sure the most-derived (overriden) version of a function is called, if any
+- Pure virtual (virtual ... = 0): See virtual, plus deriving classes _have to_ implement these functions

@@ -34,6 +34,8 @@ private:
 	void addMenuItem(const std::string &label);
 	void selectNextMenuItem();
 	void selectPrevMenuItem();
+	void selectMenuItem(int i);
+	void deselectMenuItem(int i);
 
 public:
 
