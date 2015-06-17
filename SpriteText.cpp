@@ -62,7 +62,7 @@ namespace Cong {
 		if (text.length() > 0)
 		{
 			charSprites = new sf::Sprite[text.length()];
-			std::cout << "SpriteText <" << text << "> text adress: " << charSprites << std::endl;
+			//std::cout << "SpriteText <" << text << "> text adress: " << charSprites << std::endl;
 		}
 	}
 
