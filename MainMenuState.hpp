@@ -3,39 +3,22 @@
 
 #include <string>
 #include <iostream>
-#include <vector>
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-#include "Game.hpp"
-#include "GameState.hpp"
-#include "CharMap.hpp"
-#include "SpriteText.hpp"
+#include "MenuState.hpp"
 
 namespace Cong {
 
-class MainMenuState: public GameState {
+class Game;
+
+class MainMenuState: public MenuState {
 
 private:
 
-	const CharMap *charMap;
-
-	SpriteText headline;
-	SpriteText intro;
-
-	std::vector<SpriteText> menuItems;
-	int currentMenuItem;
-
-	void initCharMap();
-	void initText();
-
-	void addMenuItem(const std::string &label);
-	void selectNextMenuItem();
-	void selectPrevMenuItem();
-	void selectMenuItem(int i);
-	void deselectMenuItem(int i);
+	void onConfirmPressed();
 
 public:
 

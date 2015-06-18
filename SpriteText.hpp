@@ -1,13 +1,17 @@
 #ifndef CONG_SPRITETEXTURE_HPP
 #define CONG_SPRITETEXTURE_HPP
 
+#include <iostream>
+#include <string>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
-#include <string>
-#include "CharMap.hpp"
+
 #include "SpriteTextAnchor.hpp"
 
 namespace Cong {
+
+class CharMap;
 
 class SpriteText : public sf::Transformable, public sf::Drawable {
 

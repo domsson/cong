@@ -1,3 +1,6 @@
+#include "Game.hpp"
+#include "GameState.hpp"
+#include "CharMap.hpp"
 #include "MenuState.hpp"
 
 namespace Cong
@@ -5,7 +8,7 @@ namespace Cong
 
 	const int MenuState::DEFAULT_MENU_OFFSET = 64;
 	const int MenuState::DEFAULT_TITLE_SCALE = 8;
-	const int MenuState::DEFAULT_TITLE_MARGIN = 32;
+	const int MenuState::DEFAULT_TITLE_MARGIN = 64;
 	const int MenuState::DEFAULT_ITEM_SCALE = 4;
 	const int MenuState::DEFAULT_ITEM_MARGIN = 32;
 
@@ -16,6 +19,7 @@ namespace Cong
 	MenuState::MenuState(Game &game)
 	: GameState(game), charMap(nullptr), currentMenuItem(0), titleIsSet(false)
 	{
+		setValuesToDefaults();
 		initCharMap();
 		initTitle();
 	}
@@ -23,6 +27,15 @@ namespace Cong
 	MenuState::~MenuState()
 	{
 		// Do nothing
+	}
+
+	void MenuState::setValuesToDefaults()
+	{
+		menuOffset = DEFAULT_MENU_OFFSET;
+		titleScale = DEFAULT_TITLE_SCALE;
+		titleMargin = DEFAULT_TITLE_MARGIN;
+		itemScale = DEFAULT_ITEM_SCALE;
+		itemMargin = DEFAULT_ITEM_MARGIN;
 	}
 
 	void MenuState::initCharMap()
@@ -51,17 +64,80 @@ namespace Cong
 		}
 	}
 
-	void MenuState::addMenuItem(const std::string &label, int itemScale=DEFAULT_ITEM_SCALE)
+	void MenuState::addMenuItem(const std::string &label, int itemScale)
 	{
 		SpriteText newItem;
 		newItem.setCharMap(*charMap);
 		newItem.setScale(sf::Vector2f(itemScale, itemScale));
 		newItem.setAnchor(SpriteTextAnchor::TOP_CENTER);
-		int offsetY = menuItems.size() * (newItem.getHeight() + DEFAULT_ITEM_MARGIN);
-		newItem.setPosition(game->getViewportWidth() * 0.5, DEFAULT_MENU_OFFSET * 2 + offsetY);
 		newItem.setText(label);
 
-		menuItems.push_back(newItem);		
+		menuItems.push_back(newItem);
+		positionItem(menuItems.size() - 1);
+	}
+
+	void MenuState::positionTitleAndItems()
+	{
+		positionTitle();
+
+		for (int i=0; i<menuItems.size(); ++i)
+		{
+			positionItem(i);
+		}
+	}
+
+	void MenuState::positionTitle()
+	{
+		title.setPosition(game->getViewportWidth() * 0.5, menuOffset);
+	}
+
+	void MenuState::positionItem(int i)
+	{
+		float x = game->getViewportWidth() * 0.5;
+		float y = 0;
+
+		// First item
+		if (i == 0)
+		{
+			y = (titleIsSet) ? title.getPosition().y + title.getHeight() + titleMargin : menuOffset;
+			menuItems.at(0).setPosition(x, y);
+		}
+		// Remaining items
+		else if (i > 0 && i < menuItems.size())
+		{
+			y = menuItems.at(i-1).getPosition().y + menuItems.at(i-1).getHeight() + itemMargin;
+			menuItems.at(i).setPosition(x, y);
+		}
+	}
+
+	void MenuState::setMenuOffset(int offset)
+	{
+		menuOffset = offset;
+		positionTitleAndItems();
+	}
+
+	void MenuState::setItemScale(int scale)
+	{
+		itemScale = scale;
+		positionTitleAndItems();
+	}
+
+	void MenuState::setItemMargin(int margin)
+	{
+		itemMargin = margin;
+		positionTitleAndItems();
+	}
+
+	void MenuState::setTitleScale(int scale)
+	{
+		titleScale = scale;
+		positionTitleAndItems();
+	}
+
+	void MenuState::setTitleMargin(int margin)
+	{
+		titleMargin = margin;
+		positionTitleAndItems();
 	}
 
 	void MenuState::selectMenuItem(int i)

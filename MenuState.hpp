@@ -7,13 +7,15 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Game.hpp"
-#include "GameState.hpp"
-#include "CharMap.hpp"
+//#include "CharMap.hpp"
 #include "SpriteText.hpp"
 
 namespace Cong
 {
+
+class Game;
+class GameState;
+class CharMap;
 
 class MenuState: public GameState
 {
@@ -32,7 +34,7 @@ public:
 
 protected:
 
-	const CharMap *charMap;
+	const CharMap *charMap; // CharMap to be used for title and items
 
 	SpriteText title; // Menu title to be displayed atop all menu items
 	bool titleIsSet; // Has the menu title been set?
@@ -45,18 +47,34 @@ protected:
 	void initCharMap();
 
 	void setTitle(const std::string &label);
-	void addMenuItem(const std::string &label, int itemScale);
+	void addMenuItem(const std::string &label, int itemScale=DEFAULT_ITEM_SCALE);
 	void selectNextMenuItem();
 	void selectPrevMenuItem();
 	void selectMenuItem(int i);
 	void deselectMenuItem(int i);
 
+	void setMenuOffset(int offset);
+	void setItemScale(int scale);
+	void setItemMargin(int margin);
+	void setTitleScale(int scale);
+	void setTitleMargin(int margin);
+
 	void renderTitle() const;
 	void renderItems() const;
 
 private:
+
+	int menuOffset;
+	int titleScale;
+	int titleMargin;
+	int itemScale;
+	int itemMargin;
 	
-	void initTitle();
+	void initTitle(); // Prepare the title for later use
+	void setValuesToDefaults();
+	void positionTitle();
+	void positionItem(int i);
+	void positionTitleAndItems();
 
 };
 

@@ -1,5 +1,5 @@
+#include "CharMap.hpp"
 #include "SpriteText.hpp"
-#include <iostream>
 
 namespace Cong {
 

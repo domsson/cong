@@ -61,8 +61,10 @@ Problems and Learnings
 - [Virtual / Pure Virtual](http://stackoverflow.com/questions/1306778/c-virtual-pure-virtual-explained) - Important for inheritance and interfaces / abstract classes
 - If a class has members that are pointers, you will most likely need a copy constructor and custom assignment operator (for deep instead of shallow copies), otherwise you'll run into ugly problems (Segfault says hello!). See http://stackoverflow.com/questions/29052286/initialize-object-with-pointer-members-in-a-vector-c
 - The above leads or is related to move semantics (no idea yet!), the [&&-operator](http://stackoverflow.com/questions/4549151/c-double-address-operator) (related to move semantics) and the Rule of Three / Five (basically the previous point)
+- For move semantics, check out http://stackoverflow.com/questions/3106110/what-are-move-semantics
 - Copy constructors can have member initializer lists as well!
 - Copy constructors in derived classes need to explicitly call their base/parent's copy constructors (in the initializer list), otherwise the base object's will properties not be copied accordingly
 - Custom assignment operators can NOT have member initializer lists. Simple reason: As we define what happens when we _assign_ (and not _initialize_) to our object, the members have already been initialized at this point.
-- Virtual: makes sure the most-derived (overriden) version of a function is called, if any
-- Pure virtual (virtual ... = 0): See virtual, plus deriving classes _have to_ implement these functions
+- Check out the copy&swap idiom: http://stackoverflow.com/questions/3279543/what-is-the-copy-and-swap-idiom
+- Virtual: makes sure the most-derived (overriden) version of a function is called, if any. See http://stackoverflow.com/questions/2391679/why-do-we-need-virtual-methods-in-c
+- Pure virtual (virtual ... = 0): See virtual, plus deriving classes _have to_ implement these functions.
