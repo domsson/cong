@@ -41,12 +41,6 @@ namespace Cong {
 	{
 		this->charMap = &charMap; // Update the reference
 		adjustCharSpritesToText(); // Different charMap means the sprites need re-adjustment!
-		/*
-		if (text.length() > 0)
-		{
-			setText(text); // Setting the text will do all the required sprite adjustments
-		}
-		*/
 	}
 	
 	void SpriteText::setText(const std::string &text)

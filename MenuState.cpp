@@ -68,17 +68,37 @@ namespace Cong
 		}
 	}
 
-	void MenuState::addMenuItem(const std::string &label, int itemScale)
+	int MenuState::addMenuItem(const std::string &label, int itemScale)
 	{
 		// Create and tweak the new menu item
-		SpriteText newItem;
-		newItem.setCharMap(*charMap);
+		MenuItem newItem(*charMap);
 		newItem.setScale(sf::Vector2f(itemScale, itemScale));
 		newItem.setAnchor(SpriteTextAnchor::TOP_CENTER);
-		newItem.setText(label);
+		newItem.setLabel(label);
 
+		addMenuItem(newItem);
+	}
+
+	int MenuState::addMenuItem(const std::string &label, const std::string options[], int numOptions)
+	{
+		// Create and tweak the new menu item
+		MenuItem newItem(*charMap);
+		newItem.setScale(sf::Vector2f(itemScale, itemScale));
+		newItem.setAnchor(SpriteTextAnchor::TOP_CENTER);
+		newItem.setLabel(label);
+
+		for (int i=0; i<numOptions; ++i)
+		{
+			newItem.addOption(options[i]);
+		}
+
+		addMenuItem(newItem);
+	}
+
+	int MenuState::addMenuItem(const MenuItem &item)
+	{
 		// Insert the new item into the collection
-		menuItems.push_back(newItem);
+		menuItems.push_back(item);
 
 		// Calculate the index of the new item within the collection
 		int itemNum = menuItems.size() - 1;
@@ -91,6 +111,9 @@ namespace Cong
 		{
 			setCurrentItem(itemNum);
 		}
+
+		// Return the index of the new item so the caller can refer to it later
+		return itemNum;
 	}
 
 	void MenuState::positionTitleAndItems()

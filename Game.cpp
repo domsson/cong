@@ -44,7 +44,7 @@ namespace Cong {
 				setState(new MainMenuState(*this));
 				break;
 			case GameStates::OPTIONS_MENU:
-				
+				setState(new OptionsMenuState(*this));
 				break;
 			case GameStates::GAMEPLAY:
 				setState(new PlayState(*this));

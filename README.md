@@ -68,3 +68,4 @@ Problems and Learnings
 - Check out the copy&swap idiom: http://stackoverflow.com/questions/3279543/what-is-the-copy-and-swap-idiom
 - Virtual: makes sure the most-derived (overriden) version of a function is called, if any. See http://stackoverflow.com/questions/2391679/why-do-we-need-virtual-methods-in-c
 - Pure virtual (virtual ... = 0): See virtual, plus deriving classes _have to_ implement these functions.
+- If you have a function in a child class that has the same name but different arguments as a function in the base class, calling the base class' function through an object of the child class will not work. The keyword here is "name hiding": http://stackoverflow.com/questions/16835897/overloading-base-class-method-in-derived-class and http://www.programmerinterview.com/index.php/c-cplusplus/c-name-hiding/

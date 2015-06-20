@@ -56,22 +56,6 @@ namespace Cong {
 					case sf::Keyboard::Down:
 						selectNextMenuItem();
 						break;
-
-					case sf::Keyboard::Num1:
-						setItemMargin(8);
-						break;
-
-					case sf::Keyboard::Num2:
-						setItemMargin(16);
-						break;
-
-					case sf::Keyboard::Num3:
-						setItemMargin(32);
-						break;
-
-					case sf::Keyboard::Num4:
-						setItemMargin(64);
-						break;
 				}
 			}
         }
@@ -86,6 +70,7 @@ namespace Cong {
 				break;
 
 			case 1:
+				changeState(GameStates::OPTIONS_MENU);
 				break;
 
 			case 2:

@@ -24,6 +24,12 @@ public:
     void update();
 	void render();
 
+private:
+
+	void onConfirmPressed();
+	void onLeftPressed();
+	void onRightPressed();
+
 };
 
 }

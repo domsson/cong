@@ -16,6 +16,7 @@
 #include "GameState.hpp"
 #include "GameStates.hpp"
 #include "MainMenuState.hpp"
+#include "OptionsMenuState.hpp"
 #include "PlayState.hpp"
 
 namespace Cong {
