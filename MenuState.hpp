@@ -59,6 +59,10 @@ protected:
 	void setTitleScale(int scale);
 	void setTitleMargin(int margin);
 
+	void setTitleColor(const sf::Color &color);
+	void setItemColor(const sf::Color &color);
+	void setSelectColor(const sf::Color &color);
+
 	void renderTitle() const;
 	void renderItems() const;
 
@@ -69,12 +73,22 @@ private:
 	int titleMargin;
 	int itemScale;
 	int itemMargin;
+
+	sf::Color titleColor;
+	sf::Color itemColor;
+	sf::Color selectColor;
 	
 	void initTitle(); // Prepare the title for later use
 	void setValuesToDefaults();
 	void positionTitle();
 	void positionItem(int i);
 	void positionTitleAndItems();
+	void scaleTitle();
+	void scaleItems();
+	void styleTitle();
+	void styleItems();
+
+	void setCurrentItem(int i);
 
 };
 

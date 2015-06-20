@@ -17,7 +17,7 @@ namespace Cong
 	const sf::Color MenuState::DEFAULT_SELECT_COLOR = sf::Color::Green;
 
 	MenuState::MenuState(const Game &game)
-	: GameState(game), charMap(nullptr), currentMenuItem(0), titleIsSet(false)
+	: GameState(game), charMap(nullptr), currentMenuItem(-1), titleIsSet(false)
 	{
 		setValuesToDefaults();
 		initCharMap();
@@ -36,6 +36,10 @@ namespace Cong
 		titleMargin = DEFAULT_TITLE_MARGIN;
 		itemScale = DEFAULT_ITEM_SCALE;
 		itemMargin = DEFAULT_ITEM_MARGIN;
+
+		titleColor = DEFAULT_TITLE_COLOR;
+		itemColor = DEFAULT_ITEM_COLOR;
+		selectColor = DEFAULT_SELECT_COLOR;
 	}
 
 	void MenuState::initCharMap()
@@ -49,10 +53,10 @@ namespace Cong
 	void MenuState::initTitle()
 	{
 		title.setCharMap(*charMap);
-		title.setScale(sf::Vector2f(DEFAULT_TITLE_SCALE, DEFAULT_TITLE_SCALE));
+		title.setScale(sf::Vector2f(titleScale, titleScale));
 		title.setAnchor(SpriteTextAnchor::TOP_CENTER);
-		title.setPosition(game->getViewportWidth() * 0.5, DEFAULT_MENU_OFFSET);
-		title.setColor(DEFAULT_TITLE_COLOR);
+		title.setPosition(game->getViewportWidth() * 0.5, menuOffset);
+		title.setColor(titleColor);
 	}
 
 	void MenuState::setTitle(const std::string &label)
@@ -85,7 +89,7 @@ namespace Cong
 		// It this is the first item, 'select' (highlight/hover) it
 		if (itemNum == 0)
 		{
-			selectMenuItem(itemNum);
+			setCurrentItem(itemNum);
 		}
 	}
 
@@ -123,6 +127,32 @@ namespace Cong
 		}
 	}
 
+	void MenuState::scaleTitle()
+	{
+		title.setScale(titleScale, titleScale);
+	}
+
+	void MenuState::scaleItems()
+	{
+		for (int i=0; i<menuItems.size(); ++i)
+		{
+			menuItems.at(i).setScale(itemScale, itemScale);
+		}
+	}
+
+	void MenuState::styleTitle()
+	{
+		title.setColor(titleColor);
+	}
+
+	void MenuState::styleItems()
+	{
+		for (int i=0; i<menuItems.size(); ++i)
+		{
+			menuItems.at(i).setColor(itemColor);
+		}
+	}
+
 	void MenuState::setMenuOffset(int offset)
 	{
 		menuOffset = offset;
@@ -132,6 +162,7 @@ namespace Cong
 	void MenuState::setItemScale(int scale)
 	{
 		itemScale = scale;
+		scaleItems();
 		positionTitleAndItems();
 	}
 
@@ -144,6 +175,7 @@ namespace Cong
 	void MenuState::setTitleScale(int scale)
 	{
 		titleScale = scale;
+		scaleTitle();
 		positionTitleAndItems();
 	}
 
@@ -153,38 +185,76 @@ namespace Cong
 		positionTitleAndItems();
 	}
 
+	void MenuState::setTitleColor(const sf::Color &color)
+	{
+		titleColor = color;
+	}
+
+	void MenuState::setItemColor(const sf::Color &color)
+	{
+		itemColor = color;
+	}
+
+	void MenuState::setSelectColor(const sf::Color &color)
+	{
+		selectColor = color;
+	}
+
+	/**
+	 * Modifies the appearance of the given menu item in order to indicate
+	 * that it is the currently selected item. Override in child classes to
+	 * define a custom 'selected' style for menu items.
+	 */
 	void MenuState::selectMenuItem(int i)
 	{
-		menuItems.at(i).setColor(DEFAULT_SELECT_COLOR);
+		menuItems.at(i).setColor(selectColor);
 	}
 
+	/**
+	 * Modifies the appearance of the given menu item in order to indicate
+	 * that it is not currently selected. Override in child classes to define
+	 * a custom 'unselected' style for the menu items.
+	 */
 	void MenuState::deselectMenuItem(int i)
 	{
-		menuItems.at(i).setColor(DEFAULT_ITEM_COLOR);
+		menuItems.at(i).setColor(itemColor);
 	}
 
-	void MenuState::selectNextMenuItem()
+	/**
+	 * Deselects the currently selected menu item and selects the given item.
+	 */
+	void MenuState::setCurrentItem(int i)
 	{
-		deselectMenuItem(currentMenuItem);
-
-		if (++currentMenuItem >= menuItems.size())
+		// Do nothing if item <i> is already the currently selected item
+		if (i == currentMenuItem)
 		{
-			currentMenuItem = 0;
+			return;
 		}
 
-		selectMenuItem(currentMenuItem);
+		// Deselect the currently selected item, if any
+		if (currentMenuItem != -1)
+		{
+			deselectMenuItem(currentMenuItem);
+			currentMenuItem = -1;
+		}
+
+		// If <i> refers to an existing menu item, select it
+		if (i >= 0 && i < menuItems.size())
+		{
+			selectMenuItem(i);
+			currentMenuItem = i;
+		}		
+	}
+
+	
+	void MenuState::selectNextMenuItem()
+	{
+		setCurrentItem((currentMenuItem + 1 >= menuItems.size()) ? 0 : currentMenuItem + 1);		
 	}
 
 	void MenuState::selectPrevMenuItem()
 	{
-		deselectMenuItem(currentMenuItem);
-				
-		if (--currentMenuItem < 0)
-		{
-			currentMenuItem = menuItems.size() - 1;
-		}
-
-		selectMenuItem(currentMenuItem);
+		setCurrentItem((currentMenuItem - 1 < 0) ? menuItems.size() - 1 : currentMenuItem - 1);
 	}
 
 	void MenuState::renderTitle() const
