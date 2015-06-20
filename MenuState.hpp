@@ -41,7 +41,7 @@ protected:
 	std::vector<SpriteText> menuItems; // The menu items
 	int currentMenuItem; // What menu item is currently selected?
 
-	MenuState(Game &game); // Protected ctor as this is an abstract base class!
+	MenuState(const Game &game); // Protected ctor as this is an abstract base class!
 	virtual ~MenuState(); // Virtual dtor makes sure child class dtor is called!
 
 	void initCharMap();

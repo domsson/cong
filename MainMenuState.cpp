@@ -3,7 +3,7 @@
 
 namespace Cong {
 
-	MainMenuState::MainMenuState(Game &game)
+	MainMenuState::MainMenuState(const Game &game)
 	: MenuState(game)
 	{
 		setTitle(this->game->getTitle());
@@ -11,8 +11,6 @@ namespace Cong {
 		addMenuItem("Play");
 		addMenuItem("Options");
 		addMenuItem("Quit");
-
-		selectMenuItem(currentMenuItem);
 	}
 
 	MainMenuState::~MainMenuState()

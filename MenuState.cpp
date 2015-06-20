@@ -16,7 +16,7 @@ namespace Cong
 	const sf::Color MenuState::DEFAULT_ITEM_COLOR = sf::Color::White;
 	const sf::Color MenuState::DEFAULT_SELECT_COLOR = sf::Color::Green;
 
-	MenuState::MenuState(Game &game)
+	MenuState::MenuState(const Game &game)
 	: GameState(game), charMap(nullptr), currentMenuItem(0), titleIsSet(false)
 	{
 		setValuesToDefaults();
@@ -66,14 +66,27 @@ namespace Cong
 
 	void MenuState::addMenuItem(const std::string &label, int itemScale)
 	{
+		// Create and tweak the new menu item
 		SpriteText newItem;
 		newItem.setCharMap(*charMap);
 		newItem.setScale(sf::Vector2f(itemScale, itemScale));
 		newItem.setAnchor(SpriteTextAnchor::TOP_CENTER);
 		newItem.setText(label);
 
+		// Insert the new item into the collection
 		menuItems.push_back(newItem);
-		positionItem(menuItems.size() - 1);
+
+		// Calculate the index of the new item within the collection
+		int itemNum = menuItems.size() - 1;
+
+		// Position the new item based on the item above it, if any
+		positionItem(itemNum);
+
+		// It this is the first item, 'select' (highlight/hover) it
+		if (itemNum == 0)
+		{
+			selectMenuItem(itemNum);
+		}
 	}
 
 	void MenuState::positionTitleAndItems()

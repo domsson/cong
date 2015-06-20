@@ -22,7 +22,7 @@ private:
 
 public:
 
-	MainMenuState(Game &game);
+	MainMenuState(const Game &game);
 	~MainMenuState();
 
 	void enter();

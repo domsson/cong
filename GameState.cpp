@@ -9,7 +9,7 @@ namespace Cong {
 		// Do nothing
 	}
 
-	GameState::GameState(Game &game)
+	GameState::GameState(const Game &game)
 	: game(nullptr), nextState(GameStates::NONE)
 	{
 		setGame(game);
@@ -20,7 +20,7 @@ namespace Cong {
 		// Do nothing
 	}
 
-	void GameState::setGame(Game &game)
+	void GameState::setGame(const Game &game)
 	{
 		this->game = &game;
 	}

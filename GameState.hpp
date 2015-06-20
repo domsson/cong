@@ -13,7 +13,7 @@ class GameState {
 public:
 
 	GameState();
-	GameState(Game &game);
+	GameState(const Game &game);
 	virtual ~GameState(); // TODO Do we need the dtor? Should it be virtual?
 
 	virtual void enter() = 0;
@@ -24,7 +24,7 @@ public:
     virtual void update() = 0;
 	virtual void render() = 0;
 
-	void setGame(Game &game);
+	void setGame(const Game &game);
 	GameStates getNextState() const;
 
 protected:
