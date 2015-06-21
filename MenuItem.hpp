@@ -22,6 +22,7 @@ public:
 	std::string getOption(int i) const;
 	std::string getSelectedOption() const;
 	int getSelectedOptionIndex() const;
+	int getOptionIndex(const std::string &label) const;
 	
 	void setLabel(const std::string &label);
 	void setSeparator(const std::string &separator);
@@ -37,6 +38,8 @@ public:
 
 	void nextOption();
 	void prevOption();
+	void showOption(int i);
+	void showOption(const std::string &label);
 
 protected:
 

@@ -30,6 +30,14 @@ private:
 	void onLeftPressed();
 	void onRightPressed();
 
+	void loadResolutionOption();
+	void loadThemeOption();
+	void loadSoundOption();
+
+	void saveResolutionOption() const;
+	void saveThemeOption() const;
+	void saveSoundOption() const;
+
 };
 
 }

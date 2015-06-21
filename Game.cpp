@@ -153,12 +153,10 @@ namespace Cong {
 		return charMap;
 	}
 
-	/*
-	void Game::requestStateChange() const
+	Options* Game::getOptions()
 	{
-		stateChangeRequested = true;
+		return &options;
 	}
-	*/
 
 	bool Game::loadSound(const std::string &soundFile, sf::SoundBuffer &buffer, sf::Sound &sound)
 	{

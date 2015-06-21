@@ -18,6 +18,7 @@
 #include "MainMenuState.hpp"
 #include "OptionsMenuState.hpp"
 #include "PlayState.hpp"
+#include "Options.hpp"
 
 namespace Cong {
 
@@ -32,6 +33,8 @@ private:
 	int width;
 	int height;
 	std::string title;
+
+	Options options;
 
 	GameState *activeState;
 	//mutable bool stateChangeRequested;
@@ -61,6 +64,7 @@ public:
 	unsigned int getViewportHeight() const;
 	std::string getTitle() const;
 	const CharMap* getDefaultCharMap() const;
+	Options* getOptions();
 
 	static bool loadSound(const std::string &soundFile, sf::SoundBuffer &buffer, sf::Sound &sound);
 	static bool loadTexture(const std::string &textureFile, sf::Texture &texture);

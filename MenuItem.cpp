@@ -58,6 +58,20 @@ namespace Cong
 		return selectedOption;
 	}
 
+	int MenuItem::getOptionIndex(const std::string &label) const
+	{
+		for (int i=0; i<options.size(); ++i)
+		{
+			if (options.at(i) == label)
+			{
+				return i;
+			}
+		}
+
+		// Not found
+		return -1;
+	}
+
 	bool MenuItem::hasOptions() const
 	{
 		return options.size() > 0;
@@ -99,6 +113,25 @@ namespace Cong
 		}
 
 		updateText();
+	}
+
+	void MenuItem::showOption(int i)
+	{
+		if (i >= 0 && i < options.size())
+		{
+			selectedOption = i;
+			updateText();
+		}
+	}
+
+	void MenuItem::showOption(const std::string &label)
+	{
+		int optionIndex = getOptionIndex(label);
+	
+		if (optionIndex != -1)
+		{
+			showOption(optionIndex);
+		}
 	}
 
 	void MenuItem::updateText()
