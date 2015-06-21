@@ -157,7 +157,10 @@ namespace Cong {
 					ball->reverseDirectionHorizontal();
 					ball->setSpeed(ball->getSpeed() * (1.0 + BALL_SPEED_INCREASE));
 					ball->slope(yDiff);
-					paddleSound.play();
+					if (Options::playSounds == Sound::ON)
+					{
+						paddleSound.play();
+					}
 				}
 			}
 
@@ -171,7 +174,10 @@ namespace Cong {
 
 				if (collisionY && Math::rangesIntersect(ballRange, paddleRange)) {
 					ball->reverseDirectionVertical();
-					paddleSound.play();
+					if (Options::playSounds == Sound::ON)
+					{
+						paddleSound.play();
+					}
 				}
 			}
 
@@ -185,7 +191,10 @@ namespace Cong {
 
 				if (collisionY && Math::rangesIntersect(ballRange, paddleRange)) {
 					ball->reverseDirectionVertical();
-					paddleSound.play();
+					if (Options::playSounds == Sound::ON)
+					{
+						paddleSound.play();
+					}
 				}
 			}
 		}
@@ -215,7 +224,10 @@ namespace Cong {
 					ball->reverseDirectionHorizontal();
 					ball->setSpeed(ball->getSpeed() * (1.0 + BALL_SPEED_INCREASE));
 					ball->slope(yDiff);
-					paddleSound.play();
+					if (Options::playSounds == Sound::ON)
+					{
+						paddleSound.play();
+					}
 				}
 			}
 
@@ -229,7 +241,10 @@ namespace Cong {
 
 				if (collisionY && Math::rangesIntersect(ballRange, paddleRange)) {
 					ball->reverseDirectionVertical();
-					paddleSound.play();
+					if (Options::playSounds == Sound::ON)
+					{
+						paddleSound.play();
+					}
 				}
 			}
 
@@ -243,34 +258,37 @@ namespace Cong {
 				
 				if (collisionY && Math::rangesIntersect(ballRange, paddleRange)) {
 					ball->reverseDirectionVertical();
-					paddleSound.play();
+					if (Options::playSounds == Sound::ON)
+					{
+						paddleSound.play();
+					}
 				}
 			}
 		}
 
         if (ballPositionNext.x + BALL_RADIUS <= 0) {
 			scoreForRight();          
-			outSound.play();
+			if (Options::playSounds == Sound::ON) { outSound.play(); }
 			serve();
 			return;
         }
         
         if (ballPositionNext.x - BALL_RADIUS >= game->getViewportWidth()) {
 			scoreForLeft();
-			outSound.play();
+			if (Options::playSounds == Sound::ON) { outSound.play(); }
             serve();
 			return;
         }
     
         if (ballPositionNext.y <= 0 + BALL_RADIUS) {
             ballPositionNext.y = 0 + BALL_RADIUS;
-			wallSound.play();
+			if (Options::playSounds == Sound::ON) { wallSound.play(); }
             ball->reverseDirectionVertical();
         }
         
         if (ballPositionNext.y >= game->getViewportHeight() - BALL_RADIUS) {
             ballPositionNext.y = game->getViewportHeight() - BALL_RADIUS;
-			wallSound.play();
+			if (Options::playSounds == Sound::ON) { wallSound.play(); }
             ball->reverseDirectionVertical();
         }
         
