@@ -14,7 +14,8 @@ namespace Cong {
 	Game::Game(const std::string &title, int width, int height)
 	: window(nullptr), title(title), width(width), height(height), activeState(nullptr), charMap(nullptr)
 	{
-        window = new sf::RenderWindow(sf::VideoMode(width, height), title);
+        window = new sf::RenderWindow(sf::VideoMode(width, height), title, sf::Style::Close);
+		window->setMouseCursorVisible(false);
 
 		Game::loadTexture(CHARMAP_TEXTURE, charMapTexture);
 		charMap = new CharMap(charMapTexture, CHARMAP_CHARS , 7, 9, 0, 18);
@@ -61,6 +62,37 @@ namespace Cong {
 		}
 	}
 
+	void Game::requestResolutionChange() const
+	{
+		resolutionChangeRequested = true;
+	}
+
+	void Game::updateWindow()
+	{
+		sf::Vector2i newResolution;
+		
+		switch (Options::resolution)
+		{
+			case (Resolution::LOW):
+				newResolution.x = 640;
+				newResolution.y = 480;
+				break;
+			case (Resolution::MEDIUM):
+				newResolution.x = 800;
+				newResolution.y = 600;
+				break;
+			case (Resolution::HIGH):
+				newResolution.x = 1024;
+				newResolution.y =  768;
+				break;
+		}
+
+		if (window->getSize().x != newResolution.x || window->getSize().y != newResolution.y)
+		{
+			window->create(sf::VideoMode(newResolution.x, newResolution.y), title, sf::Style::Close);
+		}
+	}
+
 	Game::~Game()
 	{
 		window->close();
@@ -95,6 +127,11 @@ namespace Cong {
 	            processInputs();  
 	            update();
             	render();
+			}
+
+			if (resolutionChangeRequested)
+			{
+				updateWindow();
 			}
 		}
 	}

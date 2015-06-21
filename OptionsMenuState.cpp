@@ -60,6 +60,7 @@ namespace Cong
 		saveResolutionOption();
 		saveThemeOption();
 		saveSoundOption();
+		game->requestResolutionChange();
 	}
 
 	void OptionsMenuState::loadResolutionOption()

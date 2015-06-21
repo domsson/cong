@@ -38,6 +38,7 @@ private:
 
 	GameState *activeState;
 	//mutable bool stateChangeRequested;
+	mutable bool resolutionChangeRequested;
 
 	sf::Texture charMapTexture;
 	const CharMap *charMap;
@@ -50,6 +51,8 @@ private:
 	void changeState(GameStates newState);
 	void tryStateChange();
 
+	void updateWindow();
+
 public:
     
 	Game(const std::string &title, int width, int height);
@@ -58,6 +61,7 @@ public:
 	void run();
 	void setState(GameState *newState);
 	//void requestStateChange() const;
+	void requestResolutionChange() const;
 	sf::RenderWindow* getWindow() const;
 	float getDeltaTime() const;
 	unsigned int getViewportWidth() const;
