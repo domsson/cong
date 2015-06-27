@@ -5,7 +5,7 @@
 namespace Cong
 {
 
-	const std::string RESOLUTION = "Resolution";
+	const std::string RESOLUTION = "Window";
 	const std::string RESOLUTION_LOW    = " 640*480";
 	const std::string RESOLUTION_MEDIUM = " 800*600";
 	const std::string RESOLUTION_HIGH   = "1024*768";
