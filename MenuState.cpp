@@ -14,7 +14,7 @@ namespace Cong
 
 	const sf::Color MenuState::DEFAULT_TITLE_COLOR = sf::Color(107, 255, 255);
 	const sf::Color MenuState::DEFAULT_ITEM_COLOR = sf::Color::White;
-	const sf::Color MenuState::DEFAULT_SELECT_COLOR = sf::Color(107, 255, 255);
+	const sf::Color MenuState::DEFAULT_SELECT_COLOR = sf::Color(200, 170, 60);
 
 	MenuState::MenuState(const Game &game)
 	: GameState(game), charMap(nullptr), currentMenuItem(-1), titleIsSet(false)

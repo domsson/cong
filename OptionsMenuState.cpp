@@ -10,9 +10,6 @@ namespace Cong
 	const std::string RESOLUTION_MEDIUM = " 800*600";
 	const std::string RESOLUTION_HIGH   = "1024*768";
 	const std::string RESOLUTION_HIGHER = "1280*960";
-	const std::string RESOLUTION_SQUARE = "Square";
-	const std::string RESOLUTION_WIDE   = "Wide";
-	const std::string RESOLUTION_TALL   = "Tall";
 
 	const std::string FULLSCREEN = "Fullscreen";
 	const std::string FULLSCREEN_ON = "Yes";
@@ -32,8 +29,8 @@ namespace Cong
 		setTitle("Options");
 		
 		// menuItem 0
-		std::string resolutions[] = {RESOLUTION_LOW, RESOLUTION_MEDIUM, RESOLUTION_HIGH, RESOLUTION_SQUARE, RESOLUTION_WIDE, RESOLUTION_TALL};
-		addMenuItem(RESOLUTION, resolutions, 6);
+		std::string resolutions[] = {RESOLUTION_MEDIUM, RESOLUTION_HIGH, RESOLUTION_LOW};
+		addMenuItem(RESOLUTION, resolutions, 3);
 
 		// menuItem 1
 		std::string themes[] = {THEME_CLASSIC, THEME_FANCY};
