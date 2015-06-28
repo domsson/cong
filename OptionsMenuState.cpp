@@ -29,7 +29,7 @@ namespace Cong
 		setTitle("Options");
 		
 		// menuItem 0
-		std::string resolutions[] = {RESOLUTION_MEDIUM, RESOLUTION_HIGH, RESOLUTION_LOW};
+		std::string resolutions[] = {RESOLUTION_LOW, RESOLUTION_MEDIUM, RESOLUTION_HIGH};
 		addMenuItem(RESOLUTION, resolutions, 3);
 
 		// menuItem 1

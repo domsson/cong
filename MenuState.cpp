@@ -12,7 +12,7 @@ namespace Cong
 	const int MenuState::DEFAULT_ITEM_SCALE = 4;
 	const int MenuState::DEFAULT_ITEM_MARGIN = 32;
 
-	const sf::Color MenuState::DEFAULT_TITLE_COLOR = sf::Color(107, 255, 255);
+	const sf::Color MenuState::DEFAULT_TITLE_COLOR = sf::Color(10, 140, 75);
 	const sf::Color MenuState::DEFAULT_ITEM_COLOR = sf::Color::White;
 	const sf::Color MenuState::DEFAULT_SELECT_COLOR = sf::Color(200, 170, 60);
 
