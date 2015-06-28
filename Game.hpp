@@ -51,7 +51,9 @@ private:
 	void changeState(GameStates newState);
 	void tryStateChange();
 
+	void initWindow();
 	void updateWindow();
+	void updateViewport();
 
 public:
     

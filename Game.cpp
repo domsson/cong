@@ -67,9 +67,15 @@ namespace Cong {
 		resolutionChangeRequested = true;
 	}
 
+	void Game::initWindow()
+	{
+		window = new sf::RenderWindow(sf::VideoMode(width, height), title, sf::Style::Close);
+		window->setMouseCursorVisible(false);
+	}
+
 	void Game::updateWindow()
 	{
-		sf::Vector2i newResolution;
+		sf::Vector2u newResolution;
 		
 		switch (Options::resolution)
 		{
@@ -89,8 +95,44 @@ namespace Cong {
 
 		if (window->getSize().x != newResolution.x || window->getSize().y != newResolution.y)
 		{
+			// setSize() doesn't work when sf::Style::Resize flag not set - BUG in SFML!
+			// See: http://en.sfml-dev.org/forums/index.php?topic=12952.0
+			// And: https://github.com/SFML/SFML/issues/466
+			//window->setSize(newResolution);
 			window->create(sf::VideoMode(newResolution.x, newResolution.y), title, sf::Style::Close);
+			updateViewport();
 		}
+
+		resolutionChangeRequested = false;
+	}
+
+	void Game::updateViewport()
+	{
+			sf::View view;
+
+			float ratio = (float) height / (float) width; // 0.75 in the case of 800x600
+			float newRatio = (float) window->getSize().y / (float) window->getSize().x;
+			
+			if (newRatio == ratio) { // Fits perfectly
+				view.setViewport(sf::FloatRect(0.0f, 0.0f, 1.0f, 1.0f));	
+			}
+			else if (newRatio < ratio) { // Need black bars at left/right
+				float viewWidth = (float) window->getSize().y / ratio;
+				float fraction = viewWidth / (float) window->getSize().x;
+				view.setViewport(sf::FloatRect((1-fraction) * 0.5, 0.0f, fraction, 1.0f));
+			}
+			else if (newRatio > ratio) { // Need black bars at top/bottom
+				float viewHeight = (float) window->getSize().x * ratio;
+				float fraction = viewHeight / (float) window->getSize().y;
+				view.setViewport(sf::FloatRect(0.0f, (1-fraction) * 0.5, 1.0f, fraction));
+			}
+
+			view.setSize(width, height);
+			view.setCenter(width * 0.5, height * 0.5); // Why do I have to define these as center of the VIEW's size?
+			window->setView(view);
+			std::cout << "window.getSize(): " << window->getSize().x << "x" << window->getSize().y << std::endl;
+			std::cout << "window.getView().getSize(): " << window->getView().getSize().x << "x" << window->getView().getSize().y << std::endl;
+			std::cout << "view.getCenter(): " << view.getCenter().x << "x" << view.getCenter().y << std::endl;
 	}
 
 	Game::~Game()
@@ -172,12 +214,14 @@ namespace Cong {
 
 	unsigned int Game::getViewportWidth() const
 	{
-		return window->getSize().x;	
+		//return window->getSize().x;
+		return width;
 	}
 
 	unsigned int Game::getViewportHeight() const
 	{
-		return window->getSize().y;	
+		//return window->getSize().y;
+		return height;
 	}
 
 	std::string Game::getTitle() const
