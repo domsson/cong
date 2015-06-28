@@ -12,9 +12,9 @@ namespace Cong
 	const int MenuState::DEFAULT_ITEM_SCALE = 4;
 	const int MenuState::DEFAULT_ITEM_MARGIN = 32;
 
-	const sf::Color MenuState::DEFAULT_TITLE_COLOR = sf::Color::Red;
+	const sf::Color MenuState::DEFAULT_TITLE_COLOR = sf::Color(107, 255, 255);
 	const sf::Color MenuState::DEFAULT_ITEM_COLOR = sf::Color::White;
-	const sf::Color MenuState::DEFAULT_SELECT_COLOR = sf::Color::Green;
+	const sf::Color MenuState::DEFAULT_SELECT_COLOR = sf::Color(107, 255, 255);
 
 	MenuState::MenuState(const Game &game)
 	: GameState(game), charMap(nullptr), currentMenuItem(-1), titleIsSet(false)
