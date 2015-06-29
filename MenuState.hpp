@@ -30,6 +30,7 @@ public:
 	static const sf::Color DEFAULT_TITLE_COLOR; // Default color for title
 	static const sf::Color DEFAULT_ITEM_COLOR; // Default color for unselected menu item
 	static const sf::Color DEFAULT_SELECT_COLOR; // Default color for selected menu item
+	static const sf::Color DEFAULT_INACTIVE_COLOR; // Default color for disabled menu items
 
 protected:
 
@@ -42,6 +43,7 @@ protected:
 	sf::Color titleColor;
 	sf::Color itemColor;
 	sf::Color selectColor;
+	sf::Color inactiveColor;
 
 	const CharMap *charMap; // CharMap to be used for title and items
 
@@ -68,6 +70,9 @@ protected:
 	void selectMenuItem(int i);
 	void deselectMenuItem(int i);
 
+	void enableItem(int i);
+	void disableItem(int i);
+
 	void setTitle(const std::string &label);
 	void setMenuOffset(int offset);
 	void setItemScale(int scale);
@@ -78,6 +83,7 @@ protected:
 	void setTitleColor(const sf::Color &color);
 	void setItemColor(const sf::Color &color);
 	void setSelectColor(const sf::Color &color);
+	void setInactiveColor(const sf::Color &color);
 
 	void renderTitle() const;
 	void renderItems() const;
@@ -95,6 +101,10 @@ private:
 	void styleItems();
 
 	void setCurrentItem(int i);
+
+	bool itemExists(int i);
+	int findNextMenuItem(int current = -1, int checked = 0);
+	int findPrevMenuItem(int current = -1, int checked = 0);
 
 };
 

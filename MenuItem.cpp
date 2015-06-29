@@ -8,7 +8,7 @@ namespace Cong
 	const std::string MenuItem::DEFAULT_OPTION_SUFFIX = " >";
 
 	MenuItem::MenuItem(const CharMap &charMap)
-	: SpriteText(charMap), selectedOption(-1), separator(DEFAULT_SEPARATOR),
+	: SpriteText(charMap), selectedOption(-1), separator(DEFAULT_SEPARATOR), enabled(true),
 	  optionPrefix(DEFAULT_OPTION_PREFIX), optionSuffix(DEFAULT_OPTION_SUFFIX)
 	{
 		// Do nothing
@@ -75,6 +75,11 @@ namespace Cong
 	bool MenuItem::hasOptions() const
 	{
 		return options.size() > 0;
+	}
+
+	bool MenuItem::isEnabled() const
+	{
+		return enabled;
 	}
 
 	void MenuItem::nextOption()
@@ -179,6 +184,11 @@ namespace Cong
 	{
 		optionSuffix = suffix;
 		updateText();
+	}
+
+	void MenuItem::setEnabled(bool enabled)
+	{
+		this->enabled = enabled;
 	}
 
 	std::string MenuItem::getSeparator() const

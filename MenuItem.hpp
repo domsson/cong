@@ -28,6 +28,7 @@ public:
 	void setSeparator(const std::string &separator);
 	void setOptioPrefix(const std::string &prefix);
 	void setOptionSuffix(const std::string &suffix);
+	void setEnabled(bool enabled);
 
 	std::string getLabel() const;
 	std::string getSeparator() const;
@@ -35,6 +36,7 @@ public:
 	std::string getOptionSuffix() const;
 
 	bool hasOptions() const;
+	bool isEnabled() const;
 
 	void nextOption();
 	void prevOption();
@@ -49,6 +51,8 @@ protected:
 private:
 
 	std::string label;
+	
+	bool enabled;
 
 	std::vector<std::string> options;
 	int selectedOption;

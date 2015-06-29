@@ -42,7 +42,8 @@ namespace Cong
 
 		// menuItem 3
 		addMenuItem("Back");
-		
+
+		disableItem(1); // No Theme selection functionality yet.
 	}
 
 	OptionsMenuState::~OptionsMenuState()

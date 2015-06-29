@@ -15,6 +15,7 @@ namespace Cong
 	const sf::Color MenuState::DEFAULT_TITLE_COLOR = sf::Color(10, 140, 75);
 	const sf::Color MenuState::DEFAULT_ITEM_COLOR = sf::Color::White;
 	const sf::Color MenuState::DEFAULT_SELECT_COLOR = sf::Color(200, 170, 60);
+	const sf::Color MenuState::DEFAULT_INACTIVE_COLOR = sf::Color(175, 175, 175);
 
 	MenuState::MenuState(const Game &game)
 	: GameState(game), charMap(nullptr), currentMenuItem(-1), titleIsSet(false)
@@ -40,6 +41,7 @@ namespace Cong
 		titleColor = DEFAULT_TITLE_COLOR;
 		itemColor = DEFAULT_ITEM_COLOR;
 		selectColor = DEFAULT_SELECT_COLOR;
+		inactiveColor = DEFAULT_INACTIVE_COLOR;
 	}
 
 	void MenuState::initCharMap()
@@ -223,6 +225,11 @@ namespace Cong
 		selectColor = color;
 	}
 
+	void MenuState::setInactiveColor(const sf::Color &color)
+	{
+		inactiveColor = color;
+	}
+
 	/**
 	 * Modifies the appearance of the given menu item in order to indicate
 	 * that it is the currently selected item. Override in child classes to
@@ -251,6 +258,21 @@ namespace Cong
 		// Do nothing if item <i> is already the currently selected item
 		if (i == currentMenuItem)
 		{
+			std::cerr << "Warning: tried to select the currently selected menu item." << std::endl;
+			return;
+		}
+
+		// Do nothing it <i> refers to a non-existing menu item
+		if (!itemExists(i))
+		{
+			std::cerr << "Warning: tried to select the non-existing menu item #" << i << "." << std::endl;
+			return;
+		}
+
+		// Do nothing if the item to be selected is disabled
+		if (!menuItems.at(i).isEnabled())
+		{
+			std::cerr << "Warning: tried to select a deactivated menu item." << std::endl;
 			return;
 		}
 
@@ -261,23 +283,117 @@ namespace Cong
 			currentMenuItem = -1;
 		}
 
-		// If <i> refers to an existing menu item, select it
-		if (i >= 0 && i < menuItems.size())
-		{
-			selectMenuItem(i);
-			currentMenuItem = i;
-		}		
+		selectMenuItem(i);
+		currentMenuItem = i;
 	}
 
+
+	void MenuState::enableItem(int i)
+	{
+		if (itemExists(i))
+		{
+			menuItems.at(i).setEnabled(true);
+			menuItems.at(i).setColor(itemColor);
+		}
+	}
+
+	void MenuState::disableItem(int i)
+	{
+		// If we're trying to disable the currently selected item, select the next available item
+		if (i == currentMenuItem)
+		{
+			// Let's find the next available menu item, if any
+			int j = findNextMenuItem();
+
+			// If no other is available, then we can't disable the current one, that would be weird
+			if (j == -1)
+			{
+				std::cerr << "Warning: tried to disable the only available menu item." << std::endl;
+				return;
+			}
+
+			setCurrentItem(j);
+		}
+
+		menuItems.at(i).setEnabled(false);
+		menuItems.at(i).setColor(inactiveColor);
+	}
+
+	bool MenuState::itemExists(int i)
+	{
+		return (i >= 0 && i < menuItems.size());
+	}
 	
 	void MenuState::selectNextMenuItem()
 	{
-		setCurrentItem((currentMenuItem + 1 >= menuItems.size()) ? 0 : currentMenuItem + 1);		
+		int i = findNextMenuItem();
+		if (i == -1) // There is no next item available
+		{
+			std::cerr << "Warning: tried to select next menu item when there is none available." << std::endl;
+			return;
+		}
+
+		setCurrentItem(i);
+		//setCurrentItem((currentMenuItem + 1 >= menuItems.size()) ? 0 : currentMenuItem + 1);		
+	}
+	
+	int MenuState::findNextMenuItem(int current, int checked)
+	{
+		if (current == -1)
+		{
+			current = currentMenuItem;
+		}
+
+		// Did we already make a full circle without success?
+		if (checked >= menuItems.size() - 1)
+		{
+			return -1;
+		}
+
+		int next = (current + 1 >= menuItems.size()) ? 0 : current + 1; // Roll over if need be
+
+		if (menuItems.at(next).isEnabled())
+		{
+			return next;
+		}
+
+		return findNextMenuItem(next, ++checked);
 	}
 
 	void MenuState::selectPrevMenuItem()
 	{
-		setCurrentItem((currentMenuItem - 1 < 0) ? menuItems.size() - 1 : currentMenuItem - 1);
+		int i = findPrevMenuItem();
+		if (i == -1) // There is no previous item available
+		{
+			std::cerr << "Warning: tried to select previous menu item when there is none available." << std::endl;
+			return;
+		}
+
+		setCurrentItem(i);
+		//setCurrentItem((currentMenuItem - 1 < 0) ? menuItems.size() - 1 : currentMenuItem - 1);
+	}
+
+	int MenuState::findPrevMenuItem(int current, int checked)
+	{
+		if (current == -1)
+		{
+			current = currentMenuItem;
+		}
+
+		// Did we already make a full circle without success?
+		if (checked >= menuItems.size() - 1)
+		{
+			return -1;
+		}
+
+		int prev = (current - 1 < 0) ? menuItems.size() - 1 : current - 1; // Roll over if need be
+
+		if (menuItems.at(prev).isEnabled())
+		{
+			return prev;
+		}
+
+		return findPrevMenuItem(prev, ++checked);
 	}
 
 	void MenuState::renderTitle() const
