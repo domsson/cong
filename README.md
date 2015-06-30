@@ -25,9 +25,10 @@ The included `build.sh` script will do the building, after which you can run Con
 Planned features
 ----------------
 - [ ] Solid game loop that makes for a fixed game speed across machines
+- [ ] Solid physics that work even at a high ball velocity
 - [x] Main menu
 - [x] Options menu (still need better way to set/get options though)
-- [ ] 2 Player mode (still needs some work though)
+- [x] 2 Player mode (still needs some work though)
 - [ ] 1 Player mode (requires simple AI)
 - [ ] Possibility to pause the game
 - [x] Some simple sound effects
@@ -39,6 +40,7 @@ Additional features (if time/motivation permits)
 - [ ] Input customisation (what key/button does what?)
 - [x] Video settings: Window size
 - [ ] Video settings: Full screen
+- [x] Sound settings: Turn sounds on/off
 - [ ] Possibility to add and select new themes (colors and/or textures)
 - [ ] Possibility to add and select new rules (ball speed, points to win, ...)
 
@@ -46,7 +48,7 @@ Lincence, Copyright, whatever
 -----------------------------
 Everything is public domain (CC0), so do whatever you want with it.
 All code and contents have been created by me, with the exepction of:
-- The sounds, which I got from [OpenGameArt.org](http://opengameart.org/content/3-ping-pong-sounds-8-bit-style) (Public Domain)
+- The sounds, which I got from [OpenGameArt.org](http://opengameart.org/content/3-ping-pong-sounds-8-bit-style) (CC0 as well)
 
 
 Problems and Learnings (My personal notes)
