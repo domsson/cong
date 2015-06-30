@@ -14,40 +14,43 @@ Dependencies
 ------------
 - [SFML](http://www.sfml-dev.org/) (Version 2.0+)
 
-Building
---------
-I use these commands, put into a `build.sh` file, to build:
+Building and running
+--------------------
+The included `build.sh` script will do the building, after which you can run Cong:
 ```
-g++ -c *.cpp -std=c++11
-g++ -o cong *.o -lsfml-graphics -lsfml-window -lsfml-system
-rm ./*.o
+./build.sh
+./cong
 ```
 
 Planned features
 ----------------
-- Solid game loop that makes for a fixed game speed across machines
-- Main menu, maybe with an additional Settings menu
-- 1 and 2 player mode (and therefore a simple AI)
-- Possibility to pause the game
-- Some simple sound effects
+- [ ] Solid game loop that makes for a fixed game speed across machines
+- [x] Main menu
+- [x] Options menu (still need better way to set/get options though)
+- [ ] 2 Player mode (still needs some work though)
+- [ ] 1 Player mode (requires simple AI)
+- [ ] Possibility to pause the game
+- [x] Some simple sound effects
 
-Stretch goals (if time/motivation permits)
-------------------------------------------
-- Round ball and the required custom physics as an additional challenge
-- Support for other Input devices (Joystick, Joypad) and analog input
-- Possibility to customize inputs (user can choose which buttons/keys move the paddles)
-- Possibility to configure video settings (resolution, windowed/full screen, ...)
-- Color setting (change element/font color from white to some other colors)
+Additional features (if time/motivation permits)
+------------------------------------------------
+- [ ] Support for other input devices (Joystick, Joypad)
+- [ ] Support for analog input for finer control over paddle speed
+- [ ] Input customisation (what key/button does what?)
+- [x] Video settings: Window size
+- [ ] Video settings: Full screen
+- [ ] Possibility to add and select new themes (colors and/or textures)
+- [ ] Possibility to add and select new rules (ball speed, points to win, ...)
 
-Lincence, Copyright, Credits
-----------------------------
-Everything is public domain (do whatever you want with it).
+Lincence, Copyright, whatever
+-----------------------------
+Everything is public domain (CC0), so do whatever you want with it.
 All code and contents have been created by me, with the exepction of:
 - The sounds, which I got from [OpenGameArt.org](http://opengameart.org/content/3-ping-pong-sounds-8-bit-style) (Public Domain)
 
 
-Problems and Learnings
-----------------------
+Problems and Learnings (My personal notes)
+------------------------------------------
 - Referencing files (textures): I have no idea how it works on Mac/OS X; easy on Linux. Well, fuck OS X for now!
 - Passing pointers/references around: You really need to pay attention to the scope! (See point 5 for further insight)
 - Member vars and member functions can't have the same name; this is in fact one reason why a lot of people would prefix member variables with `m` or `_` or `m_` or ...
