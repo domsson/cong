@@ -3,10 +3,10 @@
 namespace Cong {
 
     static const int PADDING = 20;
-    static const int PADDLE_WIDTH = 20;
-    static const int PADDLE_HEIGHT = 80;
+    static const int PADDLE_WIDTH = 24; // 32;
+    static const int PADDLE_HEIGHT = 96; // 128;
 	static const int PADDLE_SPEED = 400;
-    static const int BALL_RADIUS = 14;
+    static const int BALL_RADIUS = 12; // 16;
 	static const int BALL_SPEED = 300;
 	static const float BALL_SPEED_INCREASE = 0.05;
 
@@ -14,9 +14,9 @@ namespace Cong {
     static const int BALL_COLOR[] = {255, 255, 255};
 	static const int PADDLE_COLOR[] = {255, 255, 255};
 
-	static const std::string BALL_TEXTURE = "ball4.png";
-	static const std::string COURT_TEXTURE = "court.png";
-	static const std::string PADDLE_TEXTURE = "";
+	static const std::string BALL_TEXTURE = "fancy-ball.png";
+	static const std::string COURT_TEXTURE = "fancy-court.png";
+	static const std::string PADDLE_TEXTURE = "fancy-paddle.png";
 
 	static const std::string HIT_PADDLE_SOUND = "ping_pong_8bit_beeep.ogg";
 	static const std::string HIT_WALL_SOUND = "ping_pong_8bit_plop.ogg";
