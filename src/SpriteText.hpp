@@ -26,9 +26,6 @@ private:
 
 protected:
 
-	int getUnscaledWidth() const;
-	int getUnscaledHeight() const;
-
 	void setCharacter(int i, const char &c);
 	void updateSpritePosition(unsigned int i);
 	void updateSpritePositions();
@@ -54,6 +51,10 @@ public:
 
 	float getWidth() const;
 	float getHeight() const;
+
+	int getUnscaledWidth() const;
+	int getUnscaledHeight() const;
+
 	std::string getText() const;
 	SpriteTextAnchor getAnchor() const;
 
