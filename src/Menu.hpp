@@ -27,17 +27,30 @@ public:
 	Menu();
 	Menu(const CharMap &charMap);
 
-	int addMenuItem(const std::string &label, int itemScale=DEFAULT_ITEM_SCALE);
-	int addMenuItem(const std::string &label, const std::string options[], int numOptions);
-	int addMenuItem(const MenuItem &item);
+	void setCharMap(const CharMap &charMap);
 
-	void selectNextMenuItemOption();
-	void selectPrevMenuItemOption();
+	int addItem(const std::string &label, int itemScale=DEFAULT_ITEM_SCALE);
+	int addItem(const std::string &label, const std::string options[], int numOptions);
+	int addItem(const MenuItem &item);
 
-	void selectNextMenuItem();
-	void selectPrevMenuItem();
+	void selectNextItemOption();
+	void selectPrevItemOption();
+
+	void selectNextItem();
+	void selectPrevItem();
+
+	MenuItem& getItem(int i);
+	int getCurrentItem() const;
+
+	void enableItem(int i);
+	void disableItem(int i);
+
+	float getWidth() const;
+	float getHeight() const;
 
 protected:
+
+	Anchor anchor;
 
 	int itemScale;
 	int itemMargin;
@@ -48,16 +61,13 @@ protected:
 
 	const CharMap *charMap; // CharMap to be used for the items
 
-	std::vector<MenuItem> menuItems; // The menu items
-	int currentMenuItem; // What menu item is currently selected?
+	std::vector<MenuItem> items; // The menu items
+	int currentItem; // What menu item is currently selected?
 
 	void initCharMap();
 
-	void selectMenuItem(int i);
-	void deselectMenuItem(int i);
-
-	void enableItem(int i);
-	void disableItem(int i);
+	void selectItem(int i);
+	void deselectItem(int i);
 
 	void setMenuOffset(int offset);
 	void setItemScale(int scale);
@@ -81,9 +91,12 @@ private:
 	void setCurrentItem(int i);
 
 	bool itemExists(int i) const;
-	int findNextMenuItem(int current = -1, int checked = 0) const;
-	int findPrevMenuItem(int current = -1, int checked = 0) const;
+	int findNextItem(int current = -1, int checked = 0) const;
+	int findPrevItem(int current = -1, int checked = 0) const;
 	int findWidestItem() const;
+
+	void setAnchor(Anchor anchor);
+	void updateOrigin();
 
 };
 

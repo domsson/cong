@@ -4,13 +4,13 @@
 namespace Cong {
 
 	SpriteText::SpriteText()
-	: charMap(nullptr), charSprites(nullptr), anchor(TOP_LEFT), color(sf::Color::White)
+	: charMap(nullptr), charSprites(nullptr), anchor(Anchor::TOP_LEFT), color(sf::Color::White)
 	{
 		// Do nothing
 	}
 
 	SpriteText::SpriteText(const CharMap &charMap)
-	: charMap(&charMap), charSprites(nullptr), anchor(TOP_LEFT), color(sf::Color::White)
+	: charMap(&charMap), charSprites(nullptr), anchor(Anchor::TOP_LEFT), color(sf::Color::White)
 	{
 		// Do nothing
 	}
@@ -100,12 +100,6 @@ namespace Cong {
 		charSprites[i].setTextureRect(sf::IntRect(charPosX, charPosY, charMap->charWidth, charMap->charHeight));
 	}
 
-	void SpriteText::setAnchor(SpriteTextAnchor anchor)
-	{
-		this->anchor = anchor;
-		updateOrigin();
-	}
-
 	void SpriteText::setColor(const sf::Color &color)
 	{
 		this->color.r = color.r;
@@ -119,35 +113,41 @@ namespace Cong {
 		}
 	}
 
+	void SpriteText::setAnchor(Anchor anchor)
+	{
+		this->anchor = anchor;
+		updateOrigin();
+	}
+
 	void SpriteText::updateOrigin()
 	{
 		switch (anchor)
 		{
-			case TOP_LEFT:
+			case Anchor::TOP_LEFT:
 				setOrigin(0.0, 0.0);
 				break;
-			case TOP_CENTER:
+			case Anchor::TOP_CENTER:
 				setOrigin(getUnscaledWidth() * 0.5, 0.0);
 				break;
-			case TOP_RIGHT:
+			case Anchor::TOP_RIGHT:
 				setOrigin(getUnscaledWidth(), 0.0);
 				break;
-			case CENTER_LEFT:
+			case Anchor::CENTER_LEFT:
 				setOrigin(0.0, getUnscaledHeight() * 0.5);
 				break;
-			case CENTER_CENTER:
+			case Anchor::CENTER_CENTER:
 				setOrigin(getUnscaledWidth() * 0.5, getUnscaledHeight() * 0.5);
 				break;
-			case CENTER_RIGHT:
+			case Anchor::CENTER_RIGHT:
 				setOrigin(getUnscaledWidth(), getUnscaledHeight() * 0.5);
 				break;
-			case BOTTOM_LEFT:
+			case Anchor::BOTTOM_LEFT:
 				setOrigin(0.0, getUnscaledHeight());
 				break;
-			case BOTTOM_CENTER:
+			case Anchor::BOTTOM_CENTER:
 				setOrigin(getUnscaledWidth() * 0.5, getUnscaledHeight());
 				break;
-			case BOTTOM_RIGHT:
+			case Anchor::BOTTOM_RIGHT:
 				setOrigin(getUnscaledWidth(), getUnscaledHeight());
 				break;			
 		}
@@ -178,7 +178,7 @@ namespace Cong {
 		return text;
 	}
 
-	SpriteTextAnchor SpriteText::getAnchor() const
+	Anchor SpriteText::getAnchor() const
 	{
 		return anchor;
 	}

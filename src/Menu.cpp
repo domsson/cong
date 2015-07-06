@@ -12,15 +12,21 @@ namespace Cong
 	const sf::Color Menu::DEFAULT_INACTIVE_COLOR = sf::Color(175, 175, 175);
 
 	Menu::Menu()
-	: charMap(nullptr), currentMenuItem(-1)
+	: charMap(nullptr), currentItem(-1), anchor(Anchor::TOP_CENTER)
 	{
 		setValuesToDefaults();
 	}
 
 	Menu::Menu(const CharMap &charMap)
-	: charMap(&charMap), currentMenuItem(-1)
+	: charMap(&charMap), currentItem(-1), anchor(Anchor::TOP_CENTER)
 	{
 		setValuesToDefaults();
+	}
+
+	void Menu::setCharMap(const CharMap &charMap)
+	{
+		this->charMap = &charMap;
+		positionItems();
 	}
 
 	void Menu::setValuesToDefaults()
@@ -33,7 +39,7 @@ namespace Cong
 		inactiveColor = DEFAULT_INACTIVE_COLOR;
 	}
 
-	int Menu::addMenuItem(const std::string &label, int itemScale)
+	int Menu::addItem(const std::string &label, int itemScale)
 	{
 		if (charMap == nullptr)
 		{
@@ -44,13 +50,13 @@ namespace Cong
 		// Create and tweak the new menu item
 		MenuItem newItem(*charMap);
 		newItem.setScale(sf::Vector2f(itemScale, itemScale));
-		newItem.setAnchor(SpriteTextAnchor::TOP_CENTER);
+		newItem.setAnchor(Anchor::TOP_CENTER);
 		newItem.setLabel(label);
 
-		addMenuItem(newItem);
+		addItem(newItem);
 	}
 
-	int Menu::addMenuItem(const std::string &label, const std::string options[], int numOptions)
+	int Menu::addItem(const std::string &label, const std::string options[], int numOptions)
 	{
 		if (charMap == nullptr)
 		{
@@ -61,7 +67,7 @@ namespace Cong
 		// Create and tweak the new menu item
 		MenuItem newItem(*charMap);
 		newItem.setScale(sf::Vector2f(itemScale, itemScale));
-		newItem.setAnchor(SpriteTextAnchor::TOP_CENTER);
+		newItem.setAnchor(Anchor::TOP_CENTER);
 		newItem.setLabel(label);
 
 		for (int i=0; i<numOptions; ++i)
@@ -69,19 +75,16 @@ namespace Cong
 			newItem.addOption(options[i]);
 		}
 
-		addMenuItem(newItem);
+		addItem(newItem);
 	}
 
-	int Menu::addMenuItem(const MenuItem &item)
+	int Menu::addItem(const MenuItem &item)
 	{
 		// Insert the new item into the collection
-		menuItems.push_back(item);
+		items.push_back(item);
 
 		// Calculate the index of the new item within the collection
-		int itemNum = menuItems.size() - 1;
-
-		// Position the new item based on the item above it, if any
-		positionItem(itemNum);
+		int itemNum = items.size() - 1;
 
 		// It this is the first item, 'select' (highlight/hover) it
 		if (itemNum == 0)
@@ -89,13 +92,70 @@ namespace Cong
 			setCurrentItem(itemNum);
 		}
 
+		// Update the origin (the new item might be wider than all others)
+		updateOrigin();
+
+		// Reposition all items based on the (maybe) updated origin
+		positionItems();
+
 		// Return the index of the new item so the caller can refer to it later
 		return itemNum;
 	}
 
+	void Menu::setAnchor(Anchor anchor)
+	{
+		this->anchor = anchor;
+		updateOrigin();
+	}
+
+	void Menu::updateOrigin()
+	{
+		switch (anchor)
+		{
+			case Anchor::TOP_LEFT:
+				setOrigin(0.0, 0.0);
+				break;
+			case Anchor::TOP_CENTER:
+				setOrigin(getWidth() * 0.5, 0.0);
+				break;
+			case Anchor::TOP_RIGHT:
+				setOrigin(getWidth(), 0.0);
+				break;
+			case Anchor::CENTER_LEFT:
+				setOrigin(0.0, getHeight() * 0.5);
+				break;
+			case Anchor::CENTER_CENTER:
+				setOrigin(getWidth() * 0.5, getHeight() * 0.5);
+				break;
+			case Anchor::CENTER_RIGHT:
+				setOrigin(getWidth(), getHeight() * 0.5);
+				break;
+			case Anchor::BOTTOM_LEFT:
+				setOrigin(0.0, getHeight());
+				break;
+			case Anchor::BOTTOM_CENTER:
+				setOrigin(getWidth() * 0.5, getHeight());
+				break;
+			case Anchor::BOTTOM_RIGHT:
+				setOrigin(getWidth(), getHeight());
+				break;			
+		}
+	}
+
+	MenuItem& Menu::getItem(int i)
+	{
+		// TODO: Crashes if i is out of bounds, but can't return nullptr. What to do?
+		return items.at(i);
+	}
+
+	int Menu::getCurrentItem() const
+	{
+		return currentItem;
+	}
+
 	void Menu::positionItems()
 	{
-		for (int i=0; i<menuItems.size(); ++i)
+		for (int i=0; i<items.size(); ++i)
 		{
 			positionItem(i);
 		}
@@ -103,12 +163,11 @@ namespace Cong
 
 	void Menu::positionItem(int i)
 	{
-		//float x = game->getViewportWidth() * 0.5;
-		float x = menuItems.at(findWidestItem()).getWidth() * 0.5;
+		float x = getOrigin().x;
 		float y = 0;
 
-		y = (i == 0) ? 0 : menuItems.at(i-1).getPosition().y + menuItems.at(i-1).getHeight() + itemMargin;
-		menuItems.at(i).setPosition(x, y);
+		y = (i == 0) ? 0 : items.at(i-1).getPosition().y + items.at(i-1).getHeight() + itemMargin;
+		items.at(i).setPosition(x, y);
 	}
 
 	int Menu::findWidestItem() const
@@ -117,9 +176,10 @@ namespace Cong
 		int widthOfWidest = 0;
 		int currentWidth = 0;
 
-		for (int i=0; i<menuItems.size(); ++i)
+		for (int i=0; i<items.size(); ++i)
 		{
-			currentWidth = menuItems.at(i).getUnscaledWidth(); // Saves a multiplication in getWidth()
+			// Using getUnscaledWidth() to save the additional multiplication in getWidth()
+			currentWidth = items.at(i).getUnscaledWidth();
 			if (currentWidth > widthOfWidest)
 			{
 				indexOfWidest = i;
@@ -129,19 +189,39 @@ namespace Cong
 		return indexOfWidest;
 	}
 
+	float Menu::getWidth() const
+	{
+		int indexOfWidest = findWidestItem();
+		if (indexOfWidest == -1)
+		{
+			return 0;
+		}
+		return items.at(indexOfWidest).getWidth();
+	}
+
+	float Menu::getHeight() const
+	{
+		int numItems = items.size();
+		if (numItems == 0)
+		{
+			return 0;
+		}
+		return (numItems * items.at(0).getHeight()) + ((numItems - 1) * itemMargin);
+	}
+
 	void Menu::scaleItems()
 	{
-		for (int i=0; i<menuItems.size(); ++i)
+		for (int i=0; i<items.size(); ++i)
 		{
-			menuItems.at(i).setScale(itemScale, itemScale);
+			items.at(i).setScale(itemScale, itemScale);
 		}
 	}
 
 	void Menu::styleItems()
 	{
-		for (int i=0; i<menuItems.size(); ++i)
+		for (int i=0; i<items.size(); ++i)
 		{
-			menuItems.at(i).setColor(itemColor);
+			items.at(i).setColor(itemColor);
 		}
 	}
 
@@ -178,9 +258,9 @@ namespace Cong
 	 * that it is the currently selected item. Override in child classes to
 	 * define a custom 'selected' style for menu items.
 	 */
-	void Menu::selectMenuItem(int i)
+	void Menu::selectItem(int i)
 	{
-		menuItems.at(i).setColor(selectColor);
+		items.at(i).setColor(selectColor);
 	}
 
 	/**
@@ -188,9 +268,9 @@ namespace Cong
 	 * that it is not currently selected. Override in child classes to define
 	 * a custom 'unselected' style for the menu items.
 	 */
-	void Menu::deselectMenuItem(int i)
+	void Menu::deselectItem(int i)
 	{
-		menuItems.at(i).setColor(itemColor);
+		items.at(i).setColor(itemColor);
 	}
 
 	/**
@@ -199,7 +279,7 @@ namespace Cong
 	void Menu::setCurrentItem(int i)
 	{
 		// Do nothing if item <i> is already the currently selected item
-		if (i == currentMenuItem)
+		if (i == currentItem)
 		{
 			std::cerr << "Warning: tried to select the currently selected menu item." << std::endl;
 			return;
@@ -213,21 +293,21 @@ namespace Cong
 		}
 
 		// Do nothing if the item to be selected is disabled
-		if (!menuItems.at(i).isEnabled())
+		if (!items.at(i).isEnabled())
 		{
 			std::cerr << "Warning: tried to select a deactivated menu item." << std::endl;
 			return;
 		}
 
 		// Deselect the currently selected item, if any
-		if (currentMenuItem != -1)
+		if (currentItem != -1)
 		{
-			deselectMenuItem(currentMenuItem);
-			currentMenuItem = -1;
+			deselectItem(currentItem);
+			currentItem = -1;
 		}
 
-		selectMenuItem(i);
-		currentMenuItem = i;
+		selectItem(i);
+		currentItem = i;
 	}
 
 
@@ -235,18 +315,18 @@ namespace Cong
 	{
 		if (itemExists(i))
 		{
-			menuItems.at(i).setEnabled(true);
-			menuItems.at(i).setColor(itemColor);
+			items.at(i).setEnabled(true);
+			items.at(i).setColor(itemColor);
 		}
 	}
 
 	void Menu::disableItem(int i)
 	{
 		// If we're trying to disable the currently selected item, select the next available item
-		if (i == currentMenuItem)
+		if (i == currentItem)
 		{
 			// Let's find the next available menu item, if any
-			int j = findNextMenuItem();
+			int j = findNextItem();
 
 			// If no other is available, then we can't disable the current one, that would be weird
 			if (j == -1)
@@ -258,54 +338,53 @@ namespace Cong
 			setCurrentItem(j);
 		}
 
-		menuItems.at(i).setEnabled(false);
-		menuItems.at(i).setColor(inactiveColor);
+		items.at(i).setEnabled(false);
+		items.at(i).setColor(inactiveColor);
 	}
 
 	bool Menu::itemExists(int i) const
 	{
-		return (i >= 0 && i < menuItems.size());
+		return (i >= 0 && i < items.size());
 	}
 	
-	void Menu::selectNextMenuItem()
+	void Menu::selectNextItem()
 	{
-		int i = findNextMenuItem();
+		int i = findNextItem();
 		if (i == -1) // There is no next item available
 		{
 			std::cerr << "Warning: tried to select next menu item when there is none available." << std::endl;
 			return;
 		}
 
-		setCurrentItem(i);
-		//setCurrentItem((currentMenuItem + 1 >= menuItems.size()) ? 0 : currentMenuItem + 1);		
+		setCurrentItem(i);	
 	}
 	
-	int Menu::findNextMenuItem(int current, int checked) const
+	int Menu::findNextItem(int current, int checked) const
 	{
 		if (current == -1)
 		{
-			current = currentMenuItem;
+			current = currentItem;
 		}
 
 		// Did we already make a full circle without success?
-		if (checked >= menuItems.size() - 1)
+		if (checked >= items.size() - 1)
 		{
 			return -1;
 		}
 
-		int next = (current + 1 >= menuItems.size()) ? 0 : current + 1; // Roll over if need be
+		int next = (current + 1 >= items.size()) ? 0 : current + 1; // Roll over if need be
 
-		if (menuItems.at(next).isEnabled())
+		if (items.at(next).isEnabled())
 		{
 			return next;
 		}
 
-		return findNextMenuItem(next, ++checked);
+		return findNextItem(next, ++checked);
 	}
 
-	void Menu::selectPrevMenuItem()
+	void Menu::selectPrevItem()
 	{
-		int i = findPrevMenuItem();
+		int i = findPrevItem();
 		if (i == -1) // There is no previous item available
 		{
 			std::cerr << "Warning: tried to select previous menu item when there is none available." << std::endl;
@@ -313,48 +392,37 @@ namespace Cong
 		}
 
 		setCurrentItem(i);
-		//setCurrentItem((currentMenuItem - 1 < 0) ? menuItems.size() - 1 : currentMenuItem - 1);
 	}
 
-	int Menu::findPrevMenuItem(int current, int checked) const
+	int Menu::findPrevItem(int current, int checked) const
 	{
 		if (current == -1)
 		{
-			current = currentMenuItem;
+			current = currentItem;
 		}
 
 		// Did we already make a full circle without success?
-		if (checked >= menuItems.size() - 1)
+		if (checked >= items.size() - 1)
 		{
 			return -1;
 		}
 
-		int prev = (current - 1 < 0) ? menuItems.size() - 1 : current - 1; // Roll over if need be
+		int prev = (current - 1 < 0) ? items.size() - 1 : current - 1; // Roll over if need be
 
-		if (menuItems.at(prev).isEnabled())
+		if (items.at(prev).isEnabled())
 		{
 			return prev;
 		}
 
-		return findPrevMenuItem(prev, ++checked);
+		return findPrevItem(prev, ++checked);
 	}
-
-/*
-	void Menu::renderItems() const
-	{
-		for (int i=0; i < menuItems.size(); ++i)
-		{
-			game->getWindow()->draw(menuItems.at(i));
-		}
-	}
-*/
 
 	void Menu::draw(sf::RenderTarget &target, sf::RenderStates states) const
 	{
 		states.transform *= getTransform();
-		for (int i=0; i<menuItems.size(); ++i)
+		for (int i=0; i<items.size(); ++i)
 		{		
-			target.draw(menuItems.at(i), states);
+			target.draw(items.at(i), states);
 		}
 	}
 

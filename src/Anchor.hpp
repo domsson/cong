@@ -1,9 +1,11 @@
-#ifndef CONG_SPRITETEXTANCHOR_HPP
-#define CONG_SPRITETEXTANCHOR_HPP
+#ifndef CONG_ANCHOR_HPP
+#define CONG_ANCHOR_HPP
 
-namespace Cong {
+namespace Cong
+{
 
-enum SpriteTextAnchor {
+enum class Anchor
+{
 	TOP_LEFT,
 	TOP_CENTER,
 	TOP_RIGHT,

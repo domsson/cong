@@ -8,9 +8,9 @@ namespace Cong {
 	{
 		setTitle(this->game->getTitle());
 
-		addMenuItem("Play");
-		addMenuItem("Options");
-		addMenuItem("Quit");
+		menu.addItem("Play");
+		menu.addItem("Options");
+		menu.addItem("Quit");
 	}
 
 	MainMenuState::~MainMenuState()
@@ -50,11 +50,11 @@ namespace Cong {
 						break;
 					
 					case sf::Keyboard::Up:
-						selectPrevMenuItem();
+						menu.selectPrevItem();
 						break;
 
 					case sf::Keyboard::Down:
-						selectNextMenuItem();
+						menu.selectNextItem();
 						break;
 				}
 			}
@@ -63,7 +63,7 @@ namespace Cong {
 
 	void MainMenuState::onConfirmPressed()
 	{
-		switch (currentMenuItem)
+		switch (menu.getCurrentItem())
 		{
 			case 0:
 				changeState(GameStates::GAMEPLAY);
@@ -92,7 +92,7 @@ namespace Cong {
 		game->getWindow()->clear();
 
 		renderTitle();
-		renderItems();
+		renderMenu();
 
 		game->getWindow()->display();
 	}

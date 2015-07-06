@@ -107,13 +107,13 @@ namespace Cong {
 	{
 		scoreDisplayLeft = new SpriteText(*charMap);
 		scoreDisplayLeft->setScale(sf::Vector2f(8, 8));
-		scoreDisplayLeft->setAnchor(SpriteTextAnchor::TOP_CENTER);
+		scoreDisplayLeft->setAnchor(Anchor::TOP_CENTER);
 		scoreDisplayLeft->setPosition(game->getViewportWidth() * 0.35, PADDING);
 		scoreDisplayLeft->setText(std::to_string(scoreLeft));
 
 		scoreDisplayRight = new SpriteText(*charMap);
 		scoreDisplayRight->setScale(sf::Vector2f(8, 8));
-		scoreDisplayRight->setAnchor(SpriteTextAnchor::TOP_CENTER);
+		scoreDisplayRight->setAnchor(Anchor::TOP_CENTER);
 		scoreDisplayRight->setPosition(game->getViewportWidth() * 0.65, PADDING);
 		scoreDisplayRight->setText(std::to_string(scoreRight));
 	}

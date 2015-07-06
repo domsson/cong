@@ -7,7 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-#include "SpriteTextAnchor.hpp"
+#include "Anchor.hpp"
 
 namespace Cong {
 
@@ -21,7 +21,7 @@ private:
 	std::string text;
 	sf::Sprite *charSprites;
 
-	SpriteTextAnchor anchor;
+	Anchor anchor;
 	sf::Color color;
 
 protected:
@@ -46,7 +46,7 @@ public:
 
 	void setText(const std::string &text);
 	void setCharMap(const CharMap &charMapTexture);
-	void setAnchor(SpriteTextAnchor anchor);
+	void setAnchor(Anchor anchor);
 	void setColor(const sf::Color &color);
 
 	float getWidth() const;
@@ -56,7 +56,7 @@ public:
 	int getUnscaledHeight() const;
 
 	std::string getText() const;
-	SpriteTextAnchor getAnchor() const;
+	Anchor getAnchor() const;
 
 };
 

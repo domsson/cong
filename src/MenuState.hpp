@@ -7,7 +7,8 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "MenuItem.hpp"
+#include "Menu.hpp"
+// #include "MenuItem.hpp"
 
 namespace Cong
 {
@@ -24,87 +25,52 @@ public:
 	static const int DEFAULT_MENU_OFFSET;
 	static const int DEFAULT_TITLE_SCALE;
 	static const int DEFAULT_TITLE_MARGIN;
-	static const int DEFAULT_ITEM_SCALE;
-	static const int DEFAULT_ITEM_MARGIN;
 
 	static const sf::Color DEFAULT_TITLE_COLOR; // Default color for title
-	static const sf::Color DEFAULT_ITEM_COLOR; // Default color for unselected menu item
-	static const sf::Color DEFAULT_SELECT_COLOR; // Default color for selected menu item
-	static const sf::Color DEFAULT_INACTIVE_COLOR; // Default color for disabled menu items
 
 protected:
 
 	int menuOffset;
 	int titleScale;
 	int titleMargin;
-	int itemScale;
-	int itemMargin;
 
 	sf::Color titleColor;
-	sf::Color itemColor;
-	sf::Color selectColor;
-	sf::Color inactiveColor;
 
 	const CharMap *charMap; // CharMap to be used for title and items
 
 	SpriteText title; // Menu title to be displayed atop all menu items
 	bool titleIsSet; // Has the menu title been set?
 
-	std::vector<MenuItem> menuItems; // The menu items
-	int currentMenuItem; // What menu item is currently selected?
+	Menu menu;
 
 	MenuState(const Game &game); // Protected ctor as this is an abstract base class!
 	virtual ~MenuState(); // Virtual dtor makes sure child class dtor is called!
 
 	void initCharMap();
 	
-	int addMenuItem(const std::string &label, int itemScale=DEFAULT_ITEM_SCALE);
-	int addMenuItem(const std::string &label, const std::string options[], int numOptions);
-	int addMenuItem(const MenuItem &item);
-
-	void selectNextMenuItemOption();
-	void selectPrevMenuItemOption();
-
-	void selectNextMenuItem();
-	void selectPrevMenuItem();
-	void selectMenuItem(int i);
-	void deselectMenuItem(int i);
-
-	void enableItem(int i);
-	void disableItem(int i);
-
 	void setTitle(const std::string &label);
-	void setMenuOffset(int offset);
-	void setItemScale(int scale);
-	void setItemMargin(int margin);
 	void setTitleScale(int scale);
 	void setTitleMargin(int margin);
 
+	void setMenuOffset(int offset);
+
 	void setTitleColor(const sf::Color &color);
-	void setItemColor(const sf::Color &color);
-	void setSelectColor(const sf::Color &color);
-	void setInactiveColor(const sf::Color &color);
+
+	void positionTitle();
+	void positionMenu();
+	void positionTitleAndMenu();
+
+	void scaleTitle();
+	void styleTitle();
 
 	void renderTitle() const;
-	void renderItems() const;
+	void renderMenu() const;
 
 private:
 	
 	void initTitle(); // Prepare the title for later use
+	void initMenu();
 	void setValuesToDefaults();
-	void positionTitle();
-	void positionItem(int i);
-	void positionTitleAndItems();
-	void scaleTitle();
-	void scaleItems();
-	void styleTitle();
-	void styleItems();
-
-	void setCurrentItem(int i);
-
-	bool itemExists(int i);
-	int findNextMenuItem(int current = -1, int checked = 0);
-	int findPrevMenuItem(int current = -1, int checked = 0);
 
 };
 

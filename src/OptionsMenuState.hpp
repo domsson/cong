@@ -34,9 +34,9 @@ private:
 	void loadThemeOption();
 	void loadSoundOption();
 
-	void saveResolutionOption() const;
-	void saveThemeOption() const;
-	void saveSoundOption() const;
+	void saveResolutionOption();
+	void saveThemeOption();
+	void saveSoundOption();
 
 };
 

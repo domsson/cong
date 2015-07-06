@@ -30,20 +30,20 @@ namespace Cong
 		
 		// menuItem 0
 		std::string resolutions[] = {RESOLUTION_LOW, RESOLUTION_MEDIUM, RESOLUTION_HIGH};
-		addMenuItem(RESOLUTION, resolutions, 3);
+		menu.addItem(RESOLUTION, resolutions, 3);
 
 		// menuItem 1
 		std::string themes[] = {THEME_CLASSIC, THEME_FANCY};
-		addMenuItem(THEME, themes, 2);
+		menu.addItem(THEME, themes, 2);
 
 		// menuItem 2
 		std::string sounds[] = {SOUNDS_ON, SOUNDS_OFF};
-		addMenuItem(SOUNDS, sounds, 2);
+		menu.addItem(SOUNDS, sounds, 2);
 
 		// menuItem 3
-		addMenuItem("Back");
+		menu.addItem("Back");
 
-		disableItem(1); // No Theme selection functionality yet.
+		menu.disableItem(1); // No Theme selection functionality yet.
 	}
 
 	OptionsMenuState::~OptionsMenuState()
@@ -73,13 +73,16 @@ namespace Cong
 		switch (Options::resolution)
 		{
 			case Resolution::LOW:
-				menuItems.at(0).showOption(RESOLUTION_LOW);
+				//menuItems.at(0).showOption(RESOLUTION_LOW);
+				menu.getItem(0).showOption(RESOLUTION_LOW);
 				break;
 			case Resolution::MEDIUM:
-				menuItems.at(0).showOption(RESOLUTION_MEDIUM);
+				//menuItems.at(0).showOption(RESOLUTION_MEDIUM);
+				menu.getItem(0).showOption(RESOLUTION_MEDIUM);
 				break;
 			case Resolution::HIGH:
-				menuItems.at(0).showOption(RESOLUTION_HIGH);
+				//menuItems.at(0).showOption(RESOLUTION_HIGH);
+				menu.getItem(0).showOption(RESOLUTION_HIGH);
 				break;
 		}
 	}
@@ -89,10 +92,12 @@ namespace Cong
 		switch (Options::theme)
 		{
 			case Theme::CLASSIC:
-				menuItems.at(1).showOption(THEME_CLASSIC);
+				//menuItems.at(1).showOption(THEME_CLASSIC);
+				menu.getItem(1).showOption(THEME_CLASSIC);
 				break;
 			case Theme::FANCY:
-				menuItems.at(1).showOption(THEME_FANCY);
+				//menuItems.at(1).showOption(THEME_FANCY);
+				menu.getItem(1).showOption(THEME_FANCY);
 				break;
 		}
 	}
@@ -102,17 +107,19 @@ namespace Cong
 		switch (Options::playSounds)
 		{
 			case Sound::ON:
-				menuItems.at(2).showOption(SOUNDS_ON);
+				//menuItems.at(2).showOption(SOUNDS_ON);
+				menu.getItem(2).showOption(SOUNDS_ON);
 				break;
 			case Sound::OFF:
-				menuItems.at(2).showOption(SOUNDS_OFF);
+				//menuItems.at(2).showOption(SOUNDS_OFF);
+				menu.getItem(2).showOption(SOUNDS_OFF);
 				break;
 		}
 	}
 
-	void OptionsMenuState::saveResolutionOption() const
+	void OptionsMenuState::saveResolutionOption()
 	{
-		std::string resolutionOption = menuItems.at(0).getSelectedOption(); // 0 = resolution...
+		const std::string resolutionOption = menu.getItem(0).getSelectedOption(); // 0 = resolution...
 
 		if (resolutionOption == RESOLUTION_LOW)
 		{
@@ -128,9 +135,9 @@ namespace Cong
 		}
 	}
 
-	void OptionsMenuState::saveThemeOption() const
+	void OptionsMenuState::saveThemeOption()
 	{
-		std::string themeOption = menuItems.at(1).getSelectedOption(); // 1 = themes...
+		std::string themeOption = menu.getItem(1).getSelectedOption(); // 1 = themes...
 
 		if (themeOption == THEME_CLASSIC)
 		{
@@ -142,9 +149,9 @@ namespace Cong
 		}
 	}
 
-	void OptionsMenuState::saveSoundOption() const
+	void OptionsMenuState::saveSoundOption()
 	{
-		std::string soundOption = menuItems.at(2).getSelectedOption(); // 2 = sound...
+		std::string soundOption = menu.getItem(2).getSelectedOption(); // 2 = sound...
 
 		if (soundOption == SOUNDS_ON)
 		{
@@ -178,11 +185,11 @@ namespace Cong
 						break;
 					
 					case sf::Keyboard::Up:
-						selectPrevMenuItem();
+						menu.selectPrevItem();
 						break;
 
 					case sf::Keyboard::Down:
-						selectNextMenuItem();
+						menu.selectNextItem();
 						break;
 
 					case sf::Keyboard::Left:
@@ -199,7 +206,7 @@ namespace Cong
 
 	void OptionsMenuState::onConfirmPressed()
 	{
-		switch (currentMenuItem)
+		switch (menu.getCurrentItem())
 		{
 			case 0:
 				onRightPressed();
@@ -221,12 +228,12 @@ namespace Cong
 
 	void OptionsMenuState::onRightPressed()
 	{
-		menuItems.at(currentMenuItem).nextOption();
+		menu.getItem(menu.getCurrentItem()).nextOption();
 	}
 
 	void OptionsMenuState::onLeftPressed()
 	{
-		menuItems.at(currentMenuItem).prevOption();
+		menu.getItem(menu.getCurrentItem()).prevOption();
 	}
 
 	void OptionsMenuState::processInputs()
@@ -241,7 +248,7 @@ namespace Cong
 	{
 		game->getWindow()->clear();
 		renderTitle();
-		renderItems();
+		renderMenu();
 		game->getWindow()->display();
 	}
 
