@@ -23,7 +23,8 @@ namespace Cong {
 	static const std::string BALL_OUT_SOUND = "ping_pong_8bit_peeeeeep.ogg";
 
 	PlayState::PlayState(Game &game)
-	: GameState(game), court(0), ball(0), paddleLeft(0), paddleRight(0), scoreDisplayLeft(0), scoreDisplayRight(0), charMap(0)
+	: GameState(game), court(0), ball(0), paddleLeft(0), paddleRight(0),
+	  scoreDisplayLeft(0), scoreDisplayRight(0), charMap(0), isPaused(false)
 	{
 		charMap = this->game->getDefaultCharMap();
 	}
@@ -36,6 +37,7 @@ namespace Cong {
 		delete paddleRight;
 		delete scoreDisplayLeft;
 		delete scoreDisplayRight;
+		delete menuBackground;
 	}
 
 	void PlayState::enter()
@@ -46,6 +48,7 @@ namespace Cong {
 		initBall();
 		initScoreDisplays();
 		initSounds();
+		initPauseMenu();
 	}
 
 	void PlayState::exit()
@@ -123,10 +126,33 @@ namespace Cong {
 		Game::loadSound(HIT_PADDLE_SOUND, paddleSoundFile, paddleSound);
 		Game::loadSound(HIT_WALL_SOUND, wallSoundFile, wallSound);
 		Game::loadSound(BALL_OUT_SOUND, outSoundFile, outSound);
-	}	
+	}
+	
+	void PlayState::initPauseMenu()
+	{
+		pauseMenu.setCharMap(*charMap);
+		pauseMenu.setAnchor(Anchor::CENTER_CENTER);
+		pauseMenu.addItem("Resume");
+		pauseMenu.addItem("Main Menu");
+		pauseMenu.addItem("Quit Cong");
+		positionMenu();
+		
+		menuBackground = new sf::RectangleShape(sf::Vector2f(game->getViewportWidth(), game->getViewportHeight()));
+		menuBackground->setFillColor(sf::Color(0, 0, 0, 128));
+	}
+	
+	void PlayState::positionMenu()
+	{
+		pauseMenu.setPosition(game->getViewportWidth() * 0.5, game->getViewportHeight() * 0.5);
+	}
 
 	void PlayState::update()
 	{
+		if (isPaused)
+		{
+			return;
+		}
+		
 		float ballSpeed = ball->getSpeed() * game->getDeltaTime();
         sf::Vector2f ballPositionNext((ball->getPosition().x + ball->getDirection().x * ballSpeed), (ball->getPosition().y + ball->getDirection().y * ballSpeed));
         
@@ -312,80 +338,149 @@ namespace Cong {
 	{
 		scoreDisplayRight->setText(std::to_string(++scoreRight));
 	}
+	
+	void PlayState::pause()
+	{
+		isPaused = true;
+	}
+	
+	void PlayState::resume()
+	{
+		isPaused = false;
+	}
 
 	void PlayState::processEvents()
 	{
 		sf::Event event;
         while (game->getWindow()->pollEvent(event))
 		{
-            if (event.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed)
 			{
                 game->getWindow()->close();
 			}
 			else if (event.type == sf::Event::KeyReleased)
 			{
-				if (event.key.code == sf::Keyboard::Escape)
+				if (isPaused) // Game is paused (pause menu shown)
 				{
-					changeState(GameStates::MAIN_MENU);
+					switch (event.key.code)
+					{
+						case sf::Keyboard::Escape:
+							changeState(GameStates::MAIN_MENU);
+							break;
+
+						case sf::Keyboard::Return:
+							onConfirmPressed();
+							break;
+						
+						case sf::Keyboard::Up:
+							pauseMenu.selectPrevItem();
+							break;
+
+						case sf::Keyboard::Down:
+							pauseMenu.selectNextItem();
+							break;
+					}
+				}
+				else // Game is running
+				{
+					switch (event.key.code)
+					{
+						case sf::Keyboard::Escape:
+							pause();
+							break;
+					}				
 				}
 			}
         }
     }
+    
+    void PlayState::onConfirmPressed()
+	{
+		switch (pauseMenu.getCurrentItem())
+		{
+			case 0:
+				resume();
+				break;
+
+			case 1:
+				changeState(GameStates::MAIN_MENU);
+				break;
+
+			case 2:
+				game->getWindow()->close();
+				break;
+		}
+	}
 
 	void PlayState::processInputs()
-	{        
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-            sf::Vector2f paddleLeftPos = paddleLeft->getPosition();
-            int paddleLeftY = paddleLeftPos.y - PADDLE_SPEED * game->getDeltaTime();
-            paddleLeftY = paddleLeftY - PADDLE_HEIGHT * 0.5 < 0 ? PADDLE_HEIGHT * 0.5  : paddleLeftY;
-            
-            paddleLeft->setPosition(sf::Vector2f(paddleLeftPos.x, paddleLeftY));
-        }
-        
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-            sf::Vector2f paddleLeftPos = paddleLeft->getPosition();
-            int paddleLeftY = paddleLeftPos.y + PADDLE_SPEED * game->getDeltaTime();
-            paddleLeftY = paddleLeftY + PADDLE_HEIGHT * 0.5 > game->getViewportHeight() ? game->getViewportHeight() - PADDLE_HEIGHT * 0.5  : paddleLeftY;
-            
-            paddleLeft->setPosition(sf::Vector2f(paddleLeftPos.x, paddleLeftY));
-        }
-        
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-            sf::Vector2f paddleRightPos = paddleRight->getPosition();
-            int paddleRightY = paddleRightPos.y - PADDLE_SPEED * game->getDeltaTime();
-            paddleRightY = paddleRightY - PADDLE_HEIGHT * 0.5 < 0  ? PADDLE_HEIGHT * 0.5  : paddleRightY;
-            
-            paddleRight->setPosition(sf::Vector2f(paddleRightPos.x, paddleRightY));
-        }
-        
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-            sf::Vector2f paddleRightPos = paddleRight->getPosition();
-            int paddleRightY = paddleRightPos.y + PADDLE_SPEED * game->getDeltaTime();
-            paddleRightY = paddleRightY + PADDLE_HEIGHT * 0.5  > game->getViewportHeight() ? game->getViewportHeight() - PADDLE_HEIGHT * 0.5   : paddleRightY;
-            
-            paddleRight->setPosition(sf::Vector2f(paddleRightPos.x, paddleRightY));
-        }
-        
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
-            ball->setDirection(sf::Vector2f(1, 0));
-            ball->setSpeed(BALL_SPEED);
-        }
-        
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::V)) {
-            ball->setDirection(sf::Vector2f(0, 1));
-            ball->setSpeed(BALL_SPEED);
-        }
-        
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
-            ball->setDirection(sf::Vector2f(1, 1));
-            ball->setSpeed(BALL_SPEED);
-        }
+	{
+		if (!isPaused) // Game is running, react to player's input
+		{     
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+			{
+				sf::Vector2f paddleLeftPos = paddleLeft->getPosition();
+				int paddleLeftY = paddleLeftPos.y - PADDLE_SPEED * game->getDeltaTime();
+				paddleLeftY = paddleLeftY - PADDLE_HEIGHT * 0.5 < 0 ? PADDLE_HEIGHT * 0.5  : paddleLeftY;
+				
+				paddleLeft->setPosition(sf::Vector2f(paddleLeftPos.x, paddleLeftY));
+			}
+			
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+			{
+				sf::Vector2f paddleLeftPos = paddleLeft->getPosition();
+				int paddleLeftY = paddleLeftPos.y + PADDLE_SPEED * game->getDeltaTime();
+				paddleLeftY = paddleLeftY + PADDLE_HEIGHT * 0.5 > game->getViewportHeight() ? game->getViewportHeight() - PADDLE_HEIGHT * 0.5  : paddleLeftY;
+				
+				paddleLeft->setPosition(sf::Vector2f(paddleLeftPos.x, paddleLeftY));
+			}
+			
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+			{
+				sf::Vector2f paddleRightPos = paddleRight->getPosition();
+				int paddleRightY = paddleRightPos.y - PADDLE_SPEED * game->getDeltaTime();
+				paddleRightY = paddleRightY - PADDLE_HEIGHT * 0.5 < 0  ? PADDLE_HEIGHT * 0.5  : paddleRightY;
+				
+				paddleRight->setPosition(sf::Vector2f(paddleRightPos.x, paddleRightY));
+			}
+			
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+			{
+				sf::Vector2f paddleRightPos = paddleRight->getPosition();
+				int paddleRightY = paddleRightPos.y + PADDLE_SPEED * game->getDeltaTime();
+				paddleRightY = paddleRightY + PADDLE_HEIGHT * 0.5  > game->getViewportHeight() ? game->getViewportHeight() - PADDLE_HEIGHT * 0.5   : paddleRightY;
+				
+				paddleRight->setPosition(sf::Vector2f(paddleRightPos.x, paddleRightY));
+			}
+			
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
+			{
+				ball->setDirection(sf::Vector2f(1, 0));
+				ball->setSpeed(BALL_SPEED);
+			}
+			
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::V))
+			{
+				ball->setDirection(sf::Vector2f(0, 1));
+				ball->setSpeed(BALL_SPEED);
+			}
+			
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::C))
+			{
+				ball->setDirection(sf::Vector2f(1, 1));
+				ball->setSpeed(BALL_SPEED);
+			}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
-			ball->setPosition(PADDING + BALL_RADIUS, game->getViewportHeight() - BALL_RADIUS * 2 - PADDING);
-            ball->setDirection(sf::Vector2f(0, -1));
-            ball->setSpeed(BALL_SPEED);
-        }
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::X))
+			{
+				ball->setPosition(PADDING + BALL_RADIUS, game->getViewportHeight() - BALL_RADIUS * 2 - PADDING);
+				ball->setDirection(sf::Vector2f(0, -1));
+				ball->setSpeed(BALL_SPEED);
+			}
+		}
+		
+		else // Game is paused, pause menu is being displayed on top
+		{
+		}
 	}
 
 	void PlayState::render()
@@ -397,6 +492,11 @@ namespace Cong {
         game->getWindow()->draw(*ball);
         game->getWindow()->draw(*paddleLeft);
         game->getWindow()->draw(*paddleRight);
+        if (isPaused)
+        {
+			game->getWindow()->draw(*menuBackground);
+			game->getWindow()->draw(pauseMenu);
+		}
         game->getWindow()->display();
 	}
 

@@ -25,6 +25,7 @@ private:
 	int width;
 	int height;
 
+	sf::RectangleShape *menuBackground;
 	sf::RectangleShape *court;
 	Ball *ball;
 	Paddle *paddleLeft;
@@ -38,6 +39,8 @@ private:
 
 	SpriteText *scoreDisplayLeft;
     SpriteText *scoreDisplayRight;
+    
+    Menu pauseMenu;
 
 	sf::Sound paddleSound;
 	sf::Sound wallSound;
@@ -49,12 +52,18 @@ private:
 
 	int scoreLeft;
 	int scoreRight;
+	
+	bool isPaused;
 
 	void initCourt();
 	void initPaddles();
 	void initBall();
 	void initScoreDisplays();
 	void initSounds();
+	void initPauseMenu();
+	
+	void positionMenu();	
+	void onConfirmPressed();
 
 	void serve();
 	void scoreForLeft();
@@ -73,6 +82,9 @@ public:
 	void processInputs();
     void update();
 	void render();
+	
+	void pause();
+	void resume();
 
 };
 
