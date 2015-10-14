@@ -55,6 +55,7 @@ namespace Cong
 	void MenuState::initMenu()
 	{
 		menu.setCharMap(*charMap);
+		menu.setAnchor(Anchor::CENTER_CENTER); // To center in x and y
 		positionMenu();
 	}
 
@@ -87,6 +88,7 @@ namespace Cong
 
 	void MenuState::positionMenu()
 	{
+		/*
 		if (titleIsSet)
 		{
 			menu.setPosition(game->getViewportWidth() * 0.5, title.getPosition().y + title.getHeight() + titleMargin);
@@ -95,6 +97,8 @@ namespace Cong
 		{
 			menu.setPosition(game->getViewportWidth() * 0.5, menuOffset);
 		}
+		*/
+		menu.setPosition(game->getViewportWidth() * 0.5, game->getViewportHeight() * 0.5); // Center in x and y
 	}
 
 	void MenuState::scaleTitle()

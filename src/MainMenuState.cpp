@@ -7,7 +7,7 @@ namespace Cong {
 	: MenuState(game)
 	{
 		setTitle(this->game->getTitle());
-
+		
 		menu.addItem("Play");
 		menu.addItem("Options");
 		menu.addItem("Quit");
