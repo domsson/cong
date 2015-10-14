@@ -24,7 +24,8 @@ namespace Cong {
 
 	PlayState::PlayState(Game &game)
 	: GameState(game), court(0), ball(0), paddleLeft(0), paddleRight(0),
-	  scoreDisplayLeft(0), scoreDisplayRight(0), charMap(0), isPaused(false)
+	  scoreDisplayLeft(0), scoreDisplayRight(0), charMap(0),
+	  lastScorer(-1), isPaused(false), hasEnded(false)
 	{
 		charMap = this->game->getDefaultCharMap();
 	}
@@ -49,6 +50,17 @@ namespace Cong {
 		initScoreDisplays();
 		initSounds();
 		initPauseMenu();
+	}
+	
+	void PlayState::reset()
+	{
+		resetScores();
+		scoreDisplayLeft->setText(std::to_string(scoreLeft));
+		scoreDisplayRight->setText(std::to_string(scoreRight));
+		lastScorer = -1;
+		paddleLeft->setPosition(PADDING + PADDLE_WIDTH, (game->getViewportHeight()-1) * 0.5);
+		paddleRight->setPosition(game->getViewportWidth() - (PADDLE_WIDTH + PADDING), (game->getViewportHeight()-1) * 0.5);
+		pauseMenu.getItem(0).setLabel("Resume");
 	}
 
 	void PlayState::exit()
@@ -150,6 +162,12 @@ namespace Cong {
 	{
 		if (isPaused)
 		{
+			return;
+		}
+		
+		if (!hasEnded && (scoreLeft > 10 || scoreRight > 10))
+		{
+			end();
 			return;
 		}
 		
@@ -332,11 +350,20 @@ namespace Cong {
 	void PlayState::scoreForLeft()
 	{
 		scoreDisplayLeft->setText(std::to_string(++scoreLeft));
+		lastScorer = 0;
 	}
 
 	void PlayState::scoreForRight()
 	{
 		scoreDisplayRight->setText(std::to_string(++scoreRight));
+		lastScorer = 1;
+	}
+	
+	void PlayState::end()
+	{
+		hasEnded = true;
+		pauseMenu.getItem(0).setLabel("Restart");
+		pause();
 	}
 	
 	void PlayState::pause()
@@ -347,6 +374,12 @@ namespace Cong {
 	void PlayState::resume()
 	{
 		isPaused = false;
+		if (hasEnded)
+		{
+			reset();
+			serve();
+			hasEnded = false;
+		}
 	}
 
 	void PlayState::processEvents()

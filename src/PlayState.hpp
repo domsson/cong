@@ -53,7 +53,10 @@ private:
 	int scoreLeft;
 	int scoreRight;
 	
+	int lastScorer;
+	
 	bool isPaused;
+	bool hasEnded;
 
 	void initCourt();
 	void initPaddles();
@@ -69,6 +72,8 @@ private:
 	void scoreForLeft();
 	void scoreForRight();
 	void resetScores();
+	
+	void end();
 
 public:
 
@@ -85,6 +90,7 @@ public:
 	
 	void pause();
 	void resume();
+	void reset();
 
 };
 

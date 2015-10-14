@@ -79,7 +79,6 @@ protected:
 	void setSelectColor(const sf::Color &color);
 	void setInactiveColor(const sf::Color &color);
 
-	//void renderItems() const;
 	void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 
 private:
