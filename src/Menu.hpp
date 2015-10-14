@@ -47,7 +47,9 @@ public:
 
 	float getWidth() const;
 	float getHeight() const;
-
+	
+	void setAnchor(Anchor anchor);
+	
 protected:
 
 	Anchor anchor;
@@ -95,7 +97,6 @@ private:
 	int findPrevItem(int current = -1, int checked = 0) const;
 	int findWidestItem() const;
 
-	void setAnchor(Anchor anchor);
 	void updateOrigin();
 
 };
