@@ -30,7 +30,7 @@ Planned features
 - [x] Options menu (still need better way to set/get options though)
 - [x] 2 Player mode (still needs some work though)
 - [ ] 1 Player mode (requires simple AI)
-- [ ] Possibility to pause the game
+- [x] Possibility to pause the game
 - [x] Some simple sound effects
 
 Additional features (if time/motivation permits)
@@ -47,7 +47,7 @@ Additional features (if time/motivation permits)
 Lincence, Copyright, whatever
 -----------------------------
 Everything is public domain (CC0), so do whatever you want with it.
-All code and contents have been created by me, with the exepction of:
+All code and contents have been created by me, with the exception of:
 - The sounds, which I got from [OpenGameArt.org](http://opengameart.org/content/3-ping-pong-sounds-8-bit-style) (CC0 as well)
 
 
