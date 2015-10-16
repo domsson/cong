@@ -240,7 +240,7 @@ namespace Cong
 	{
 	}
 
-    void OptionsMenuState::update()
+    void OptionsMenuState::update(float deltaTime)
 	{
 	}
 

@@ -21,7 +21,7 @@ public:
 
 	void processEvents();
 	void processInputs();
-    void update();
+    void update(float deltaTime);
 	void render();
 
 private:

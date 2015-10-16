@@ -21,7 +21,7 @@ public:
 
 	virtual void processEvents() = 0;
 	virtual void processInputs() = 0;
-    virtual void update() = 0;
+    virtual void update(float deltaTime) = 0;
 	virtual void render() = 0;
 
 	void setGame(const Game &game);

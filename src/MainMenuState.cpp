@@ -83,7 +83,7 @@ namespace Cong {
 	{
 	}
 
-    void MainMenuState::update()
+    void MainMenuState::update(float deltaTime)
 	{
 	}
 	

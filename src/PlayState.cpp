@@ -159,7 +159,7 @@ namespace Cong {
 		pauseMenu.setPosition(game->getViewportWidth() * 0.5, game->getViewportHeight() * 0.5);
 	}
 
-	void PlayState::update()
+	void PlayState::update(float deltaTime)
 	{
 		if (isPaused)
 		{
@@ -187,7 +187,8 @@ namespace Cong {
 			}
 		}
 		
-		float ballSpeed = ball->getSpeed() * game->getDeltaTime();
+		// float ballSpeed = ball->getSpeed() * game->getDeltaTime();
+		float ballSpeed = ball->getSpeed() * deltaTime;
         sf::Vector2f ballPositionNext((ball->getPosition().x + ball->getDirection().x * ballSpeed), (ball->getPosition().y + ball->getDirection().y * ballSpeed));
         
 		// We check for collisions with the left paddle only if the ball is close to it.

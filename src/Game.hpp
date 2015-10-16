@@ -48,7 +48,7 @@ private:
 
 	void processEvents();
 	void processInputs();
-	void update();
+	void update(float deltaTime);
 	void render();
 
 	void changeState(GameStates newState);

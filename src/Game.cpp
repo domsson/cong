@@ -156,25 +156,20 @@ namespace Cong {
 		while (window->isOpen())
 		{
 			float elapsedSeconds = clock.restart().asSeconds();
-			// std::cout << "Elapsed: " << elapsedSeconds << "s\n"; 
+			//std::cout << elapsedSeconds << " ";
 
-			// We're gonna be optimistic and assume no computer will lag behind
 			if (elapsedSeconds < SECONDS_PER_FRAME)
 			{
 				long sleepingTime = (SECONDS_PER_FRAME - elapsedSeconds) * 1000;
 				// std::cout << "Sleeping for " << sleepingTime << std::endl;
 				std::this_thread::sleep_for(std::chrono::milliseconds(sleepingTime));
 			}
-			else
-			{
-				std::cout << "We're lagging behind by " << (elapsedSeconds - SECONDS_PER_FRAME) << std::endl;
-			}
 
 			if (activeState != nullptr)
 			{
 	            processEvents();
-	            processInputs();  
-	            update();
+	            processInputs();
+	            update(elapsedSeconds);
             	render();
 			}
 
@@ -197,9 +192,9 @@ namespace Cong {
 		tryStateChange();
 	}
 
-	void Game::update()
+	void Game::update(float deltaTime)
 	{
-		activeState->update();
+		activeState->update(deltaTime);
 		tryStateChange();
 	}
 
