@@ -28,7 +28,7 @@ Planned features
 - [ ] Solid physics that work even at a high ball velocity
 - [x] Main menu
 - [x] Options menu (still need better way to set/get options though)
-- [x] 2 Player mode (still needs some work though)
+- [x] 2 Player mode
 - [ ] 1 Player mode (requires simple AI)
 - [x] Possibility to pause the game
 - [x] Some simple sound effects
