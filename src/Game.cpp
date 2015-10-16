@@ -163,7 +163,7 @@ namespace Cong {
 				long sleepingTime = (SECONDS_PER_FRAME - elapsedSeconds) * 1000.0;
 				if (sleepingTime > 0)
 				{
-					std::cout << "Sleeping for " << sleepingTime << std::endl;
+					//std::cout << "Sleeping for " << sleepingTime << std::endl;
 					std::this_thread::sleep_for(std::chrono::milliseconds(sleepingTime));
 				}
 			}
