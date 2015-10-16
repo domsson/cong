@@ -2,7 +2,7 @@
 
 namespace Cong {
 
-	static const int TARGET_FPS = 50;
+	static const int TARGET_FPS = 60;
 	static const float SECONDS_PER_FRAME = 1.0 / TARGET_FPS;
 	
 	static const std::string GAME_ICON = "icon.png";
@@ -160,9 +160,12 @@ namespace Cong {
 
 			if (elapsedSeconds < SECONDS_PER_FRAME)
 			{
-				long sleepingTime = (SECONDS_PER_FRAME - elapsedSeconds) * 1000;
-				// std::cout << "Sleeping for " << sleepingTime << std::endl;
-				std::this_thread::sleep_for(std::chrono::milliseconds(sleepingTime));
+				long sleepingTime = (SECONDS_PER_FRAME - elapsedSeconds) * 1000.0;
+				if (sleepingTime > 0)
+				{
+					std::cout << "Sleeping for " << sleepingTime << std::endl;
+					std::this_thread::sleep_for(std::chrono::milliseconds(sleepingTime));
+				}
 			}
 
 			if (activeState != nullptr)

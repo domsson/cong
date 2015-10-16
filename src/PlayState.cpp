@@ -7,7 +7,7 @@ namespace Cong {
     static const int PADDLE_HEIGHT = 96; // 128;
 	static const int PADDLE_SPEED = 400;
     static const int BALL_RADIUS = 12; // 16;
-	static const int BALL_SPEED = 300;
+	static const int BALL_SPEED = 400;
 	static const float BALL_SPEED_INCREASE = 0.05;
 
 	static const int COURT_COLOR[] = {255, 255, 255};
