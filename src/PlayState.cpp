@@ -25,7 +25,7 @@ namespace Cong {
 	PlayState::PlayState(Game &game)
 	: GameState(game), court(0), ball(0), paddleLeft(0), paddleRight(0),
 	  scoreDisplayLeft(0), scoreDisplayRight(0), charMap(0),
-	  lastScorer(-1), isPaused(false), hasEnded(false)
+	  lastScorer(0), isPaused(false), isServing(true), hasEnded(false)
 	{
 		charMap = this->game->getDefaultCharMap();
 	}
@@ -50,6 +50,7 @@ namespace Cong {
 		initScoreDisplays();
 		initSounds();
 		initPauseMenu();
+		serve();
 	}
 	
 	void PlayState::reset()
@@ -57,7 +58,7 @@ namespace Cong {
 		resetScores();
 		scoreDisplayLeft->setText(std::to_string(scoreLeft));
 		scoreDisplayRight->setText(std::to_string(scoreRight));
-		lastScorer = -1;
+		lastScorer = 0;
 		paddleLeft->setPosition(PADDING + PADDLE_WIDTH, (game->getViewportHeight()-1) * 0.5);
 		paddleRight->setPosition(game->getViewportWidth() - (PADDLE_WIDTH + PADDING), (game->getViewportHeight()-1) * 0.5);
 		pauseMenu.getItem(0).setLabel("Resume");
@@ -114,7 +115,7 @@ namespace Cong {
 
         ball = new Cong::Ball(BALL_RADIUS, 0);
         ball->setPosition((game->getViewportWidth()-1) * 0.5, (game->getViewportHeight()-1) * 0.5); // The Ball's origin is at its center!
-        ball->setFillColor(sf::Color(BALL_COLOR[0], BALL_COLOR[1], BALL_COLOR[2]));
+        ball->setFillColor(sf::Color(BALL_COLOR[0], BALL_COLOR[1], BALL_COLOR[2], 0));
 		ball->setTexture(&ballTexture);
 	}
 
@@ -169,6 +170,21 @@ namespace Cong {
 		{
 			end();
 			return;
+		}
+		
+		if (isServing)
+		{
+			int ballAlpha = ball->getFillColor().a;
+			if (ballAlpha < 255)
+			{
+				ball->setFillColor(sf::Color(BALL_COLOR[0], BALL_COLOR[1], BALL_COLOR[2], ballAlpha + 3));
+				return;
+			}
+			else
+			{
+				isServing = false;
+				ball->setSpeed(BALL_SPEED);
+			}
 		}
 		
 		float ballSpeed = ball->getSpeed() * game->getDeltaTime();
@@ -342,15 +358,24 @@ namespace Cong {
 
     void PlayState::serve()
 	{
+		isServing = true;
+		ball->setFillColor(sf::Color(BALL_COLOR[0], BALL_COLOR[1], BALL_COLOR[2], 0));
         ball->setSpeed(0);
-        ball->setDirection(sf::Vector2f(1, 1));
         ball->setPosition((game->getViewportWidth()-1) * 0.5, (game->getViewportHeight()-1) * 0.5);
+
+		float yDir = std::rand() / (RAND_MAX + 1.0) - 0.5; // .5 to -.5
+		float xDir = std::sqrt(1 - yDir);
+		if (lastScorer != 0)
+		{
+			xDir *= -lastScorer;
+		}
+        ball->setDirection(sf::Vector2f(xDir, yDir));
     }
 
 	void PlayState::scoreForLeft()
 	{
 		scoreDisplayLeft->setText(std::to_string(++scoreLeft));
-		lastScorer = 0;
+		lastScorer = -1;
 	}
 
 	void PlayState::scoreForRight()

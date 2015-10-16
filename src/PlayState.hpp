@@ -56,6 +56,7 @@ private:
 	int lastScorer;
 	
 	bool isPaused;
+	bool isServing;
 	bool hasEnded;
 
 	void initCourt();
