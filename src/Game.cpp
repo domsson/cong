@@ -162,6 +162,10 @@ namespace Cong {
 				// std::cout << "Sleeping for " << sleepingTime << std::endl;
 				std::this_thread::sleep_for(std::chrono::milliseconds(sleepingTime));
 			}
+			else
+			{
+				std::cout << "We're lagging behind by " << (elapsedSeconds - SECONDS_PER_FRAME) << std::endl;
+			}
 
 			if (activeState != nullptr)
 			{
