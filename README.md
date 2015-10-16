@@ -24,7 +24,7 @@ The included `build.sh` script will do the building, after which you can run Con
 
 Planned features
 ----------------
-- [ ] Solid game loop that makes for a fixed game speed across machines
+- [x] Solid game loop that makes for a fixed game speed across machines
 - [ ] Solid physics that work even at a high ball velocity
 - [x] Main menu
 - [x] Options menu (still need better way to set/get options though)
