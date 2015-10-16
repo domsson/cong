@@ -42,6 +42,9 @@ private:
 
 	sf::Texture charMapTexture;
 	const CharMap *charMap;
+	
+	sf::Image gameIcon;
+	bool iconLoaded;
 
 	void processEvents();
 	void processInputs();

@@ -4,6 +4,8 @@ namespace Cong {
 
 	static const int TARGET_FPS = 50;
 	static const float SECONDS_PER_FRAME = 1.0 / TARGET_FPS;
+	
+	static const std::string GAME_ICON = "icon.png";
 
 	static const std::string TEXTURE_DIR = "./tex/";
 	static const std::string SOUND_DIR = "./sfx/";
@@ -12,15 +14,24 @@ namespace Cong {
 	static const std::string CHARMAP_CHARS = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
 	Game::Game(const std::string &title, int width, int height)
-	: window(nullptr), title(title), width(width), height(height), activeState(nullptr), charMap(nullptr)
+	: window(nullptr), title(title), width(width), height(height), activeState(nullptr), charMap(nullptr), iconLoaded(false)
 	{
-        window = new sf::RenderWindow(sf::VideoMode(width, height), title, sf::Style::Close);
-		window->setMouseCursorVisible(false);
+		iconLoaded = gameIcon.loadFromFile(GAME_ICON);
+		initWindow();
 
 		Game::loadTexture(CHARMAP_TEXTURE, charMapTexture);
 		charMap = new CharMap(charMapTexture, CHARMAP_CHARS , 7, 9, 0, 18);
 	}
-
+	
+	void Game::initWindow()
+	{
+		window = new sf::RenderWindow(sf::VideoMode(width, height), title, sf::Style::Close);
+		window->setMouseCursorVisible(false);
+		if (iconLoaded)
+		{
+			window->setIcon(gameIcon.getSize().x, gameIcon.getSize().y, gameIcon.getPixelsPtr());
+		}
+	}
 
 	void Game::setState(GameState *newState)
 	{
@@ -32,7 +43,6 @@ namespace Cong {
 		activeState = newState;
 		newState->enter();
 	}
-
 
 	void Game::changeState(GameStates newState)
 	{
@@ -65,12 +75,6 @@ namespace Cong {
 	void Game::requestResolutionChange() const
 	{
 		resolutionChangeRequested = true;
-	}
-
-	void Game::initWindow()
-	{
-		window = new sf::RenderWindow(sf::VideoMode(width, height), title, sf::Style::Close);
-		window->setMouseCursorVisible(false);
 	}
 
 	void Game::updateWindow()
@@ -151,8 +155,7 @@ namespace Cong {
 
 		while (window->isOpen())
 		{
-			sf::Time elapsed = clock.restart();
-			float elapsedSeconds = elapsed.asSeconds();
+			float elapsedSeconds = clock.restart().asSeconds();
 			// std::cout << "Elapsed: " << elapsedSeconds << "s\n"; 
 
 			// We're gonna be optimistic and assume no computer will lag behind
@@ -254,7 +257,7 @@ namespace Cong {
 		std::cout << "Loaded " << soundFile << " (Duration: " << buffer.getDuration().asMilliseconds() << " ms)" << std::endl;
 		return true;
 	}
-
+	
 	bool Game::loadTexture(const std::string &textureFile, sf::Texture &texture)
 	{
 		if (!texture.loadFromFile(TEXTURE_DIR + textureFile))
